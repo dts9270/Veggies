@@ -1,237 +1,477 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="mr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VegShop - Online Store</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VegKart — OTP Verified Shop</title>
+<link rel="icon" href="data:,">
 <style>
-body{margin:0;font-family:Poppins,sans-serif;background:#f6f6f6;color:#222;}
-header{background:#fff;padding:14px;box-shadow:0 2px 10px #0001;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:20px;font-weight:700;color:#0a8a4f}
-.main{padding:14px}
-
-/* Login box */
-.login-box{max-width:300px;margin:50px auto;background:#fff;padding:20px;border-radius:12px;
-           box-shadow:0 4px 16px #0002}
-input,select{width:100%;padding:10px;margin-top:8px;border:1px solid #ccc;border-radius:8px}
-.btn{width:100%;padding:12px;margin-top:12px;background:#0a8a4f;color:#fff;font-weight:700;border:none;border-radius:8px}
-h2{margin:0;margin-bottom:10px;text-align:center}
-
-/* Product list */
-.card{background:#fff;padding:12px;border-radius:12px;box-shadow:0 4px 16px #0002;margin-bottom:14px}
-.card img{width:100%;height:150px;border-radius:10px;object-fit:cover}
-.title{font-size:17px;font-weight:700;margin:8px 0}
-.price{color:#0a8a4f;font-weight:700}
-
-/* Cart button */
-.cart-btn{position:fixed;right:14px;bottom:14px;background:#0a8a4f;color:#fff;padding:12px 14px;border-radius:50px;font-weight:700;border:none}
-
-/* Cart panel */
-.cart-panel{position:fixed;left:0;right:0;bottom:-100%;background:#fff;border-radius:18px 18px 0 0;padding:15px;
-            height:70%;box-shadow:0 -4px 16px #0004;transition:.4s;overflow:auto;}
-.cart-panel.open{bottom:0}
-
-/* Admin/Delivery dashboard */
-.box{background:#fff;padding:14px;border-radius:10px;box-shadow:0 4px 16px #0002;margin-bottom:12px}
-.item-row{display:flex;justify-content:space-between;margin:6px 0}
+  :root{--accent:#0ea96a;--bg:#fbfbfb;--card:#fff;--muted:#666}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans',Arial;background:var(--bg)}
+  header{padding:12px;background:#fff;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee}
+  .logo{font-weight:800;color:var(--accent)}
+  .container{padding:12px;max-width:760px;margin:0 auto}
+  .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.06);margin-bottom:12px}
+  input,select,button{font-size:15px}
+  input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #e6e6e6;margin-top:8px}
+  .row{display:flex;gap:8px}
+  .btn{background:var(--accent);color:#fff;padding:10px;border-radius:10px;border:0;font-weight:700}
+  .btn.ghost{background:#f2f2f2;color:#111}
+  .small{font-size:13px;color:var(--muted)}
+  .banner{height:150px;border-radius:12px;background:url('https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=1600') center/cover; margin-bottom:12px}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  .product-img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+  .fab{position:fixed;right:14px;bottom:14px;z-index:80}
+  .cart-btn{background:var(--accent);color:#fff;padding:12px 14px;border-radius:50px;border:0;font-weight:700}
+  .cart-panel{position:fixed;left:0;right:0;bottom:-100%;background:#fff;border-radius:16px 16px 0 0;padding:12px;height:72%;box-shadow:0 -8px 40px rgba(0,0,0,.18);transition:.33s;overflow:auto}
+  .cart-panel.open{bottom:0}
+  .muted{color:var(--muted)}
+  .login-row{display:flex;gap:8px;align-items:center}
+  @media(min-width:900px){ .grid{grid-template-columns:repeat(2,1fr)} .container{padding:20px} }
 </style>
 </head>
 <body>
-
 <header>
-  <div class="logo">VegShop</div>
-  <button onclick="showLogin()" style="border:none;background:#fff;font-size:16px">🔐 Login</button>
+  <div class="logo">VegKart</div>
+  <div class="small muted">Mobile-first + Firebase OTP</div>
 </header>
 
-<div id="userArea" class="main" style="display:none">
-  <h2>ताज्या भाज्या</h2>
-  <div id="productList"></div>
-</div>
+<main class="container">
+  <!-- LOGIN / ROLE SELECT -->
+  <div id="loginCard" class="card">
+    <h3>Login / Continue</h3>
+    <div class="small muted">Admin / Delivery -> use credentials. Customer -> Continue with Phone (OTP).</div>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="login-box" style="display:none">
-  <h2>Login</h2>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button class="btn" onclick="login()">Login</button>
-</div>
+    <div style="margin-top:12px">
+      <div style="margin-bottom:8px"><strong>Admin / Delivery Login</strong></div>
+      <input id="roleUser" placeholder="Username (admin / deepak)"/>
+      <input id="rolePass" placeholder="Password" type="password"/>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" onclick="handleRoleLogin()">Login</button>
+        <button class="btn ghost" onclick="showPhoneLogin()">Continue as Customer</button>
+      </div>
+    </div>
+  </div>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel" class="main" style="display:none">
-  <h2>Admin Dashboard</h2>
-  <div id="adminOrders"></div>
-</div>
+  <!-- PHONE OTP PANEL -->
+  <div id="phoneCard" class="card" style="display:none">
+    <h3>Phone Verification (OTP)</h3>
+    <div class="small muted">Enter mobile (with country code). Example for India: 91XXXXXXXXXX</div>
+    <input id="phoneNumber" placeholder="91XXXXXXXXXX" />
+    <div id="recaptcha-container" style="margin-top:8px"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" onclick="sendOTP()">Send OTP</button>
+      <button class="btn ghost" onclick="cancelPhone()">Cancel</button>
+    </div>
 
-<!-- DELIVERY PANEL -->
-<div id="deliveryPanel" class="main" style="display:none">
-  <h2>Delivery Dashboard</h2>
-  <div id="deliveryOrders"></div>
-</div>
+    <div id="otpBox" style="display:none;margin-top:10px">
+      <input id="otpCode" placeholder="Enter OTP" />
+      <div class="row" style="margin-top:8px">
+        <button class="btn" onclick="verifyOTP()">Verify OTP</button>
+        <button class="btn ghost" onclick="resendOTP()">Resend</button>
+      </div>
+    </div>
+  </div>
 
-<!-- CART BUTTON -->
-<button class="cart-btn" id="cartBtn" onclick="openCart()" style="display:none">
-  🛒 Cart (<span id="cartCount">0</span>)
-</button>
+  <!-- CUSTOMER ORDER FORM (only visible after OTP verified or immediate for basic guest) -->
+  <div id="orderCard" class="card" style="display:none">
+    <h3>Place Order</h3>
+    <div class="banner" style="height:110px"></div>
+
+    <div class="small muted">Enter details & add items to cart</div>
+
+    <div style="margin-top:10px">
+      <input id="custName" placeholder="Name" />
+      <input id="custAddress" placeholder="Delivery address" />
+      <input id="custPhone" placeholder="Phone (will be prefilled after OTP)" />
+    </div>
+
+    <h4 style="margin-top:14px">Products</h4>
+    <div id="products" class="grid"></div>
+  </div>
+</main>
+
+<!-- CART FAB -->
+<div class="fab">
+  <button class="cart-btn" onclick="toggleCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+</div>
 
 <!-- CART PANEL -->
 <div id="cartPanel" class="cart-panel">
-  <h3>🛒 कार्ट</h3>
+  <h3>तुमचा कार्ट</h3>
   <div id="cartItems"></div>
-  <h3>Total: ₹<span id="cartTotal">0</span></h3>
-  <button class="btn" style="background:#25D366" onclick="placeOrder()">WhatsApp Order</button>
-  <button class="btn" style="background:#aaa" onclick="closeCart()">Close</button>
+  <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+    <div class="small muted">Total</div>
+    <div style="font-weight:800">₹<span id="cartTotal">0</span></div>
+  </div>
+  <div style="margin-top:12px" id="orderButtons">
+    <button class="btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+    <button class="btn ghost" onclick="clearCart()">Clear</button>
+  </div>
+  <div style="height:12px"></div>
 </div>
 
+<!-- Include Firebase JS SDK (compat for simpler code) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
 <script>
-/* ---------------- PRODUCTS ---------------- */
-const products = [
-  {id:1,name:"बटाटा",price:40,img:"https://i.imgur.com/0ZQZ0Z0.jpeg"},
-  {id:2,name:"टोमॅटो",price:50,img:"https://i.imgur.com/SGZQ7U2.jpeg"},
-  {id:3,name:"कांदा",price:35,img:"https://i.imgur.com/8wJQZJH.jpeg"},
+/* ================== CONFIG - REPLACE THESE ==================
+  1) Replace firebaseConfig with your project's config object (from Firebase Console -> Web app)
+  2) If you want Google Sheet dynamic rates, replace GOOGLE_SHEET_KEY; else keep empty for demo products.
+============================================================== */
+
+/* ===== REPLACE: your firebaseConfig here ===== */
+const firebaseConfig = {
+  apiKey: "REPLACE_API_KEY",
+  authDomain: "REPLACE_AUTH_DOMAIN",
+  projectId: "REPLACE_PROJECT_ID",
+  appId: "REPLACE_APP_ID",
+  // ... other fields from Firebase web app config
+};
+/* ================================================ */
+
+/* Optional: Google Sheet Key (if you maintain rates in sheet). Leave empty to use demo static rates */
+const GOOGLE_SHEET_KEY = ''; // e.g. '1abcDEF...'
+
+/* ========================================================= */
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+/* Roles credentials */
+const ADMIN_CRED = {user:'admin', pass:'admin', role:'admin'};
+const DELIV_CRED = {user:'deepak', pass:'1234', role:'delivery'};
+
+/* Products (fallback demo) */
+let products = [
+  {id:'p1', name:'बटाटा (Potato)', image:'https://images.unsplash.com/photo-1574226516831-e1dff420e12b?q=80&w=800', base_price_per_kg:40},
+  {id:'p2', name:'टोमॅटो (Tomato)', image:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?q=80&w=800', base_price_per_kg:45},
+  {id:'p3', name:'कांदा (Onion)', image:'https://images.unsplash.com/photo-1582515073490-399813c4a6b6?q=80&w=800', base_price_per_kg:35},
 ];
 
+let cart = JSON.parse(localStorage.getItem('vk_cart')||'[]');
+let currentUser = {role:'guest', phone:null, name:null};
+
+/* Quick UI helpers */
+function $(id){ return document.getElementById(id); }
+function show(el){ el.style.display='block'; }
+function hide(el){ el.style.display='none'; }
+function toast(msg){ const d = document.createElement('div'); d.innerText=msg; d.style='position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#111;color:#fff;padding:8px 12px;border-radius:8px;z-index:9999'; document.body.appendChild(d); setTimeout(()=>d.remove(),2000); }
+
+/* ========== Role login handling (single login screen) ========== */
+function handleRoleLogin(){
+  const u = $('roleUser').value.trim();
+  const p = $('rolePass').value.trim();
+  if(u === ADMIN_CRED.user && p === ADMIN_CRED.pass){
+    currentUser.role = 'admin'; openAdminPanel(); return;
+  }
+  if(u === DELIV_CRED.user && p === DELIV_CRED.pass){
+    currentUser.role = 'delivery'; openDeliveryPanel(); return;
+  }
+  // if both fields empty -> treat as customer-start (goto phone flow)
+  if(u === '' && p === ''){
+    showPhoneLogin(); return;
+  }
+  alert('Invalid credentials. For admin use admin/admin, for delivery deepak/1234, or leave empty to continue as customer.');
+}
+
+/* ========== Phone OTP (Firebase) ========== */
+let confirmationResultGlobal = null;
+
+function showPhoneLogin(){
+  hide($('loginCard'));
+  show($('phoneCard'));
+  // render recaptcha (invisible)
+  if(!window.recaptchaRendered){
+    window.recaptchaRendered = true;
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+      size: 'invisible',
+      callback: function(response) { /* invisible callback */ }
+    });
+    window.recaptchaVerifier.render().then(()=>{/* ready */});
+  }
+}
+
+function cancelPhone(){
+  hide($('phoneCard'));
+  show($('loginCard'));
+}
+
+async function sendOTP(){
+  const phone = $('phoneNumber').value.trim();
+  if(!phone){ alert('कृपया फोन नंबर टाका (with country code, e.g. 91XXXXXXXXXX)'); return; }
+  try{
+    const appVerifier = window.recaptchaVerifier;
+    const result = await auth.signInWithPhoneNumber(phone, appVerifier);
+    confirmationResultGlobal = result; // save to verify later
+    show($('otpBox'));
+    toast('OTP पाठवला गेला');
+  }catch(err){
+    console.error(err); alert('OTP पाठवताना त्रुटी: ' + (err.message||err));
+  }
+}
+
+async function verifyOTP(){
+  const code = $('otpCode').value.trim();
+  if(!code){ alert('OTP टाका'); return; }
+  try{
+    const res = await confirmationResultGlobal.confirm(code);
+    // res.user is signed in
+    currentUser.role = 'customer';
+    currentUser.phone = res.user.phoneNumber;
+    // prefill phone input
+    $('custPhone').value = currentUser.phone;
+    hide($('phoneCard'));
+    show($('orderCard'));
+    toast('OTP सत्यापित — order करू शकता');
+    // optionally sign out from firebase auth to not keep session: (we still can use uid if needed)
+    // auth.signOut();
+  }catch(err){
+    console.error(err); alert('OTP verify error: ' + (err.message||err));
+  }
+}
+
+function resendOTP(){ sendOTP(); }
+
+/* ========== Products rendering & sheet rates (optional) ========== */
+async function fetchSheetPrices(){
+  if(!GOOGLE_SHEET_KEY) return;
+  try{
+    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_KEY}/gviz/tq?tqx=out:json`;
+    const res = await fetch(url); const txt = await res.text();
+    const jsonStr = txt.substring(txt.indexOf('{'), txt.lastIndexOf('}')+1);
+    const g = JSON.parse(jsonStr);
+    const header = g.table.cols.map(c=>c.label.trim());
+    const rows = g.table.rows.map(r => r.c.map(c => c? c.v : ''));
+    products = rows.map(r => {
+      const obj = {}; header.forEach((h,i)=>obj[h]=r[i]);
+      return { id: obj.id||obj.Name||obj.name, name: obj.name||obj.Name, image: obj.image||obj.img||products[0].image, base_price_per_kg: parseFloat(obj.base_price_per_kg||obj.price||obj.base_price||0) }
+    });
+  }catch(e){ console.warn('sheet fetch failed', e); }
+}
+
 function renderProducts(){
-  const box=document.getElementById("productList");
-  box.innerHTML="";
+  const wrap = $('products'); wrap.innerHTML = '';
   products.forEach(p=>{
-    box.innerHTML+=`
-      <div class='card'>
-        <img src="${p.img}">
-        <div class='title'>${p.name}</div>
-        <div class='price'>₹${p.price}/kg</div>
-
-        <select id="w${p.id}">
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="1">1kg</option>
-          <option value="2">2kg</option>
+    const el = document.createElement('div'); el.className='card';
+    el.innerHTML = `
+      <img class="product-img" src="${p.image}" />
+      <div style="margin-top:8px;font-weight:700">${p.name}</div>
+      <div class="small muted">Per kg: ₹${p.base_price_per_kg || p.base_price_per_kg === 0 ? (p.base_price_per_kg) : (p.base_price_per_kg || p.base_price_per_kg)}</div>
+      <div class="row" style="margin-top:8px">
+        <select id="w_${p.id}">
+          <option value="0.25">250 g</option>
+          <option value="0.5">500 g</option>
+          <option value="1" selected>1 kg</option>
+          <option value="2">2 kg</option>
+          <option value="5">5 kg</option>
         </select>
-        <input id="q${p.id}" type="number" value="1" min="1">
-
-        <button class='btn' onclick="addToCart(${p.id})">Add to Cart</button>
+        <input id="q_${p.id}" type="number" min="1" value="1" style="width:76px;padding:8px;border-radius:8px;border:1px solid #eee" />
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn" onclick="addToCart('${p.id}')">Add</button>
       </div>
     `;
+    wrap.appendChild(el);
   });
 }
 
-/* ---------------- CART ---------------- */
-let cart=[];
+/* fallback if sheet not provided, ensure base_price_per_kg exists */
+products.forEach(p => { if(!p.base_price_per_kg) p.base_price_per_kg = p.price || p.base_price_per_kg || 40; });
+
+/* ========== Cart logic ========== */
+function getProductById(id){ return products.find(x => String(x.id) === String(id)); }
+
 function addToCart(id){
-  let p = products.find(x=>x.id===id);
-  let w = parseFloat(document.getElementById("w"+id).value);
-  let q = parseInt(document.getElementById("q"+id).value);
+  const wEl = document.getElementById(`w_${id}`);
+  const qEl = document.getElementById(`q_${id}`);
+  const weight = parseFloat(wEl.value);
+  const qty = Number(qEl.value || 1);
+  const p = getProductById(id);
+  const unitPrice = (p.base_price_per_kg || p.price || 0) * weight;
+  cart.push({ id: id, name: p.name, weight, qty, unitPrice });
+  localStorage.setItem('vk_cart', JSON.stringify(cart));
+  updateCartBadge();
+  toast('Cart मध्ये जोडले');
+}
 
-  cart.push({
-    name:p.name,
-    weight:w,
-    qty:q,
-    amount:p.price*w*q
+function updateCartBadge(){
+  $('cartCount').innerText = cart.length;
+}
+
+function toggleCart(){ const cp = $('cartPanel'); cp.classList.toggle('open'); renderCartPanel(); }
+
+function renderCartPanel(){
+  const list = $('cartItems'); list.innerHTML = ''; let total = 0;
+  cart.forEach((it, idx) => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.margin = '10px 0';
+    const amt = Math.round(it.unitPrice * it.qty);
+    row.innerHTML = `<div>${it.name} (${it.weight}kg × ${it.qty})</div><div>₹${amt}</div>`;
+    list.appendChild(row);
+    total += amt;
+  });
+  $('cartTotal').innerText = total;
+  updateCartBadge();
+}
+
+function clearCart(){ cart = []; localStorage.removeItem('vk_cart'); renderCartPanel(); updateCartBadge(); toast('Cart cleared'); }
+
+/* ========== Checkout & WhatsApp Order ========= */
+function proceedToCheckout(){
+  // must have customer details (if role customer, phone set by OTP)
+  if(currentUser.role !== 'customer'){
+    // allow guest quick checkout: show orderCard to fill name/phone
+    show($('orderCard'));
+    hide($('loginCard'));
+    hide($('phoneCard'));
+  } else {
+    show($('orderCard'));
+  }
+}
+
+function proceedPlaceOrder(){
+  // Validate name, address, phone
+  const name = $('custName').value.trim();
+  const addr = $('custAddress').value.trim();
+  const phone = $('custPhone').value.trim() || currentUser.phone;
+  if(!name || !addr || !phone){ alert('Name, Address आणि Phone द्या'); return; }
+  if(cart.length === 0){ alert('Cart रिकामा आहे'); return; }
+
+  // Create order object (local)
+  const orderId = 'ORD'+Date.now();
+  const items = cart.map(it => ({name: it.name, weight: it.weight, qty: it.qty, price: Math.round(it.unitPrice*it.qty)}));
+  const total = items.reduce((s,i)=>s+i.price,0);
+  const order = { id: orderId, name, address: addr, phone, items, total, createdAt: Date.now(), status: 'placed' };
+
+  // Save locally (for admin view)
+  const orders = JSON.parse(localStorage.getItem('vk_orders')||'[]');
+  orders.push(order);
+  localStorage.setItem('vk_orders', JSON.stringify(orders));
+
+  // Open WhatsApp with message
+  let msg = `New Order ${orderId}%0AName: ${name}%0AAddress: ${addr}%0APhone: ${phone}%0AItems:%0A`;
+  items.forEach(it => { msg += `${it.name} - ${it.qty} x ${it.weight}kg = ₹${it.price}%0A`; });
+  msg += `%0ATotal: ₹${total}`;
+
+  // Clear cart
+  clearCart();
+  toggleCart();
+
+  // open WhatsApp to user's number (they get confirmation). You can change to admin number if you'd like.
+  window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`, '_blank');
+  toast('Order placed & WhatsApp opened');
+}
+
+/* Bind place button AFTER order details are present */
+document.addEventListener('click', function(e){
+  if(e.target && e.target.matches && e.target.matches('.btn') ) { /* noop */ }
+});
+
+/* ========== Admin & Delivery Panels (basic local view) ========== */
+function openAdminPanel(){
+  // show admin UI (simple)
+  hide($('loginCard'));
+  hide($('phoneCard'));
+  show($('orderCard'));
+  $('orderCard').innerHTML = `
+    <div class="card">
+      <h3>Admin Dashboard</h3>
+      <div id="adminOrdersList"></div>
+      <div style="margin-top:8px"><button class="btn" onclick="renderAdminOrders()">Refresh Orders</button></div>
+    </div>
+  `;
+  renderAdminOrders();
+}
+
+function renderAdminOrders(){
+  const out = $('adminOrdersList') || document.createElement('div');
+  out.id = 'adminOrdersList'; out.innerHTML = '';
+  const orders = JSON.parse(localStorage.getItem('vk_orders') || '[]').slice().reverse();
+  if(orders.length === 0){ out.innerHTML = '<div class="small muted">No orders yet</div>'; }
+  orders.forEach(o => {
+    const div = document.createElement('div'); div.className = 'card';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${o.id}</strong><div class="small muted">${o.name} • ${o.phone}</div></div><div class="small muted">${new Date(o.createdAt).toLocaleString()}</div></div>
+      <div style="margin-top:8px">${o.items.map(i=>`<div class="small">${i.name} — ${i.qty}×${i.weight}kg — ₹${i.price}</div>`).join('')}</div>
+      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="assignDelivery('${o.id}')">Assign</button><button class="btn ghost" onclick="markDelivered('${o.id}')">Mark Delivered</button></div>`;
+    out.appendChild(div);
+  });
+  // attach to orderCard
+  const oc = $('orderCard'); if(oc) oc.appendChild(out);
+}
+
+function assignDelivery(orderId){
+  const did = prompt('Assign to delivery ID (eg deepak):');
+  if(!did) return;
+  const orders = JSON.parse(localStorage.getItem('vk_orders')||'[]');
+  const o = orders.find(x=>x.id===orderId);
+  if(o){ o.assignedTo = did; o.status = 'assigned'; localStorage.setItem('vk_orders', JSON.stringify(orders)); renderAdminOrders(); toast('Assigned to ' + did); }
+}
+
+function markDelivered(orderId){
+  const orders = JSON.parse(localStorage.getItem('vk_orders')||'[]');
+  const o = orders.find(x=>x.id===orderId);
+  if(o){ o.status = 'delivered'; localStorage.setItem('vk_orders', JSON.stringify(orders)); renderAdminOrders(); toast('Marked delivered'); }
+}
+
+function openDeliveryPanel(){
+  hide($('loginCard')); hide($('phoneCard')); show($('orderCard'));
+  $('orderCard').innerHTML = `<div class="card"><h3>Delivery Dashboard</h3><div id="delList"></div></div>`;
+  renderDeliveryOrders();
+}
+
+function renderDeliveryOrders(){
+  const list = $('delList'); list.innerHTML = '';
+  const orders = JSON.parse(localStorage.getItem('vk_orders')||'[]').filter(o=>o.assignedTo);
+  if(orders.length === 0){ list.innerHTML = '<div class="small muted">No assigned orders</div>'; return; }
+  orders.forEach(o => {
+    const div = document.createElement('div'); div.className='card';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${o.id}</strong><div class="small muted">${o.name} • ${o.phone}</div></div><div class="small muted">${o.assignedTo || ''}</div></div>
+      <div style="margin-top:8px">${o.items.map(i=>`<div class="small">${i.name} — ${i.qty}×${i.weight}kg</div>`).join('')}</div>
+      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="updateStatus('${o.id}','picked')">Picked</button><button class="btn ghost" onclick="updateStatus('${o.id}','on_the_way')">On the way</button><button class="btn ghost" onclick="updateStatus('${o.id}','delivered')">Delivered</button></div>`;
+    list.appendChild(div);
+  });
+}
+
+function updateStatus(orderId,status){
+  const orders = JSON.parse(localStorage.getItem('vk_orders')||'[]');
+  const o = orders.find(x=>x.id===orderId);
+  if(o){ o.status=status; localStorage.setItem('vk_orders', JSON.stringify(orders)); renderDeliveryOrders(); toast('Status: '+status); }
+}
+
+/* ========== Init ========== */
+(async function boot(){
+  // fetch sheet if key provided
+  if(GOOGLE_SHEET_KEY){ await fetchSheetPrices(); }
+  renderProducts();
+  updateCartBadge();
+
+  // Hook to set custPhone if OTP flow signed in (if already signed in)
+  auth.onAuthStateChanged((u) => {
+    if(u && u.phoneNumber){
+      currentUser.role = 'customer'; currentUser.phone = u.phoneNumber;
+      $('custPhone').value = u.phoneNumber;
+      show($('orderCard'));
+    }
   });
 
-  updateCart();
-}
-
-function updateCart(){
-  document.getElementById("cartCount").innerText=cart.length;
-}
-
-function openCart(){
-  let panel=document.getElementById("cartPanel");
-  let list=document.getElementById("cartItems");
-  list.innerHTML="";
-  let total=0;
-
-  cart.forEach(c=>{
-    list.innerHTML+=`
-      <div class='item-row'>
-        <div>${c.name} ${c.weight}kg × ${c.qty}</div>
-        <div>₹${c.amount}</div>
-      </div>
-    `;
-    total+=c.amount;
+  // bind checkout button (dynamic element)
+  // create a small "Place order" button in orderCard
+  const placeButton = document.createElement('div');
+  placeButton.style.marginTop = '12px';
+  placeButton.innerHTML = `<button class="btn" onclick="proceedPlaceOrder()">Place Order (WhatsApp)</button>`;
+  // append later when orderCard visible
+  // but to ensure it's there, we will append on demand when show orderCard
+  const observer = new MutationObserver(()=> {
+    const oc = $('orderCard');
+    if(oc && !oc.querySelector('[onclick="proceedPlaceOrder()"]')){
+      oc.appendChild(placeButton.cloneNode(true));
+    }
   });
-
-  document.getElementById("cartTotal").innerText=total;
-  panel.classList.add("open");
-}
-function closeCart(){ document.getElementById("cartPanel").classList.remove("open"); }
-
-function placeOrder(){
-  let msg="*VegShop Order*%0A%0A";
-  cart.forEach(c=>{
-    msg+=`${c.name} - ${c.weight}kg × ${c.qty} = ₹${c.amount}%0A`;
-  });
-  msg+=`%0A*Total:* ₹${document.getElementById("cartTotal").innerText}`;
-
-  window.open("https://wa.me/91XXXXXXXXXX?text="+msg, "_blank");
-}
-
-/* ---------------- LOGIN SYSTEM ---------------- */
-function showLogin(){
-  document.getElementById("loginScreen").style.display="block";
-  document.getElementById("userArea").style.display="none";
-  document.getElementById("adminPanel").style.display="none";
-  document.getElementById("deliveryPanel").style.display="none";
-}
-
-function login(){
-  let u=document.getElementById("username").value;
-  let p=document.getElementById("password").value;
-
-  // USER
-  if(u==="" && p===""){
-    loginSuccess("user");
-    return;
-  }
-
-  // ADMIN LOGIN
-  if(u==="admin" && p==="admin"){
-    loginSuccess("admin");
-    return;
-  }
-
-  // DELIVERY LOGIN
-  if(u==="deepak" && p==="1234"){
-    loginSuccess("delivery");
-    return;
-  }
-
-  alert("Wrong Login");
-}
-
-function loginSuccess(role){
-  document.getElementById("loginScreen").style.display="none";
-
-  if(role==="user"){
-    document.getElementById("userArea").style.display="block";
-    document.getElementById("cartBtn").style.display="block";
-    renderProducts();
-  }
-
-  if(role==="admin"){
-    document.getElementById("adminPanel").style.display="block";
-    loadAdminOrders();
-  }
-
-  if(role==="delivery"){
-    document.getElementById("deliveryPanel").style.display="block";
-    loadDeliveryOrders();
-  }
-}
-
-/* ---------------- ADMIN PANEL ---------------- */
-let allOrders = []; // stored orders
-
-function loadAdminOrders(){
-  document.getElementById("adminOrders").innerHTML="<p>No orders yet</p>";
-}
-
-/* ---------------- DELIVERY PANEL ---------------- */
-function loadDeliveryOrders(){
-  document.getElementById("deliveryOrders").innerHTML="<p>No assigned orders</p>";
-}
-
+  observer.observe(document.body, {childList:true, subtree:true});
+})();
 </script>
 </body>
 </html>
