@@ -3,437 +3,396 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DS Vegetable — Premium (Parbhani)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<title>DS Vegetable • Parbhani (RCM Style)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --g1:#00E589;   /* bright start */
-  --g2:#00C271;   /* bright end */
-  --bg:#f6fff7;
-  --card:#ffffff;
-  --muted:#6f7f77;
-  --accent:linear-gradient(90deg,var(--g1),var(--g2));
-  --radius:16px;
-  --shadow-lg: 0 20px 60px rgba(4,80,60,0.10);
-  --shadow-md: 0 12px 36px rgba(4,80,60,0.08);
-  --brand-dark:#053826;
-  --glass-bg: rgba(255,255,255,0.6);
+  --primary:#0b78d1;       /* RCM-like blue accent */
+  --accent:#00C271;        /* green accent for price */
+  --bg:#ffffff;
+  --muted:#6e7574;
+  --card:#fff;
+  --radius:14px;
+  --shadow:0 10px 30px rgba(10,20,30,0.06);
+  --glass:rgba(255,255,255,0.65);
 }
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#f3fff6,#fbfefc);font-family:Inter,'Noto Sans Devanagari',sans-serif;color:var(--brand-dark);-webkit-font-smoothing:antialiased}
-.container{max-width:1080px;margin:18px auto;padding:14px}
+html,body{height:100%;margin:0;font-family:Inter,'Noto Sans Devanagari',sans-serif;-webkit-font-smoothing:antialiased;background:#f6f7f8;color:#0b2b26}
+.container{max-width:1080px;margin:12px auto;padding:12px}
 
-/* TOPBAR */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:14px;
-  background:linear-gradient(90deg, rgba(0,229,137,0.10), rgba(0,194,113,0.04));
-  box-shadow:var(--shadow-lg);border:1px solid rgba(4,80,60,0.03);
-}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{
-  width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--g2),#0aa26a);
-  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.15rem;box-shadow:0 10px 30px rgba(0,180,110,0.18)
-}
-.brand h1{margin:0;font-size:1.15rem}
-.brand p{margin:0;color:var(--muted);font-size:.82rem}
-
-/* header banner (glass + floating svg) */
-.header-banner{
-  margin-top:14px;border-radius:18px;padding:16px;position:relative;overflow:hidden;
-  background:linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.55));
-  box-shadow:var(--shadow-md);border:1px solid rgba(255,255,255,0.6);
+/* Top header */
+.header{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  backdrop-filter: blur(6px);
+  background:var(--card);padding:10px;border-radius:12px;box-shadow:var(--shadow);
 }
-.banner-left{max-width:62%}
-.banner-left h2{margin:0;font-size:1.25rem}
-.banner-left p{margin:8px 0 0 0;color:var(--muted)}
-.banner-cta{margin-top:10px;display:flex;gap:10px;align-items:center}
-.cta-primary{background:var(--accent);color:#052a22;padding:10px 14px;border-radius:12px;border:none;font-weight:800;cursor:pointer;box-shadow:0 12px 36px rgba(0,197,137,0.12)}
-.cta-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:12px;cursor:pointer}
+.logo{display:flex;align-items:center;gap:10px}
+.logo .img{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#24a0ff);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.location{font-weight:700}
+.search-wrap{margin-top:10px}
+.search{width:100%;padding:12px;border-radius:10px;border:1px solid #eee;background:#fafafa}
 
-/* floating veggies svg group (right) */
-.floating-veg{width:36%;display:flex;align-items:center;justify-content:center;position:relative}
-.floating-veg svg{width:220px;height:auto;display:block;}
+/* slider */
+.slider-container{margin-top:12px;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 14px 40px rgba(11,120,209,0.08)}
+.slider-track{display:flex;transition:transform .6s ease}
+.slide{min-width:100%;height:190px;position:relative}
+.slide img{width:100%;height:100%;object-fit:cover;display:block}
+.slide-overlay{position:absolute;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.22));color:#fff}
 
-/* categories (round icons) */
-.cats{display:flex;gap:12px;overflow:auto;padding:12px 4px;margin-top:12px}
-.cat-chip{
-  min-width:84px;flex:0 0 auto;padding:10px;border-radius:999px;background:linear-gradient(180deg,#fff,#f7fff7);
-  border:1px solid rgba(0,0,0,0.04);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.04);font-weight:700;color:var(--brand-dark)
-}
-.cat-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e6fff0,#e8fff4);box-shadow:0 6px 18px rgba(0,197,137,0.06)}
+/* dots */
+.dots{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.6);opacity:0.9}
+.dot.active{background:var(--primary);transform:scale(1.3)}
 
-/* product grid */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
-@media(min-width:820px){ .grid{grid-template-columns:repeat(3,1fr)} .header-banner{padding:20px} .floating-veg svg{width:320px} }
-.card{
-  background:var(--card);border-radius:14px;padding:12px;border:1px solid rgba(0,0,0,0.03);
-  box-shadow:0 10px 30px rgba(4,80,60,0.05);transition:transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .22s;
-  transform-origin:center center;
-}
-.card:hover{transform:translateY(-8px) rotate(-0.6deg);box-shadow:0 26px 70px rgba(4,80,60,0.10)}
-.media{height:120px;border-radius:12px;background:linear-gradient(180deg,#fbfff9,#f3fff3);display:flex;align-items:center;justify-content:center}
-.media img{max-height:96px;object-fit:contain}
-.title{font-weight:800;margin-top:10px}
-.meta{color:var(--muted);font-size:0.9rem;margin-top:4px}
-.row-between{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px}
-.price-tag{background:var(--accent);padding:8px 10px;border-radius:10px;color:#052a22;font-weight:900;box-shadow:0 8px 20px rgba(0,197,137,0.12)}
+/* categories - round */
+.cats{display:flex;gap:12px;overflow:auto;padding:12px 0;margin-top:12px}
+.cat{min-width:92px;flex:0 0 auto;background:var(--card);border-radius:999px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.04);cursor:pointer}
+.cat .icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f5f8ff;font-size:24px}
+.cat p{margin:0;font-weight:700;color:var(--muted);font-size:0.88rem}
+
+/* section title */
+.section{margin-top:18px}
+.section h3{margin:0 0 8px 0;font-size:1.05rem}
+.section .sub{color:var(--muted);font-size:.9rem}
+
+/* products grid */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}
+@media(min-width:900px){ .grid{grid-template-columns:repeat(3,1fr)} }
+.card{background:var(--card);border-radius:12px;padding:10px;box-shadow:var(--shadow);transition:transform .18s}
+.card:hover{transform:translateY(-6px)}
+.media{height:110px;border-radius:10px;background:#f7fbff;display:flex;align-items:center;justify-content:center}
+.title{font-weight:800;margin-top:8px}
+.meta{color:var(--muted);font-size:0.88rem;margin-top:4px}
+.row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.price{font-weight:900;color:var(--accent)}
 .qty-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.qty-btn{
-  padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.04);background:linear-gradient(180deg,#fff,#fbfff9);cursor:pointer;font-weight:800;min-width:82px;text-align:center
-}
-.qty-btn:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,197,137,0.08)}
+.qty-btn{padding:8px 10px;border-radius:8px;border:1px solid #eee;background:#fff;font-weight:800;cursor:pointer}
 
-/* FAB cart */
-.fab{
-  position:fixed;left:50%;transform:translateX(-50%);bottom:18px;padding:12px 18px;border-radius:999px;background:linear-gradient(90deg,var(--g1),var(--g2));color:#052a22;font-weight:800;box-shadow:0 20px 60px rgba(0,197,137,0.16);display:none;align-items:center;gap:12px;z-index:999
-}
-.fab .count{background:#042a22;color:#fff;padding:6px 8px;border-radius:8px}
+/* cart page */
+.cart-wrap{margin-top:12px}
+.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:10px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.04);margin-bottom:10px}
+.thumb{width:56px;height:56px;border-radius:8px;background:#f6fbff;display:flex;align-items:center;justify-content:center}
+.remove{background:transparent;border:1px solid #eee;padding:6px;border-radius:8px;cursor:pointer}
 
-/* CART PAGE with glass total card */
-.cart-wrap{padding-top:10px}
-.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px;border-radius:12px;box-shadow:0 12px 36px rgba(4,80,60,0.06);margin-bottom:12px}
-.cart-item .left{display:flex;gap:12px;align-items:center}
-.thumb{width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,#f6fff6,#effff0);display:flex;align-items:center;justify-content:center}
-.remove-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:8px;cursor:pointer}
+/* glass total */
+.glass{position:sticky;bottom:14px;background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,255,255,0.95));padding:12px;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,0.06);margin-top:10px}
+.glass .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.glass .big{font-weight:900;font-size:1.1rem;color:#0b2740}
 
-/* glass total area */
-.glass-total{
-  position:sticky;bottom:18px;margin-top:10px;padding:14px;border-radius:14px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,255,255,0.55));
-  box-shadow:0 18px 60px rgba(4,80,60,0.08);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.6);
-}
-.glass-total .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.glass-total .total{font-weight:900;font-size:1.1rem;color:var(--brand-dark)}
+/* bottom nav */
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);display:flex;justify-content:space-around;padding:8px 12px;border-top:1px solid #eee;box-shadow:0 -6px 18px rgba(0,0,0,0.04)}
+.nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);cursor:pointer}
+.nav-item.active{color:var(--primary);font-weight:800}
 
 /* small */
+.badge{background:var(--primary);color:#fff;padding:4px 7px;border-radius:8px;font-weight:800;font-size:12px}
 .muted{color:var(--muted)}
 .hidden{display:none}
-@media(max-width:520px){
-  .logo{width:52px;height:52px}
-  .floating-veg{display:none}
-  .cat-chip{min-width:72px}
-  .qty-btn{min-width:68px;padding:7px}
-}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">DS</div>
+  <!-- header -->
+  <div class="header">
+    <div class="logo">
+      <div class="img">DS</div>
       <div>
-        <h1>DS Vegetable</h1>
-        <p>Parbhani • Fresh & Fast</p>
+        <div class="location">Parbhani • Donhi</div>
+        <div class="muted" style="font-size:12px">Fresh Vegetables & Fruits</div>
       </div>
+    </div>
+
+    <div style="width:48%">
+      <input id="topSearch" class="search" placeholder="Search 'Featured Products'...">
     </div>
 
     <div style="display:flex;gap:8px;align-items:center">
-      <input id="globalSearch" class="search" placeholder="उदा. टोमॅटो शोधा..." style="padding:10px 12px;border-radius:12px;border:none;box-shadow:var(--shadow-md)">
-      <button class="cta-ghost" onclick="location.hash='#/cart'">Cart</button>
-      <button class="cta-ghost" onclick="location.hash='#/admin'">Admin</button>
+      <div style="text-align:right"><div style="font-weight:800">431401</div><div class="muted" style="font-size:12px">Change</div></div>
     </div>
   </div>
 
-  <!-- Header banner (glass + floating veggies/fruits) -->
-  <div class="header-banner">
-    <div class="banner-left">
-      <h2>Fresh From Parbhani • Delivered to Your Home</h2>
-      <p class="muted">Daily ताजे फळे व भाज्या — थेट बाजारातून — जलद होम डिलिव्हरी</p>
-      <div class="banner-cta">
-        <button class="cta-primary" onclick="scrollToProducts()">Order Now</button>
-        <button class="cta-ghost" onclick="showAbout()">About DS Vegetable</button>
-      </div>
-    </div>
-
-    <div class="floating-veg" aria-hidden="true">
-      <!-- Mixed fruits + vegetables SVG with subtle animation -->
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="gA" x1="0" x2="1"><stop offset="0" stop-color="#ffea57"/><stop offset="1" stop-color="#ffd36b"/></linearGradient>
-          <linearGradient id="gB" x1="0" x2="1"><stop offset="0" stop-color="#ff6b6b"/><stop offset="1" stop-color="#ff8a6b"/></linearGradient>
-          <linearGradient id="gC" x1="0" x2="1"><stop offset="0" stop-color="#7ef5b4"/><stop offset="1" stop-color="#39d98a"/></linearGradient>
-        </defs>
-
-        <!-- banana -->
-        <g transform="translate(40,50)" style="animation:floatA 6s ease-in-out infinite;">
-          <path d="M10 40 C30 10, 90 10, 110 40 C90 55, 30 55, 10 40 Z" fill="url(#gA)" stroke="#e6c54a" stroke-width="2"/>
-        </g>
-
-        <!-- apple -->
-        <g transform="translate(180,30)" style="animation:floatB 5s ease-in-out infinite;">
-          <circle cx="0" cy="0" r="28" fill="url(#gB)" stroke="#c84a4a" stroke-width="2"/>
-          <path d="M-6 -24 Q0 -36 8 -26" stroke="#2c5a2b" stroke-width="3" fill="none"/>
-        </g>
-
-        <!-- tomato -->
-        <g transform="translate(280,110)" style="animation:floatC 5.5s ease-in-out infinite;">
-          <ellipse cx="0" cy="0" rx="30" ry="26" fill="#ff4b4b" stroke="#b93a3a" stroke-width="2"/>
-          <path d="M-6 -18 Q0 -30 8 -18" stroke="#2c5a2b" stroke-width="3" fill="none"/>
-        </g>
-
-        <!-- spinach leaf -->
-        <g transform="translate(80,150)" style="animation:floatD 6.5s ease-in-out infinite;">
-          <path d="M0 0 C30 -20, 60 -10, 80 0 C60 10, 30 5, 0 0 Z" fill="url(#gC)" stroke="#2d7f4f" stroke-width="2"/>
-        </g>
-
-        <!-- carrot -->
-        <g transform="translate(230,170)" style="animation:floatE 7s ease-in-out infinite;">
-          <path d="M0 -2 L10 20 L-10 20 Z" fill="#ff9a5b" stroke="#d06a3b" stroke-width="1.5"/>
-          <path d="M0 -2 Q-6 -6 -8 -12" stroke="#3a7a34" stroke-width="2" fill="none"/>
-        </g>
-      </svg>
-    </div>
+  <!-- slider -->
+  <div class="slider-container" id="sliderRoot" style="margin-top:12px">
+    <div class="slider-track" id="sliderTrack"></div>
+    <div class="dots" id="sliderDots"></div>
   </div>
 
   <!-- categories -->
-  <div class="cats" id="cats">
-    <div class="cat-chip" onclick="renderHome('')">
-      <div class="cat-icon">🏷️</div>
-      <div style="font-size:.86rem;margin-top:2px">सर्व</div>
-    </div>
-    <div class="cat-chip" onclick="filter('भाजी')">
-      <div class="cat-icon">🥬</div>
-      <div style="font-size:.86rem;margin-top:2px">भाजी</div>
-    </div>
-    <div class="cat-chip" onclick="filter('फळ')">
-      <div class="cat-icon">🍎</div>
-      <div style="font-size:.86rem;margin-top:2px">फळे</div>
-    </div>
-    <div class="cat-chip" onclick="filter('leaf')">
-      <div class="cat-icon">🌿</div>
-      <div style="font-size:.86rem;margin-top:2px">Greens</div>
-    </div>
-    <div class="cat-chip" onclick="offers()">
-      <div class="cat-icon">💥</div>
-      <div style="font-size:.86rem;margin-top:2px">ऑफर्स</div>
-    </div>
+  <div class="cats" id="catsRoot" aria-hidden="false"></div>
+
+  <!-- main content -->
+  <div id="mainContent"></div>
+</div>
+
+<!-- bottom nav -->
+<div class="bottom-nav">
+  <div class="nav-item active" data-route="#/" onclick="goRoute('#/')"> 
+    <div>🏠</div><div>Home</div>
   </div>
-
-  <!-- content / products or cart inserted here -->
-  <div id="content" style="margin-top:12px"></div>
+  <div class="nav-item" data-route="#/vegetables" onclick="goRoute('#/vegetables')">
+    <div>🥬</div><div>Vegetables</div>
+  </div>
+  <div class="nav-item" data-route="#/cart" onclick="goRoute('#/cart')">
+    <div style="position:relative">🛒 <span id="cartBadge" class="badge hidden">0</span></div><div>Cart</div>
+  </div>
+  <div class="nav-item" data-route="#/account" onclick="goRoute('#/account')">
+    <div>👤</div><div>Account</div>
+  </div>
+  <div class="nav-item" data-route="#/menu" onclick="goRoute('#/menu')">
+    <div>☰</div><div>Menu</div>
+  </div>
 </div>
-
-<!-- FAB -->
-<div id="fab" class="fab" onclick="location.hash='#/cart'">
-  <div>🛒 कार्ट • ₹<span id="fabTotal">0</span></div>
-  <div class="count" id="fabCount">0</div>
-</div>
-
-<!-- Animations -->
-<style>
-@keyframes floatA { 0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)} }
-@keyframes floatB { 0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)} }
-@keyframes floatC { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
-@keyframes floatD { 0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)} }
-@keyframes floatE { 0%{transform:translateY(0)}50%{transform:translateY(-7px)}100%{transform:translateY(0)} }
-</style>
 
 <script>
-/* ======= Functionality (unchanged) ======= */
-/* storage keys */
-const LS_PROD="p_v1",LS_CART="c_v1",LS_ORD="o_v1",LS_DEL="d_v1",LS_SESS="s_v1";
-
-/* seed sample data */
-function seed(){
-  if(!localStorage.getItem(LS_PROD)){
-    localStorage.setItem(LS_PROD,JSON.stringify([
-      {id:1,name:"टोमॅटो",price:40,cat:"भाजी"},
-      {id:2,name:"बटाटा",price:30,cat:"भाजी"},
-      {id:3,name:"कांदा",price:35,cat:"भाजी"},
-      {id:4,name:"केळी",price:90,cat:"फळ"},
-      {id:5,name:"सफरचंद",price:130,cat:"फळ"},
-      {id:6,name:"पालक",price:22,cat:"leaf"}
-    ]));
-  }
-  if(!localStorage.getItem(LS_CART)) localStorage.setItem(LS_CART,"[]");
+/* ===== Persistent keys & seed data (keeps existing logic) ===== */
+const KEY_PROD = 'ds_prod_v2', KEY_CART='ds_cart_v2', KEY_BANNERS='ds_banners_v2', KEY_SLIDER_SPEED='ds_slider_speed_v2';
+if(!localStorage.getItem(KEY_PROD)){
+  localStorage.setItem(KEY_PROD, JSON.stringify([
+    {id:1,name:'टोमॅटो',price:40,cat:'Vegetables'},
+    {id:2,name:'बटाटा',price:30,cat:'Vegetables'},
+    {id:3,name:'कांदा',price:35,cat:'Vegetables'},
+    {id:4,name:'केळी',price:90,cat:'Fruits'},
+    {id:5,name:'सफरचंद',price:130,cat:'Fruits'},
+    {id:6,name:'पालक',price:22,cat:'Vegetables'}
+  ]));
 }
-seed();
+if(!localStorage.getItem(KEY_CART)) localStorage.setItem(KEY_CART, JSON.stringify([]));
+if(!localStorage.getItem(KEY_BANNERS)) localStorage.setItem(KEY_BANNERS, JSON.stringify([
+  "https://i.imgur.com/BwnYrHq.jpg",
+  "https://i.imgur.com/czZ1EoG.jpg",
+  "https://i.imgur.com/0h7rUvp.jpg"
+]));
+if(!localStorage.getItem(KEY_SLIDER_SPEED)) localStorage.setItem(KEY_SLIDER_SPEED, '3500');
 
 /* helpers */
-const prods = ()=> JSON.parse(localStorage.getItem(LS_PROD)||'[]');
-const cart = ()=> JSON.parse(localStorage.getItem(LS_CART)||'[]');
-const saveCart = a => localStorage.setItem(LS_CART, JSON.stringify(a));
-const uid = ()=> Date.now() + Math.floor(Math.random()*999);
+const prods = ()=> JSON.parse(localStorage.getItem(KEY_PROD)||'[]');
+const cart = ()=> JSON.parse(localStorage.getItem(KEY_CART)||'[]');
+const saveCart = a => localStorage.setItem(KEY_CART, JSON.stringify(a));
+const banners = ()=> JSON.parse(localStorage.getItem(KEY_BANNERS)||'[]');
+const sliderSpeed = ()=> Number(localStorage.getItem(KEY_SLIDER_SPEED) || 3500);
 
 /* routing */
-window.addEventListener('hashchange', router);
-window.addEventListener('load', router);
-document.getElementById('globalSearch').addEventListener('input', e=> {
-  if(!location.hash || location.hash==="#" || location.hash==="#/") renderHome(e.target.value.trim());
+window.addEventListener('hashchange', renderRoute);
+window.addEventListener('load', renderRoute);
+document.getElementById('topSearch').addEventListener('input', e=> {
+  const q = e.target.value.trim().toLowerCase();
+  if(location.hash==="#"||!location.hash||location.hash==="#/") renderHome(q);
 });
 
-/* route handler */
-function router(){
-  const h = location.hash || '#/';
-  if(h.startsWith('#/cart')) renderCart();
-  else renderHome();
-  updateFab();
-}
-
-/* render home / products */
-function renderHome(q=''){
-  const c = document.getElementById('content');
-  const list = prods().filter(p => !q || p.name.includes(q) || p.cat.includes(q));
-  let html = `<div class="grid" id="gridArea">`;
-  list.forEach(p=>{
-    html += `
-      <div class="card">
-        <div class="media"><img src="https://img.icons8.com/fluency/96/vegetarian-food.png" alt="${p.name}"></div>
-        <div class="title">${p.name}</div>
-        <div class="meta">₹${p.price}/kg • ${p.cat}</div>
-        <div class="row-between"><div class="price-tag">₹${p.price}</div></div>
-        <div class="qty-options" data-id="${p.id}">
-          <button class="qty-btn" data-q="0.25">250 gm</button>
-          <button class="qty-btn" data-q="0.5">500 gm</button>
-          <button class="qty-btn" data-q="1">1 kg</button>
-          <button class="qty-btn" data-q="2">2 kg</button>
-          <button class="qty-btn" data-q="5">5 kg</button>
-        </div>
-      </div>
-    `;
+/* init categories */
+function initCats(){
+  const cats = [
+    {id:'Vegetables', label:'Vegetables', icon:'🥬'},
+    {id:'Fruits', label:'Fruits', icon:'🍎'}
+  ];
+  const root = document.getElementById('catsRoot');
+  root.innerHTML = '';
+  cats.forEach(c=>{
+    const d = document.createElement('div'); d.className='cat'; d.onclick = ()=> goRoute(`#/${c.id.toLowerCase()}`);
+    d.innerHTML = `<div class="icon">${c.icon}</div><p>${c.label}</p>`;
+    root.appendChild(d);
   });
-  html += `</div>`;
-  c.innerHTML = html;
-  attachQtyHandlers();
-  scrollToProductsIfNeeded();
+}
+initCats();
+
+/* slider loader */
+let sliderInterval = null;
+function loadSlider(){
+  const list = banners();
+  const track = document.getElementById('sliderTrack');
+  const dots = document.getElementById('sliderDots');
+  track.innerHTML=''; dots.innerHTML='';
+  list.forEach((url,i)=>{
+    const s = document.createElement('div'); s.className='slide';
+    s.innerHTML = `<img src="${url}" alt="banner ${i+1}"><div class="slide-overlay"><strong>DS Vegetable</strong><div style="font-size:13px">Fresh from Parbhani • Delivered to Your Home</div></div>`;
+    track.appendChild(s);
+    const dot = document.createElement('div'); dot.className = 'dot' + (i===0?' active':''); dots.appendChild(dot);
+  });
+  let cur = 0;
+  const speed = sliderSpeed();
+  if(sliderInterval) clearInterval(sliderInterval);
+  sliderInterval = setInterval(()=> {
+    cur = (cur+1) % list.length;
+    track.style.transform = `translateX(-${cur*100}%)`;
+    document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===cur));
+  }, speed);
+  // swipe support
+  addSwipe(track, list.length);
+}
+loadSlider();
+
+/* swipe helper */
+function addSwipe(track, slidesCount){
+  let startX=0, current=0;
+  track.addEventListener('touchstart', e=> startX = e.touches[0].clientX);
+  track.addEventListener('touchend', e=>{
+    let endX = e.changedTouches[0].clientX;
+    const dx = endX - startX;
+    if(Math.abs(dx) > 40){
+      if(dx < 0) current = Math.min(slidesCount-1, current + 1);
+      else current = Math.max(0, current - 1);
+      track.style.transform = `translateX(-${current*100}%)`;
+      document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===current));
+    }
+  });
 }
 
-/* attach qty buttons */
-function attachQtyHandlers(){
+/* render pages */
+function renderRoute(){
+  const h = location.hash || '#/';
+  document.querySelectorAll('.nav-item').forEach(n=> n.classList.toggle('active', n.dataset.route === h));
+  if(h==='#/' || h==='') renderHome();
+  else if(h.startsWith('#/vegetables')) renderProducts('Vegetables');
+  else if(h.startsWith('#/fruits')) renderProducts('Fruits');
+  else if(h.startsWith('#/cart')) renderCart();
+  else if(h.startsWith('#/account')) renderAccount();
+  else if(h.startsWith('#/menu')) renderMenu();
+  else renderHome();
+  updateCartBadge();
+}
+
+/* Home page (RCM-style) */
+function renderHome(q=''){
+  const main = document.getElementById('mainContent');
+  const list = prods().filter(p => !q || p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q));
+  let html = `<div class="section"><h3>Categories</h3><div class="sub muted">Find Exactly What You Need</div></div>`;
+  html += `<div class="section"><h3 style="margin-top:12px">Trending Products</h3><div class="grid">`;
+  list.forEach(p=>{
+    html += productCardHtml(p);
+  });
+  html += `</div></div>`;
+  main.innerHTML = html;
+  attachQtys();
+}
+
+/* Products by category (Vegetables / Fruits) */
+function renderProducts(category){
+  const main = document.getElementById('mainContent');
+  const list = prods().filter(p => p.cat === category);
+  let html = `<div class="section"><h3>${category}</h3><div class="sub muted">Best of ${category}</div></div>`;
+  html += `<div class="grid">`;
+  list.forEach(p=> html += productCardHtml(p));
+  html += `</div>`;
+  main.innerHTML = html;
+  attachQtys();
+}
+
+/* product card HTML */
+function productCardHtml(p){
+  return `<div class="card">
+    <div class="media"><img src="https://img.icons8.com/fluency/96/vegetarian-food.png" alt="${p.name}"></div>
+    <div class="title">${p.name}</div>
+    <div class="meta">₹${p.price}/kg • ${p.cat}</div>
+    <div class="row"><div class="price">₹${p.price}</div></div>
+    <div class="qty-options" data-id="${p.id}">
+      <button class="qty-btn" data-q="0.25">250 gm</button>
+      <button class="qty-btn" data-q="0.5">500 gm</button>
+      <button class="qty-btn" data-q="1">1 kg</button>
+      <button class="qty-btn" data-q="2">2 kg</button>
+      <button class="qty-btn" data-q="5">5 kg</button>
+    </div>
+  </div>`;
+}
+
+/* attach qty handlers */
+function attachQtys(){
   document.querySelectorAll('.qty-btn').forEach(btn=>{
     btn.onclick = ()=>{
       const id = btn.parentElement.dataset.id;
       const factor = Number(btn.dataset.q);
       const p = prods().find(x=>x.id==id);
       const price = +(p.price * factor).toFixed(2);
-      const current = cart();
-      current.push({id:p.id,name:p.name,qtyText:btn.innerText,price});
-      saveCart(current);
-      updateFab();
-      smallPulse(btn);
-      showToast(`${p.name} (${btn.innerText}) cart मध्ये जोडले`);
-    };
+      const c = cart();
+      c.push({id:p.id,name:p.name,qtyText:btn.innerText,price});
+      saveCart(c);
+      updateCartBadge();
+      showToast(`${p.name} (${btn.innerText}) added`);
+    }
   });
 }
 
-/* small UI micro animation */
-function smallPulse(el){
-  el.style.transform='scale(.98)';
-  el.style.opacity='0.9';
-  setTimeout(()=>{ el.style.transform=''; el.style.opacity=''; },220);
+/* cart page */
+function renderCart(){
+  const main = document.getElementById('mainContent');
+  const items = cart();
+  if(!items.length){ main.innerHTML = '<h3>कार्ट रिकामा आहे</h3>'; return; }
+  let subtotal = 0;
+  let html = `<div class="cart-wrap"><h3>तुमचा कार्ट</h3>`;
+  items.forEach((it,idx)=>{ subtotal += Number(it.price); html += `<div class="cart-item"><div style="display:flex;gap:10px;align-items:center"><div class="thumb">🥗</div><div><strong>${it.name}</strong><div class="muted">${it.qtyText}</div></div></div><div style="text-align:right"><div style="font-weight:900">₹${it.price}</div><div style="margin-top:8px"><button class="remove" onclick="removeItem(${idx})">Remove</button></div></div></div>` });
+  const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
+  html += `</div>`;
+  html += `<div class="glass"><div class="row"><div class="muted">Subtotal</div><div>₹${subtotal}</div></div><div class="row"><div class="muted">Delivery</div><div>₹${delivery}</div></div><div class="row" style="margin-top:8px"><div class="big">Total</div><div class="big">₹${total}</div></div><div style="margin-top:10px;display:flex;gap:8px"><button onclick="placeOrder()" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--primary);color:#fff;font-weight:800">Place Order (WhatsApp)</button><button onclick="checkoutCOD()" style="flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff">Cash on Delivery</button></div></div>`;
+  main.innerHTML = html;
 }
+
+/* remove from cart */
+function removeItem(i){ const c = cart(); c.splice(i,1); saveCart(c); renderCart(); updateCartBadge(); showToast('Item removed') }
+
+/* place order - WhatsApp to owner + confirmation to customer */
+function placeOrder(){
+  const items = cart(); if(!items.length) return;
+  const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
+  if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
+  let msg = `*New Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
+  items.forEach(it => msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
+  const subtotal = items.reduce((s,x)=>s + Number(x.price),0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
+  msg += encodeURIComponent(`%0ATotal: ₹${total}`);
+  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank');
+  const conf = `🙏 धन्यवाद ${name}!%0Aआपली ऑर्डर मिळाली आहे.%0ADS Vegetable — Parbhani`;
+  window.open(`https://wa.me/${phone}?text=${conf}`, '_blank');
+  saveCart([]); renderHome(); updateCartBadge(); showToast('Order placed');
+}
+
+/* COD fallback */
+function checkoutCOD(){
+  const items = cart(); if(!items.length) return;
+  const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
+  if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
+  const subtotal = items.reduce((s,x)=>s + Number(x.price),0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
+  let msg = `*New COD Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
+  items.forEach(it => msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
+  msg += encodeURIComponent(`%0ATotal: ₹${total}%0A%0APayment: Cash on Delivery`);
+  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank');
+  const conf = `🙏 धन्यवाद ${name}!%0Aआपली ऑर्डर मिळाली आहे. आम्ही लवकरच संपर्क करू.%0ADS Vegetable — Parbhani`;
+  window.open(`https://wa.me/${phone}?text=${conf}`, '_blank');
+  saveCart([]); renderHome(); updateCartBadge(); showToast('Order placed (COD)');
+}
+
+/* account & menu placeholders */
+function renderAccount(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Account</h3><div class="muted">Profile and Orders (coming)</div></div>`; }
+function renderMenu(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Menu</h3><div class="muted">Settings, Help, About</div></div>`; }
+
+/* navigation helper */
+function goRoute(h){ location.hash = h; }
 
 /* small toast */
 let tTimer=0;
 function showToast(msg){
   clearTimeout(tTimer);
   let t = document.getElementById('dsToast');
-  if(!t){
-    t = document.createElement('div'); t.id='dsToast';
-    t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)';
-    t.style.bottom='100px'; t.style.padding='10px 14px'; t.style.borderRadius='999px';
-    t.style.background='linear-gradient(90deg,var(--g1),var(--g2))'; t.style.color='#052a22'; t.style.fontWeight='800';
-    t.style.boxShadow='0 14px 40px rgba(0,197,137,0.12)'; t.style.zIndex=9999;
-    document.body.appendChild(t);
-  }
+  if(!t){ t=document.createElement('div'); t.id='dsToast'; t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='110px'; t.style.background= 'var(--primary)'; t.style.color='#fff'; t.style.padding='10px 14px'; t.style.borderRadius='999px'; t.style.zIndex=9999; t.style.fontWeight='800'; document.body.appendChild(t); }
   t.innerText = msg; t.style.opacity = '1'; t.style.display='block';
-  tTimer = setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=> t.style.display='none',300); },1500);
+  tTimer = setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=> t.style.display='none',300); },1400);
 }
 
-/* filters */
-function filter(cat){ const arr=prods().filter(p=>p.cat===cat); const grid=document.getElementById('gridArea'); if(!grid) return; grid.innerHTML=''; arr.forEach(p=>{ const card=document.createElement('div'); card.className='card'; card.innerHTML = `<div class="media"><img src="https://img.icons8.com/fluency/96/vegetarian-food.png"></div><div class="title">${p.name}</div><div class="meta">₹${p.price}/kg • ${p.cat}</div><div class="row-between"><div class="price-tag">₹${p.price}</div></div><div class="qty-options" data-id="${p.id}"><button class="qty-btn" data-q="0.25">250 gm</button><button class="qty-btn" data-q="0.5">500 gm</button><button class="qty-btn" data-q="1">1 kg</button><button class="qty-btn" data-q="2">2 kg</button><button class="qty-btn" data-q="5">5 kg</button></div>`; grid.appendChild(card); }); attachQtyHandlers(); }
-function offers(){ showToast('ऑफर्स लवकरच येत आहेत!') }
-function scrollToProducts(){ const g=document.getElementById('gridArea'); if(g) g.scrollIntoView({behavior:'smooth',block:'start'}); }
-function showAbout(){ alert('DS Vegetable — Parbhani मधून ताजे फळे व भाज्या. Order करायला धन्यवाद!'); }
-function scrollToProductsIfNeeded(){ if(location.hash==='#/') window.scrollTo({top:250,behavior:'smooth'}); }
-
-/* CART page (glass total) */
-function renderCart(){
-  const c = document.getElementById('content');
-  const items = cart();
-  if(!items.length){ c.innerHTML = '<h2>कार्ट रिकामा आहे</h2>'; return; }
-  let subtotal = 0;
-  let html = `<div class="cart-wrap"><h2>तुमचा कार्ट</h2>`;
-  items.forEach((it, idx)=>{
-    subtotal += Number(it.price);
-    html += `<div class="cart-item"><div class="left"><div class="thumb"><img src="https://img.icons8.com/fluency/48/vegetarian-food.png" style="height:30px"></div><div style="margin-left:6px"><strong>${it.name}</strong><div class="muted">${it.qtyText}</div></div></div><div style="text-align:right"><div style="font-weight:800">₹${it.price}</div><div style="margin-top:8px"><button class="remove-btn" onclick="removeItem(${idx})">Remove</button></div></div></div>`;
-  });
-  const delivery = subtotal >= 500 ? 0 : 20;
-  const total = subtotal + delivery;
-  html += `</div>`;
-  // glass total card
-  html += `<div class="glass-total"><div class="row"><div class="muted">Subtotal</div><div>₹${subtotal}</div></div><div class="row"><div class="muted">Delivery</div><div>₹${delivery}</div></div><div class="row" style="margin-top:8px"><div class="total">Total</div><div class="total">₹${total}</div></div><div style="margin-top:10px;display:flex;gap:8px"><button class="cta-primary" style="flex:1" onclick="placeOrder()">Place Order (WhatsApp)</button><button class="cta-ghost" style="flex:1" onclick="checkoutCOD()">Cash on Delivery</button></div></div>`;
-  c.innerHTML = html;
+/* update cart badge */
+function updateCartBadge(){
+  const c = cart();
+  const badge = document.getElementById('cartBadge');
+  if(c.length) { badge.innerText = c.length; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
 }
 
-/* remove */
-function removeItem(i){ const carr = cart(); carr.splice(i,1); saveCart(carr); renderCart(); updateFab(); showToast('Item removed'); }
-
-/* place order (WhatsApp to shop-owner + confirmation to customer) */
-function placeOrder(){
-  const items = cart(); if(!items.length) return;
-  const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
-  if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
-  let msg = `*New Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
-  items.forEach(it => { msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`); });
-  const subtotal = items.reduce((s,x)=>s + Number(x.price),0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
-  msg += encodeURIComponent(`%0ATotal: ₹${total}`);
-  // send to shop owner
-  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank');
-  // customer confirmation (simple)
-  const conf = `🙏 धन्यवाद ${name}!%0Aआपली ऑर्डर मिळाली आहे.%0ADS Vegetable — Parbhani`;
-  window.open(`https://wa.me/${phone}?text=${conf}`, '_blank');
-  saveCart([]); showToast('Order placed'); location.hash='#/';
-}
-
-/* simple COD fallback (same behavior but records order locally if needed) */
-function checkoutCOD(){
-  const items = cart(); if(!items.length) return;
-  const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
-  if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
-  const subtotal = items.reduce((s,x)=>s + Number(x.price),0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
-  // send owner whatsapp with COD note
-  let msg = `*New COD Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
-  items.forEach(it => { msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`); });
-  msg += encodeURIComponent(`%0ATotal: ₹${total}%0A%0APayment: Cash on Delivery`);
-  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank');
-  const conf = `🙏 धन्यवाद ${name}!%0Aआपली ऑर्डर मिळाली आहे. आम्ही लवकरच संपर्क करू.%0ADS Vegetable — Parbhani`;
-  window.open(`https://wa.me/${phone}?text=${conf}`, '_blank');
-  saveCart([]); showToast('Order placed (COD)'); location.hash='#/';
-}
-
-/* FAB update */
-function updateFab(){
-  const items = cart();
-  const total = items.reduce((s,i)=> s + Number(i.price||0), 0);
-  const cnt = items.length;
-  const fab = document.getElementById('fab');
-  document.getElementById('fabTotal').innerText = total;
-  document.getElementById('fabCount').innerText = cnt;
-  fab.style.display = cnt ? 'flex' : 'none';
-}
-
-/* midnight auto-clear */
+/* auto clear at midnight */
 function autoClearCartAtMidnight(){
-  const now = new Date();
-  const next = new Date();
+  const now = new Date(), next=new Date();
   next.setHours(24,0,0,0);
-  const ms = next - now;
-  setTimeout(()=>{
-    localStorage.removeItem(LS_CART);
-    autoClearCartAtMidnight();
-    updateFab();
-  }, ms);
+  setTimeout(()=>{ localStorage.removeItem(KEY_CART); autoClearCartAtMidnight(); updateCartBadge(); }, next-now);
 }
 autoClearCartAtMidnight();
 
-/* init */
-router();
-updateFab();
+/* initial render */
+renderRoute();
+updateCartBadge();
 </script>
 </body>
 </html>
