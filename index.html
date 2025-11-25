@@ -3,157 +3,167 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DS Vegetable • Parbhani (RCM Style)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>DS Vegetable • Parbhani — Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --primary:#0b78d1;       /* RCM-like blue accent */
-  --accent:#00C271;        /* green accent for price */
-  --bg:#ffffff;
+  --blue:#0b78d1;
+  --g1:#00E589;
+  --g2:#00C271;
+  --bg:#f6f8f9;
+  --card:#ffffff;
   --muted:#6e7574;
-  --card:#fff;
-  --radius:14px;
-  --shadow:0 10px 30px rgba(10,20,30,0.06);
-  --glass:rgba(255,255,255,0.65);
+  --radius:16px;
+  --shadow-lg:0 18px 50px rgba(11,120,209,0.08);
+  --shadow-md:0 10px 30px rgba(4,80,60,0.06);
+  --brand-dark:#053826;
+  --glass:rgba(255,255,255,0.72);
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,'Noto Sans Devanagari',sans-serif;-webkit-font-smoothing:antialiased;background:#f6f7f8;color:#0b2b26}
-.container{max-width:1080px;margin:12px auto;padding:12px}
+html,body{height:100%;margin:0;font-family:Inter,'Noto Sans Devanagari',sans-serif;-webkit-font-smoothing:antialiased;background:linear-gradient(180deg,#f3fff6,#fbfefc);color:var(--brand-dark)}
+.container{max-width:1080px;margin:14px auto;padding:12px}
 
-/* Top header */
-.header{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  background:var(--card);padding:10px;border-radius:12px;box-shadow:var(--shadow);
+/* TOP HEADER */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:14px;
+  background:var(--card);box-shadow:var(--shadow-lg);border:1px solid rgba(0,0,0,0.03);
 }
-.logo{display:flex;align-items:center;gap:10px}
-.logo .img{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#24a0ff);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
-.location{font-weight:700}
-.search-wrap{margin-top:10px}
-.search{width:100%;padding:12px;border-radius:10px;border:1px solid #eee;background:#fafafa}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.05rem;box-shadow:0 10px 30px rgba(0,180,110,0.12)}
+.loc{font-weight:800}
+.searchbar{flex:1;margin:0 12px}
+.search{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);background:linear-gradient(180deg,#fff,#f7fff7);box-shadow:var(--shadow-md)}
 
-/* slider */
-.slider-container{margin-top:12px;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 14px 40px rgba(11,120,209,0.08)}
-.slider-track{display:flex;transition:transform .6s ease}
-.slide{min-width:100%;height:190px;position:relative}
+/* SLIDER */
+.slider-wrap{margin-top:12px;position:relative;border-radius:18px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.06)}
+.slider-track{display:flex;transition:transform .6s cubic-bezier(.2,.9,.2,1);will-change:transform}
+.slide{min-width:100%;height:220px;position:relative}
 .slide img{width:100%;height:100%;object-fit:cover;display:block}
-.slide-overlay{position:absolute;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.22));color:#fff}
+.slide-overlay{position:absolute;left:0;right:0;bottom:0;padding:16px;background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.28));color:#fff}
+.slider-dots{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;display:flex;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.6);transition:all .25s}
+.dot.active{background:var(--blue);transform:scale(1.3);box-shadow:0 6px 18px rgba(11,120,209,0.18)}
 
-/* dots */
-.dots{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;display:flex;gap:6px}
-.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.6);opacity:0.9}
-.dot.active{background:var(--primary);transform:scale(1.3)}
-
-/* categories - round */
-.cats{display:flex;gap:12px;overflow:auto;padding:12px 0;margin-top:12px}
+/* CATEGORIES - round */
+.cats{display:flex;gap:12px;overflow:auto;padding:12px 4px;margin-top:12px}
 .cat{min-width:92px;flex:0 0 auto;background:var(--card);border-radius:999px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.04);cursor:pointer}
-.cat .icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f5f8ff;font-size:24px}
-.cat p{margin:0;font-weight:700;color:var(--muted);font-size:0.88rem}
+.cat .icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f2fff7,#eef9ff);font-size:24px}
+.cat p{margin:0;font-weight:700;color:var(--muted);font-size:.9rem}
 
-/* section title */
+/* SECTIONS */
 .section{margin-top:18px}
-.section h3{margin:0 0 8px 0;font-size:1.05rem}
-.section .sub{color:var(--muted);font-size:.9rem}
+.section h3{margin:0;font-size:1.05rem}
+.sub{color:var(--muted);font-size:.9rem;margin-top:4px}
 
-/* products grid */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}
+/* PRODUCTS GRID */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
 @media(min-width:900px){ .grid{grid-template-columns:repeat(3,1fr)} }
-.card{background:var(--card);border-radius:12px;padding:10px;box-shadow:var(--shadow);transition:transform .18s}
-.card:hover{transform:translateY(-6px)}
-.media{height:110px;border-radius:10px;background:#f7fbff;display:flex;align-items:center;justify-content:center}
-.title{font-weight:800;margin-top:8px}
-.meta{color:var(--muted);font-size:0.88rem;margin-top:4px}
+.card{background:var(--card);border-radius:14px;padding:12px;box-shadow:var(--shadow-md);transition:transform .18s}
+.card:hover{transform:translateY(-8px);box-shadow:0 24px 70px rgba(4,80,60,0.08)}
+.media{height:120px;border-radius:12px;background:linear-gradient(180deg,#fbfff9,#f3fff3);display:flex;align-items:center;justify-content:center}
+.title{font-weight:800;margin-top:10px}
+.meta{color:var(--muted);font-size:0.9rem;margin-top:6px}
 .row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.price{font-weight:900;color:var(--accent)}
-.qty-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.qty-btn{padding:8px 10px;border-radius:8px;border:1px solid #eee;background:#fff;font-weight:800;cursor:pointer}
+.price-pill{background:linear-gradient(90deg,var(--g1),var(--g2));padding:8px 10px;border-radius:12px;color:#052a22;font-weight:900;box-shadow:0 10px 30px rgba(0,197,137,0.12)}
+.qty-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.qty-btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.04);background:linear-gradient(180deg,#fff,#fbfff9);cursor:pointer;font-weight:800;min-width:76px;text-align:center}
+.add-btn{background:linear-gradient(90deg,var(--g1),var(--g2));padding:10px;border-radius:12px;border:none;color:#052a22;font-weight:900;cursor:pointer;width:100%;margin-top:10px;box-shadow:0 12px 36px rgba(0,197,137,0.12)}
 
-/* cart page */
+/* CART PAGE */
 .cart-wrap{margin-top:12px}
-.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:10px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.04);margin-bottom:10px}
-.thumb{width:56px;height:56px;border-radius:8px;background:#f6fbff;display:flex;align-items:center;justify-content:center}
-.remove{background:transparent;border:1px solid #eee;padding:6px;border-radius:8px;cursor:pointer}
+.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.04);margin-bottom:10px}
+.cart-left{display:flex;gap:12px;align-items:center}
+.thumb{width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,#f6fff6,#eefefe);display:flex;align-items:center;justify-content:center}
+.remove{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:8px;cursor:pointer}
 
-/* glass total */
-.glass{position:sticky;bottom:14px;background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,255,255,0.95));padding:12px;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,0.06);margin-top:10px}
-.glass .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.glass .big{font-weight:900;font-size:1.1rem;color:#0b2740}
+/* GLASS TOTAL */
+.glass-total{position:sticky;bottom:18px;margin-top:12px;padding:14px;border-radius:14px;background:var(--glass);backdrop-filter:blur(6px);box-shadow:0 20px 60px rgba(4,80,60,0.06);border:1px solid rgba(255,255,255,0.6)}
+.glass-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.total-big{font-weight:900;font-size:1.1rem;color:var(--brand-dark)}
 
-/* bottom nav */
-.bottom-nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);display:flex;justify-content:space-around;padding:8px 12px;border-top:1px solid #eee;box-shadow:0 -6px 18px rgba(0,0,0,0.04)}
-.nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);cursor:pointer}
-.nav-item.active{color:var(--primary);font-weight:800}
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);display:flex;justify-content:space-around;padding:8px 6px;border-top:1px solid rgba(0,0,0,0.04);box-shadow:0 -8px 30px rgba(0,0,0,0.04)}
+.nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);cursor:pointer;gap:6px;padding:4px}
+.nav-item.active{color:var(--blue);font-weight:800}
+.badge{background:var(--blue);color:#fff;padding:4px 8px;border-radius:999px;font-weight:800;font-size:12px}
 
-/* small */
-.badge{background:var(--primary);color:#fff;padding:4px 7px;border-radius:8px;font-weight:800;font-size:12px}
-.muted{color:var(--muted)}
+/* small toasts */
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:linear-gradient(90deg,var(--g1),var(--g2));color:#052a22;padding:10px 14px;border-radius:999px;font-weight:800;box-shadow:0 14px 40px rgba(0,197,137,0.12);display:none;z-index:9999}
 .hidden{display:none}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- header -->
-  <div class="header">
-    <div class="logo">
-      <div class="img">DS</div>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">DS</div>
       <div>
-        <div class="location">Parbhani • Donhi</div>
+        <div class="loc">Parbhani • Donhi</div>
         <div class="muted" style="font-size:12px">Fresh Vegetables & Fruits</div>
       </div>
     </div>
 
-    <div style="width:48%">
-      <input id="topSearch" class="search" placeholder="Search 'Featured Products'...">
+    <div class="searchbar">
+      <input id="searchInput" class="search" placeholder="Search 'Featured Products'...">
     </div>
 
-    <div style="display:flex;gap:8px;align-items:center">
-      <div style="text-align:right"><div style="font-weight:800">431401</div><div class="muted" style="font-size:12px">Change</div></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div style="text-align:right">
+        <div style="font-weight:800">431401</div>
+        <div class="muted" style="font-size:12px">Change</div>
+      </div>
     </div>
   </div>
 
-  <!-- slider -->
-  <div class="slider-container" id="sliderRoot" style="margin-top:12px">
+  <!-- SLIDER (rounded) -->
+  <div class="slider-wrap" id="sliderWrap" style="margin-top:12px">
     <div class="slider-track" id="sliderTrack"></div>
-    <div class="dots" id="sliderDots"></div>
+    <div class="slider-dots" id="sliderDots"></div>
   </div>
 
   <!-- categories -->
-  <div class="cats" id="catsRoot" aria-hidden="false"></div>
+  <div class="cats" id="catsRoot" style="margin-top:12px"></div>
 
   <!-- main content -->
-  <div id="mainContent"></div>
+  <div id="mainContent" style="margin-top:12px"></div>
 </div>
+
+<!-- toast -->
+<div id="toast"></div>
 
 <!-- bottom nav -->
 <div class="bottom-nav">
-  <div class="nav-item active" data-route="#/" onclick="goRoute('#/')"> 
+  <div class="nav-item active" data-route="#/" onclick="navigate('#/')"> 
     <div>🏠</div><div>Home</div>
   </div>
-  <div class="nav-item" data-route="#/vegetables" onclick="goRoute('#/vegetables')">
-    <div>🥬</div><div>Vegetables</div>
+  <div class="nav-item" data-route="#/categories" onclick="navigate('#/categories')">
+    <div>🗂️</div><div>Categories</div>
   </div>
-  <div class="nav-item" data-route="#/cart" onclick="goRoute('#/cart')">
+  <div class="nav-item" data-route="#/cart" onclick="navigate('#/cart')">
     <div style="position:relative">🛒 <span id="cartBadge" class="badge hidden">0</span></div><div>Cart</div>
   </div>
-  <div class="nav-item" data-route="#/account" onclick="goRoute('#/account')">
+  <div class="nav-item" data-route="#/account" onclick="navigate('#/account')">
     <div>👤</div><div>Account</div>
   </div>
-  <div class="nav-item" data-route="#/menu" onclick="goRoute('#/menu')">
+  <div class="nav-item" data-route="#/menu" onclick="navigate('#/menu')">
     <div>☰</div><div>Menu</div>
   </div>
 </div>
 
 <script>
-/* ===== Persistent keys & seed data (keeps existing logic) ===== */
-const KEY_PROD = 'ds_prod_v2', KEY_CART='ds_cart_v2', KEY_BANNERS='ds_banners_v2', KEY_SLIDER_SPEED='ds_slider_speed_v2';
+/* =================== KEYS & SEED =================== */
+const KEY_PROD='ds_prod_final_v1', KEY_CART='ds_cart_final_v1', KEY_BANNERS='ds_banners_final_v1', KEY_SPEED='ds_slider_speed_final_v1', KEY_ADMIN='ds_admin_v1';
+
 if(!localStorage.getItem(KEY_PROD)){
   localStorage.setItem(KEY_PROD, JSON.stringify([
     {id:1,name:'टोमॅटो',price:40,cat:'Vegetables'},
     {id:2,name:'बटाटा',price:30,cat:'Vegetables'},
     {id:3,name:'कांदा',price:35,cat:'Vegetables'},
-    {id:4,name:'केळी',price:90,cat:'Fruits'},
-    {id:5,name:'सफरचंद',price:130,cat:'Fruits'},
-    {id:6,name:'पालक',price:22,cat:'Vegetables'}
+    {id:4,name:'पालक',price:22,cat:'Vegetables'},
+    {id:5,name:'केळी',price:90,cat:'Fruits'},
+    {id:6,name:'सफरचंद',price:130,cat:'Fruits'}
   ]));
 }
 if(!localStorage.getItem(KEY_CART)) localStorage.setItem(KEY_CART, JSON.stringify([]));
@@ -162,41 +172,34 @@ if(!localStorage.getItem(KEY_BANNERS)) localStorage.setItem(KEY_BANNERS, JSON.st
   "https://i.imgur.com/czZ1EoG.jpg",
   "https://i.imgur.com/0h7rUvp.jpg"
 ]));
-if(!localStorage.getItem(KEY_SLIDER_SPEED)) localStorage.setItem(KEY_SLIDER_SPEED, '3500');
+if(!localStorage.getItem(KEY_SPEED)) localStorage.setItem(KEY_SPEED, '3500');
+if(!localStorage.getItem(KEY_ADMIN)) localStorage.setItem(KEY_ADMIN, JSON.stringify({user:'admin@ds',pass:'admin123'}));
 
 /* helpers */
-const prods = ()=> JSON.parse(localStorage.getItem(KEY_PROD)||'[]');
+const products = ()=> JSON.parse(localStorage.getItem(KEY_PROD)||'[]');
 const cart = ()=> JSON.parse(localStorage.getItem(KEY_CART)||'[]');
-const saveCart = a => localStorage.setItem(KEY_CART, JSON.stringify(a));
+const saveCart = arr => localStorage.setItem(KEY_CART, JSON.stringify(arr));
 const banners = ()=> JSON.parse(localStorage.getItem(KEY_BANNERS)||'[]');
-const sliderSpeed = ()=> Number(localStorage.getItem(KEY_SLIDER_SPEED) || 3500);
+const sliderSpeed = ()=> Number(localStorage.getItem(KEY_SPEED)||3500);
 
-/* routing */
-window.addEventListener('hashchange', renderRoute);
-window.addEventListener('load', renderRoute);
-document.getElementById('topSearch').addEventListener('input', e=> {
+/* init */
+window.addEventListener('load', init);
+window.addEventListener('hashchange', route);
+document.getElementById('searchInput').addEventListener('input', (e)=> {
   const q = e.target.value.trim().toLowerCase();
-  if(location.hash==="#"||!location.hash||location.hash==="#/") renderHome(q);
+  if(location.hash==='#/'||!location.hash) renderHome(q);
 });
 
-/* init categories */
-function initCats(){
-  const cats = [
-    {id:'Vegetables', label:'Vegetables', icon:'🥬'},
-    {id:'Fruits', label:'Fruits', icon:'🍎'}
-  ];
-  const root = document.getElementById('catsRoot');
-  root.innerHTML = '';
-  cats.forEach(c=>{
-    const d = document.createElement('div'); d.className='cat'; d.onclick = ()=> goRoute(`#/${c.id.toLowerCase()}`);
-    d.innerHTML = `<div class="icon">${c.icon}</div><p>${c.label}</p>`;
-    root.appendChild(d);
-  });
+function init(){
+  loadSlider();
+  initCats();
+  route();
+  updateCartBadge();
+  autoClearAtMidnight();
 }
-initCats();
 
-/* slider loader */
-let sliderInterval = null;
+/* ================= SLIDER ================= */
+let sliderInterval=null;
 function loadSlider(){
   const list = banners();
   const track = document.getElementById('sliderTrack');
@@ -204,86 +207,116 @@ function loadSlider(){
   track.innerHTML=''; dots.innerHTML='';
   list.forEach((url,i)=>{
     const s = document.createElement('div'); s.className='slide';
-    s.innerHTML = `<img src="${url}" alt="banner ${i+1}"><div class="slide-overlay"><strong>DS Vegetable</strong><div style="font-size:13px">Fresh from Parbhani • Delivered to Your Home</div></div>`;
+    s.innerHTML = `<img src="${url}" alt="banner ${i+1}"><div class="slide-overlay"><div style="font-weight:800;font-size:1.05rem">DS Vegetable</div><div style="font-size:13px;margin-top:6px">Fresh From Parbhani • Delivered to Your Home</div></div>`;
     track.appendChild(s);
-    const dot = document.createElement('div'); dot.className = 'dot' + (i===0?' active':''); dots.appendChild(dot);
+    const d = document.createElement('div'); d.className='dot' + (i===0?' active':''); d.dataset.index=i;
+    d.onclick = ()=> { goToSlide(i); };
+    dots.appendChild(d);
   });
   let cur = 0;
   const speed = sliderSpeed();
   if(sliderInterval) clearInterval(sliderInterval);
-  sliderInterval = setInterval(()=> {
-    cur = (cur+1) % list.length;
-    track.style.transform = `translateX(-${cur*100}%)`;
-    document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===cur));
-  }, speed);
-  // swipe support
-  addSwipe(track, list.length);
+  sliderInterval = setInterval(()=> { cur = (cur+1) % list.length; track.style.transform = `translateX(-${cur*100}%)`; document.querySelectorAll('.dot').forEach((dd,idx)=> dd.classList.toggle('active', idx===cur)); }, speed);
+  addSwipeSupport(track, list.length);
 }
-loadSlider();
-
-/* swipe helper */
-function addSwipe(track, slidesCount){
+function goToSlide(i){
+  const track = document.getElementById('sliderTrack'); track.style.transform = `translateX(-${i*100}%)`; document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===i));
+}
+function addSwipeSupport(track, count){
   let startX=0, current=0;
   track.addEventListener('touchstart', e=> startX = e.touches[0].clientX);
   track.addEventListener('touchend', e=>{
-    let endX = e.changedTouches[0].clientX;
-    const dx = endX - startX;
+    const endX = e.changedTouches[0].clientX; const dx = endX - startX;
     if(Math.abs(dx) > 40){
-      if(dx < 0) current = Math.min(slidesCount-1, current + 1);
-      else current = Math.max(0, current - 1);
+      if(dx < 0) current = Math.min(count-1, current+1);
+      else current = Math.max(0, current-1);
       track.style.transform = `translateX(-${current*100}%)`;
       document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===current));
     }
   });
 }
 
-/* render pages */
-function renderRoute(){
+/* ================ CATEGORIES ================= */
+function initCats(){
+  const root = document.getElementById('catsRoot');
+  const catList = [
+    {id:'all',label:'All',icon:'🏷️'},
+    {id:'Vegetables',label:'Vegetables',icon:'🥬'},
+    {id:'Fruits',label:'Fruits',icon:'🍎'},
+    {id:'Greens',label:'Greens',icon:'🌿'},
+    {id:'Offers',label:'Offers',icon:'💥'}
+  ];
+  root.innerHTML='';
+  catList.forEach(c=>{
+    const el=document.createElement('div'); el.className='cat'; el.onclick = ()=> navigateToCategory(c.id);
+    el.innerHTML = `<div class="icon">${c.icon}</div><p>${c.label}</p>`;
+    root.appendChild(el);
+  });
+}
+
+/* ================ ROUTING & PAGES ================= */
+function route(){
   const h = location.hash || '#/';
   document.querySelectorAll('.nav-item').forEach(n=> n.classList.toggle('active', n.dataset.route === h));
-  if(h==='#/' || h==='') renderHome();
-  else if(h.startsWith('#/vegetables')) renderProducts('Vegetables');
-  else if(h.startsWith('#/fruits')) renderProducts('Fruits');
+  if(h==='#/' || h==='' ) renderHome();
+  else if(h.startsWith('#/categories')) renderCategories();
   else if(h.startsWith('#/cart')) renderCart();
   else if(h.startsWith('#/account')) renderAccount();
   else if(h.startsWith('#/menu')) renderMenu();
+  else if(h.startsWith('#/admin')) renderAdmin();
+  else if(h.startsWith('#/vegetables')) renderProducts('Vegetables');
+  else if(h.startsWith('#/fruits')) renderProducts('Fruits');
   else renderHome();
   updateCartBadge();
 }
 
-/* Home page (RCM-style) */
-function renderHome(q=''){
-  const main = document.getElementById('mainContent');
-  const list = prods().filter(p => !q || p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q));
-  let html = `<div class="section"><h3>Categories</h3><div class="sub muted">Find Exactly What You Need</div></div>`;
-  html += `<div class="section"><h3 style="margin-top:12px">Trending Products</h3><div class="grid">`;
-  list.forEach(p=>{
-    html += productCardHtml(p);
-  });
-  html += `</div></div>`;
-  main.innerHTML = html;
-  attachQtys();
+function navigate(hash){
+  location.hash = hash;
 }
 
-/* Products by category (Vegetables / Fruits) */
-function renderProducts(category){
+/* HOME */
+function renderHome(q=''){
   const main = document.getElementById('mainContent');
-  const list = prods().filter(p => p.cat === category);
-  let html = `<div class="section"><h3>${category}</h3><div class="sub muted">Best of ${category}</div></div>`;
+  const all = products();
+  const list = q ? all.filter(p => p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q)) : all;
+  let html = `<div class="section"><h3>Trending Products</h3><div class="sub muted">Best picks for today</div></div>`;
   html += `<div class="grid">`;
-  list.forEach(p=> html += productCardHtml(p));
+  list.forEach(p=> html += productCard(p));
   html += `</div>`;
   main.innerHTML = html;
-  attachQtys();
+  attachQtyEvents();
+}
+
+/* CATEGORIES page */
+function renderCategories(){
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `<div class="section"><h3>Categories</h3><div class="sub muted">Select a category</div></div>`;
+  // reuse cats root to show big icons
+  const allCats = ['Vegetables','Fruits','Greens','Offers'];
+  let html = `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">`;
+  allCats.forEach(c => html += `<div class="cat" onclick="navigate('#/${c.toLowerCase()}')"><div class="icon">${c==='Vegetables'?'🥬':'🍎'}</div><p>${c}</p></div>`);
+  html += `</div>`;
+  main.innerHTML += html;
+}
+
+/* PRODUCTS by category */
+function renderProducts(category){
+  const main = document.getElementById('mainContent');
+  const list = products().filter(p => p.cat === category);
+  let html = `<div class="section"><h3>${category}</h3><div class="sub muted">Best of ${category}</div></div><div class="grid">`;
+  list.forEach(p=> html += productCard(p));
+  html += `</div>`;
+  main.innerHTML = html;
+  attachQtyEvents();
 }
 
 /* product card HTML */
-function productCardHtml(p){
+function productCard(p){
   return `<div class="card">
     <div class="media"><img src="https://img.icons8.com/fluency/96/vegetarian-food.png" alt="${p.name}"></div>
     <div class="title">${p.name}</div>
     <div class="meta">₹${p.price}/kg • ${p.cat}</div>
-    <div class="row"><div class="price">₹${p.price}</div></div>
+    <div class="row"><div class="price-pill">₹${p.price}</div></div>
     <div class="qty-options" data-id="${p.id}">
       <button class="qty-btn" data-q="0.25">250 gm</button>
       <button class="qty-btn" data-q="0.5">500 gm</button>
@@ -291,55 +324,79 @@ function productCardHtml(p){
       <button class="qty-btn" data-q="2">2 kg</button>
       <button class="qty-btn" data-q="5">5 kg</button>
     </div>
+    <button class="add-btn" data-id="${p.id}" onclick="quickAdd(${p.id})">Add to Cart</button>
   </div>`;
 }
 
-/* attach qty handlers */
-function attachQtys(){
-  document.querySelectorAll('.qty-btn').forEach(btn=>{
-    btn.onclick = ()=>{
-      const id = btn.parentElement.dataset.id;
-      const factor = Number(btn.dataset.q);
-      const p = prods().find(x=>x.id==id);
-      const price = +(p.price * factor).toFixed(2);
-      const c = cart();
-      c.push({id:p.id,name:p.name,qtyText:btn.innerText,price});
-      saveCart(c);
-      updateCartBadge();
-      showToast(`${p.name} (${btn.innerText}) added`);
+/* attach qty events */
+function attachQtyEvents(){
+  document.querySelectorAll('.qty-btn').forEach(b=>{
+    b.onclick = (e)=>{
+      const pEl = b.parentElement;
+      const id = pEl.dataset.id;
+      const factor = Number(b.dataset.q);
+      const prod = products().find(x=> x.id==id);
+      const price = +(prod.price * factor).toFixed(2);
+      // visual feedback
+      b.style.transform='scale(.98)'; setTimeout(()=> b.style.transform='',180);
+      showToast(`${prod.name} (${b.innerText}) — ₹${price}`);
     }
   });
 }
 
-/* cart page */
+/* quick add from button (uses default 1kg) */
+function quickAdd(id){
+  const prod = products().find(p=> p.id===id);
+  const price = prod.price * 1;
+  const c = cart();
+  c.push({id:prod.id,name:prod.name,qtyText:'1 kg',price});
+  saveCart(c);
+  updateCartBadge();
+  showToast(`${prod.name} (1 kg) added`);
+}
+
+/* add via qty buttons will push on click of qty (we implement by hooking)* /
+document.addEventListener('click', function(e){
+  if(e.target && e.target.classList.contains('qty-btn')){
+    const btn = e.target;
+    const id = btn.parentElement.dataset.id;
+    const factor = Number(btn.dataset.q);
+    const prod = products().find(x=> x.id==id);
+    const price = +(prod.price * factor).toFixed(2);
+    const c = cart(); c.push({id:prod.id,name:prod.name,qtyText:btn.innerText,price});
+    saveCart(c); updateCartBadge(); showToast(`${prod.name} (${btn.innerText}) added`);
+  }
+});*/
+
+/* CART page */
 function renderCart(){
   const main = document.getElementById('mainContent');
   const items = cart();
   if(!items.length){ main.innerHTML = '<h3>कार्ट रिकामा आहे</h3>'; return; }
   let subtotal = 0;
   let html = `<div class="cart-wrap"><h3>तुमचा कार्ट</h3>`;
-  items.forEach((it,idx)=>{ subtotal += Number(it.price); html += `<div class="cart-item"><div style="display:flex;gap:10px;align-items:center"><div class="thumb">🥗</div><div><strong>${it.name}</strong><div class="muted">${it.qtyText}</div></div></div><div style="text-align:right"><div style="font-weight:900">₹${it.price}</div><div style="margin-top:8px"><button class="remove" onclick="removeItem(${idx})">Remove</button></div></div></div>` });
-  const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
+  items.forEach((it,idx)=>{ subtotal += Number(it.price); html += `<div class="cart-item"><div class="cart-left"><div class="thumb">🥗</div><div><strong>${it.name}</strong><div class="muted">${it.qtyText}</div></div></div><div style="text-align:right"><div style="font-weight:900">₹${it.price}</div><div style="margin-top:8px"><button class="remove" onclick="removeFromCart(${idx})">Remove</button></div></div></div>` });
+  const delivery = subtotal >= 500 ? 0 : 20;
+  const total = subtotal + delivery;
   html += `</div>`;
-  html += `<div class="glass"><div class="row"><div class="muted">Subtotal</div><div>₹${subtotal}</div></div><div class="row"><div class="muted">Delivery</div><div>₹${delivery}</div></div><div class="row" style="margin-top:8px"><div class="big">Total</div><div class="big">₹${total}</div></div><div style="margin-top:10px;display:flex;gap:8px"><button onclick="placeOrder()" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--primary);color:#fff;font-weight:800">Place Order (WhatsApp)</button><button onclick="checkoutCOD()" style="flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff">Cash on Delivery</button></div></div>`;
+  html += `<div class="glass-total"><div class="glass-row"><div class="muted">Subtotal</div><div>₹${subtotal}</div></div><div class="glass-row"><div class="muted">Delivery</div><div>₹${delivery}</div></div><div class="glass-row" style="margin-top:8px"><div class="total-big">Total</div><div class="total-big">₹${total}</div></div><div style="display:flex;gap:8px;margin-top:10px"><button onclick="placeOrder()" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:800">Order via WhatsApp</button><button onclick="checkoutCOD()" style="flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff">Cash on Delivery</button></div></div>`;
   main.innerHTML = html;
 }
 
-/* remove from cart */
-function removeItem(i){ const c = cart(); c.splice(i,1); saveCart(c); renderCart(); updateCartBadge(); showToast('Item removed') }
+/* remove */
+function removeFromCart(i){ const c = cart(); c.splice(i,1); saveCart(c); renderCart(); updateCartBadge(); showToast('Item removed'); }
 
-/* place order - WhatsApp to owner + confirmation to customer */
+/* place order */
 function placeOrder(){
   const items = cart(); if(!items.length) return;
   const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
   if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
   let msg = `*New Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
-  items.forEach(it => msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
-  const subtotal = items.reduce((s,x)=>s + Number(x.price),0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
+  items.forEach(it=> msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
+  const subtotal = items.reduce((s,x)=> s + Number(x.price), 0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
   msg += encodeURIComponent(`%0ATotal: ₹${total}`);
-  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank');
-  const conf = `🙏 धन्यवाद ${name}!%0Aआपली ऑर्डर मिळाली आहे.%0ADS Vegetable — Parbhani`;
-  window.open(`https://wa.me/${phone}?text=${conf}`, '_blank');
+  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank'); // OWNER
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`🙏 धन्यवाद ${name}!\\nआपली ऑर्डर मिळाली आहे.\\nDS Vegetable — Parbhani`)}`, '_blank'); // CUSTOMER
   saveCart([]); renderHome(); updateCartBadge(); showToast('Order placed');
 }
 
@@ -348,51 +405,130 @@ function checkoutCOD(){
   const items = cart(); if(!items.length) return;
   const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
   if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
-  const subtotal = items.reduce((s,x)=>s + Number(x.price),0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
+  const subtotal = items.reduce((s,x)=> s + Number(x.price), 0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
   let msg = `*New COD Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
-  items.forEach(it => msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
+  items.forEach(it=> msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
   msg += encodeURIComponent(`%0ATotal: ₹${total}%0A%0APayment: Cash on Delivery`);
   window.open(`https://wa.me/7020970727?text=${msg}`, '_blank');
-  const conf = `🙏 धन्यवाद ${name}!%0Aआपली ऑर्डर मिळाली आहे. आम्ही लवकरच संपर्क करू.%0ADS Vegetable — Parbhani`;
-  window.open(`https://wa.me/${phone}?text=${conf}`, '_blank');
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`🙏 धन्यवाद ${name}!\\nआपली ऑर्डर मिळाली आहे. आम्ही लवकरच संपर्क करू.`)}`, '_blank');
   saveCart([]); renderHome(); updateCartBadge(); showToast('Order placed (COD)');
 }
 
-/* account & menu placeholders */
-function renderAccount(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Account</h3><div class="muted">Profile and Orders (coming)</div></div>`; }
-function renderMenu(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Menu</h3><div class="muted">Settings, Help, About</div></div>`; }
+/* ACCOUNT & MENU placeholders */
+function renderAccount(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Account</h3><div class="sub muted">Profile & Orders — Coming Soon</div></div>`;}
+function renderMenu(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Menu</h3><div class="sub muted">Settings • Help • About</div></div>`;}
 
-/* navigation helper */
-function goRoute(h){ location.hash = h; }
+/* ADMIN (simple controls for banners, speed, products) */
+function renderAdmin(){
+  const admin = JSON.parse(localStorage.getItem(KEY_ADMIN)||'{}');
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `<div class="section"><h3>Admin Panel</h3><div style="margin-top:8px"><div><strong>Demo Admin:</strong> ${admin.user} / ${admin.pass}</div></div>
+  <div style="margin-top:12px">
+    <h4>Banner Images (comma separated URLs)</h4>
+    <textarea id="bannerInput" style="width:100%;height:72px;padding:8px">${(banners()||[]).join(',')}</textarea>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input id="speedInput" placeholder="Slider speed ms (e.g. 3000)" style="padding:8px;width:200px" value="${sliderSpeed()}">
+      <button onclick="saveBannerConfig()" style="padding:8px;border-radius:8px;background:var(--blue);color:#fff;border:none">Save</button>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <h4>Products</h4>
+    <div id="adminProducts"></div>
+    <div style="margin-top:8px"><button onclick="showAddProduct()" style="padding:8px;border-radius:8px;background:var(--g1);border:none;color:#052a22">Add Product</button></div>
+  </div>
+  </div>`;
+  renderAdminProducts();
+}
+function saveBannerConfig(){
+  const val = document.getElementById('bannerInput').value.trim();
+  const arr = val ? val.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  localStorage.setItem(KEY_BANNERS, JSON.stringify(arr));
+  const sp = Number(document.getElementById('speedInput').value) || 3500;
+  localStorage.setItem(KEY_SPEED, String(sp));
+  loadSlider();
+  showToast('Banner & speed saved');
+}
+function renderAdminProducts(){
+  const wrap = document.getElementById('adminProducts');
+  wrap.innerHTML = '';
+  products().forEach(p=>{
+    const d = document.createElement('div'); d.style.marginBottom='8px'; d.style.padding='8px'; d.style.border='1px solid #eee'; d.style.borderRadius='8px';
+    d.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${p.name}</strong><div class="muted">₹${p.price} • ${p.cat}</div></div><div><button onclick="deleteProduct(${p.id})" style="padding:6px;border-radius:8px;border:1px solid #ddd">Delete</button></div></div>`;
+    wrap.appendChild(d);
+  });
+}
+function showAddProduct(){
+  const name = prompt('Product name'); if(!name) return;
+  const price = Number(prompt('Price per kg'))||0;
+  const cat = prompt('Category (Vegetables / Fruits / Greens)') || 'Vegetables';
+  const arr = products(); arr.push({id:Date.now(),name,price,cat}); localStorage.setItem(KEY_PROD, JSON.stringify(arr)); renderAdminProducts(); showToast('Product added');
+}
+function deleteProduct(id){ let arr=products(); arr=arr.filter(p=>p.id!==id); localStorage.setItem(KEY_PROD, JSON.stringify(arr)); renderAdminProducts(); showToast('Deleted'); }
 
-/* small toast */
-let tTimer=0;
+/* navigation helpers */
+function navigateToCategory(id){
+  if(id==='all') navigate('#/');
+  else if(id.toLowerCase()==='vegetables') navigate('#/vegetables');
+  else if(id.toLowerCase()==='fruits') navigate('#/fruits');
+  else navigate('#/categories');
+}
+function navigate(h){ location.hash = h; }
+
+/* toast */
+let toastTimer=0;
 function showToast(msg){
-  clearTimeout(tTimer);
-  let t = document.getElementById('dsToast');
-  if(!t){ t=document.createElement('div'); t.id='dsToast'; t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='110px'; t.style.background= 'var(--primary)'; t.style.color='#fff'; t.style.padding='10px 14px'; t.style.borderRadius='999px'; t.style.zIndex=9999; t.style.fontWeight='800'; document.body.appendChild(t); }
-  t.innerText = msg; t.style.opacity = '1'; t.style.display='block';
-  tTimer = setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=> t.style.display='none',300); },1400);
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  t.innerText = msg; t.style.display='block'; t.style.opacity='1';
+  toastTimer = setTimeout(()=> { t.style.opacity='0'; setTimeout(()=> t.style.display='none',300); },1400);
 }
 
 /* update cart badge */
 function updateCartBadge(){
-  const c = cart();
-  const badge = document.getElementById('cartBadge');
-  if(c.length) { badge.innerText = c.length; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
+  const c = cart(); const b = document.getElementById('cartBadge');
+  if(c.length){ b.innerText = c.length; b.classList.remove('hidden'); } else b.classList.add('hidden');
 }
 
-/* auto clear at midnight */
-function autoClearCartAtMidnight(){
-  const now = new Date(), next=new Date();
+/* auto-clear cart at midnight */
+function autoClearAtMidnight(){
+  const now = new Date(), next = new Date();
   next.setHours(24,0,0,0);
-  setTimeout(()=>{ localStorage.removeItem(KEY_CART); autoClearCartAtMidnight(); updateCartBadge(); }, next-now);
+  setTimeout(()=>{
+    localStorage.removeItem(KEY_CART); updateCartBadge(); autoClearAtMidnight();
+  }, next - now);
 }
-autoClearCartAtMidnight();
 
-/* initial render */
-renderRoute();
+/* misc small helpers */
+function renderAdmin(){
+  // simple auth prompt to access admin UI
+  const admin = JSON.parse(localStorage.getItem(KEY_ADMIN)||'{}');
+  const user = prompt('Admin username:'); const pass = prompt('Password:');
+  if(user===admin.user && pass===admin.pass){ renderAdminPanel(); } else { alert('Invalid'); navigate('#/'); }
+}
+function renderAdminPanel(){
+  // reuse renderAdmin
+  renderAdmin();
+}
+
+/* initial routing call */
+function route(){ /* placeholder to satisfy earlier listener */ }
+window.addEventListener('load', ()=>{ route(); /* show home by default */ const h = location.hash || '#/'; if(!location.hash || location.hash==='#/') renderHome(); else window.dispatchEvent(new Event('hashchange')); });
+
+/* attach one-time click listener for qty buttons since attachQtyEvents may not catch dynamic elements */
+document.addEventListener('click', function(e){
+  if(e.target && e.target.classList.contains('qty-btn')){
+    const btn = e.target; const id = btn.parentElement.dataset.id; const factor = Number(btn.dataset.q);
+    const prod = products().find(x=> x.id==id);
+    const price = +(prod.price * factor).toFixed(2);
+    const c = cart(); c.push({id:prod.id,name:prod.name,qtyText:btn.innerText,price}); saveCart(c); updateCartBadge(); showToast(`${prod.name} (${btn.innerText}) added`);
+  }
+});
+
+/* ensure slider and initial content load */
+loadSlider();
+renderHome();
 updateCartBadge();
+autoClearAtMidnight();
 </script>
 </body>
 </html>
