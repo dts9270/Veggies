@@ -1,303 +1,237 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="mr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>VegKart — Mobile Web App</title>
-<link rel="icon" href="data:,">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VegShop - Online Store</title>
+
 <style>
-  :root{--accent:#0ea96a;--bg:#fbfbfb;--card:#fff;--muted:#6b6b6b}
-  html,body{height:100%;margin:0;background:var(--bg);font-family:"Noto Sans",system-ui,Roboto,Arial}
-  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:10px;background:#fff;border-bottom:1px solid #eee}
-  .logo{font-weight:800;color:var(--accent);font-size:18px}
-  .search{flex:1;padding:8px;border-radius:10px;border:1px solid #eee}
-  .hamb{width:38px;height:38px;border-radius:10px;background:var(--card);display:flex;align-items:center;justify-content:center}
-  .banner{height:160px;background:#ddd;border-radius:10px;margin:12px;padding:0;overflow:hidden}
-  .banner img{width:100%;height:100%;object-fit:cover}
-  .container{padding:12px;max-width:720px;margin:0 auto}
-  h2{font-size:16px;margin:6px 0 12px}
-  .list{display:flex;flex-direction:column;gap:10px}
-  .card{display:flex;gap:10px;background:var(--card);padding:10px;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.06)}
-  .card img{width:110px;height:92px;object-fit:cover;border-radius:8px}
-  .meta{flex:1;display:flex;flex-direction:column;justify-content:space-between}
-  .title{font-weight:700}
-  .small{font-size:13px;color:var(--muted)}
-  .price{font-weight:800;color:var(--accent)}
-  .weight-row{display:flex;gap:8px;align-items:center;margin-top:6px}
-  select.weight{padding:6px;border-radius:8px;border:1px solid #eee;background:#fff}
-  input.qty{width:62px;padding:6px;border-radius:8px;border:1px solid #eee;text-align:center}
-  .btn{background:var(--accent);color:#fff;padding:9px 12px;border-radius:10px;border:none;font-weight:700}
-  .btn.ghost{background:#f3f3f3;color:#111}
-  .cart-fab{position:fixed;right:14px;bottom:18px;z-index:60}
-  .fab-btn{background:var(--accent);color:#fff;padding:12px 16px;border-radius:999px;box-shadow:0 12px 30px rgba(14,169,106,.18);display:flex;align-items:center;gap:8px;font-weight:700}
-  .sheet{position:fixed;left:8px;right:8px;bottom:8px;background:var(--card);border-radius:14px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.18);max-height:70vh;overflow:auto;display:none;z-index:70}
-  .sheet.open{display:block}
-  nav.bottom-nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 12px;background:#fff;border-top:1px solid #eee;z-index:55}
-  nav .nav-item{font-size:12px;color:var(--muted)}
-  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:80}
-  .panel{background:var(--card);padding:12px;border-radius:12px;width:94%;max-width:720px;max-height:86vh;overflow:auto}
-  @media(min-width:700px){ .list{flex-direction:row;flex-wrap:wrap} .card{width:calc(50% - 8px)} .banner{height:220px} }
+body{margin:0;font-family:Poppins,sans-serif;background:#f6f6f6;color:#222;}
+header{background:#fff;padding:14px;box-shadow:0 2px 10px #0001;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:20px;font-weight:700;color:#0a8a4f}
+.main{padding:14px}
+
+/* Login box */
+.login-box{max-width:300px;margin:50px auto;background:#fff;padding:20px;border-radius:12px;
+           box-shadow:0 4px 16px #0002}
+input,select{width:100%;padding:10px;margin-top:8px;border:1px solid #ccc;border-radius:8px}
+.btn{width:100%;padding:12px;margin-top:12px;background:#0a8a4f;color:#fff;font-weight:700;border:none;border-radius:8px}
+h2{margin:0;margin-bottom:10px;text-align:center}
+
+/* Product list */
+.card{background:#fff;padding:12px;border-radius:12px;box-shadow:0 4px 16px #0002;margin-bottom:14px}
+.card img{width:100%;height:150px;border-radius:10px;object-fit:cover}
+.title{font-size:17px;font-weight:700;margin:8px 0}
+.price{color:#0a8a4f;font-weight:700}
+
+/* Cart button */
+.cart-btn{position:fixed;right:14px;bottom:14px;background:#0a8a4f;color:#fff;padding:12px 14px;border-radius:50px;font-weight:700;border:none}
+
+/* Cart panel */
+.cart-panel{position:fixed;left:0;right:0;bottom:-100%;background:#fff;border-radius:18px 18px 0 0;padding:15px;
+            height:70%;box-shadow:0 -4px 16px #0004;transition:.4s;overflow:auto;}
+.cart-panel.open{bottom:0}
+
+/* Admin/Delivery dashboard */
+.box{background:#fff;padding:14px;border-radius:10px;box-shadow:0 4px 16px #0002;margin-bottom:12px}
+.item-row{display:flex;justify-content:space-between;margin:6px 0}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="logo">VegKart</div>
-  <input id="search" class="search" placeholder="शोधा (उदा. आलू, टोमॅटो)" />
-  <div class="hamb" title="Menu" onclick="openQuickMenu()">≡</div>
+  <div class="logo">VegShop</div>
+  <button onclick="showLogin()" style="border:none;background:#fff;font-size:16px">🔐 Login</button>
 </header>
 
-<div class="container">
-  <div class="banner" id="banner"><img id="banner-img" src="https://images.unsplash.com/photo-1541542684-65a06f2b16cf?q=80&w=1600&auto=format&fit=crop" alt="banner"></div>
-
-  <h2>ताज्या भाज्या & फळे</h2>
-  <div id="products" class="list"></div>
+<div id="userArea" class="main" style="display:none">
+  <h2>ताज्या भाज्या</h2>
+  <div id="productList"></div>
 </div>
 
-<div class="cart-fab">
-  <button class="fab-btn" id="fab-open" onclick="toggleSheet(true)"><span id="fab-count">0</span> • Cart • <span id="fab-total">₹0</span></button>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-box" style="display:none">
+  <h2>Login</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button class="btn" onclick="login()">Login</button>
 </div>
 
-<div id="cart-sheet" class="sheet" role="dialog" aria-modal="true">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <div><strong>तुमचा कार्ट</strong><div class="small" id="sheet-sub">items</div></div>
-    <div><button onclick="toggleSheet(false)" class="btn ghost">Close</button></div>
-  </div>
-  <div class="items" id="sheet-items"></div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-    <div><div class="small">Total</div><div class="price" id="sheet-total">₹0</div></div>
-    <div style="display:flex;gap:8px">
-      <button class="btn ghost" onclick="clearCart()">Clear</button>
-      <button class="btn" onclick="placeOrderMobile()">Place Order</button>
-    </div>
-  </div>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="main" style="display:none">
+  <h2>Admin Dashboard</h2>
+  <div id="adminOrders"></div>
 </div>
 
-<nav class="bottom-nav">
-  <div class="nav-item" onclick="scrollToTop()">Home</div>
-  <div class="nav-item" onclick="location.href='?panel=admin'">Admin</div>
-  <div class="nav-item" onclick="location.href='?panel=delivery'">Delivery</div>
-</nav>
+<!-- DELIVERY PANEL -->
+<div id="deliveryPanel" class="main" style="display:none">
+  <h2>Delivery Dashboard</h2>
+  <div id="deliveryOrders"></div>
+</div>
 
-<div id="overlay" class="overlay" onclick="closeOverlay(event)">
-  <div class="panel" id="overlay-panel" onclick="event.stopPropagation()">
-    <h3>Quick Menu</h3>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-      <div style="display:flex;justify-content:space-between;align-items:center"><div class="small">Admin PIN</div><input id="quick-pin" placeholder="Enter PIN" style="padding:6px;border-radius:8px;border:1px solid #eee"/></div>
-      <div style="display:flex;gap:8px"><button class="btn" onclick="quickOpenAdmin()">Open Admin</button><button class="btn ghost" onclick="quickOpenDelivery()">Open Delivery</button></div>
-      <hr/>
-      <div class="small muted">Admin & Delivery panels internally full-featured (orders, assign, track).</div>
-      <div id="admin-orders" style="margin-top:12px"></div>
-      <div id="delivery-orders" style="margin-top:12px"></div>
-    </div>
-  </div>
+<!-- CART BUTTON -->
+<button class="cart-btn" id="cartBtn" onclick="openCart()" style="display:none">
+  🛒 Cart (<span id="cartCount">0</span>)
+</button>
+
+<!-- CART PANEL -->
+<div id="cartPanel" class="cart-panel">
+  <h3>🛒 कार्ट</h3>
+  <div id="cartItems"></div>
+  <h3>Total: ₹<span id="cartTotal">0</span></h3>
+  <button class="btn" style="background:#25D366" onclick="placeOrder()">WhatsApp Order</button>
+  <button class="btn" style="background:#aaa" onclick="closeCart()">Close</button>
 </div>
 
 <script>
-/* ========== CONFIG ========== */
-const GOOGLE_SHEET_KEY = 'REPLACE_WITH_YOUR_SHEET_KEY'; // replace with your sheet key or leave to use demo products
-const ADMIN_PIN = '1234';
-const PRICE_REFRESH_INTERVAL_MS = 60_000;
-/* ============================ */
-
-let products = [];
-let cart = JSON.parse(localStorage.getItem('vk_cart_mobile') || '[]');
-let orders = JSON.parse(localStorage.getItem('vk_orders_mobile') || '[]');
-const BANNERS = [
-  'https://images.unsplash.com/photo-1514516346750-3f61b684b3a6?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=1600&auto=format&fit=crop'
+/* ---------------- PRODUCTS ---------------- */
+const products = [
+  {id:1,name:"बटाटा",price:40,img:"https://i.imgur.com/0ZQZ0Z0.jpeg"},
+  {id:2,name:"टोमॅटो",price:50,img:"https://i.imgur.com/SGZQ7U2.jpeg"},
+  {id:3,name:"कांदा",price:35,img:"https://i.imgur.com/8wJQZJH.jpeg"},
 ];
 
-function rupee(v){ return '₹' + Number(v||0).toFixed(0); }
-function $(id){ return document.getElementById(id); }
-
-/* Banner rotate */
-let bi = 0; setInterval(()=>{ bi=(bi+1)%BANNERS.length; $('banner-img').src=BANNERS[bi]; }, 4500);
-
-/* Fetch Google Sheet (gviz JSON) */
-async function fetchPricesNow(){
-  if(!GOOGLE_SHEET_KEY || GOOGLE_SHEET_KEY.includes('REPLACE')){ console.warn('Set GOOGLE_SHEET_KEY to fetch live prices.'); return; }
-  try{
-    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_KEY}/gviz/tq?tqx=out:json`;
-    const res = await fetch(url); const txt = await res.text();
-    const jsonStr = txt.substring(txt.indexOf('{'), txt.lastIndexOf('}')+1);
-    const g = JSON.parse(jsonStr);
-    const header = g.table.cols.map(c => c.label.trim());
-    const rows = g.table.rows.map(r=> r.c.map(c => c ? c.v : ''));
-    products = rows.map(r => {
-      const obj = {};
-      header.forEach((h,i)=>obj[h]=r[i]);
-      return {
-        id: obj.id || obj.ID || obj.name,
-        name: obj.name || obj.Name || 'Unknown',
-        image: obj.image || obj.img || 'https://images.unsplash.com/photo-1547516508-4a8f6f0b6f0a?q=80&w=800&auto=format&fit=crop',
-        base_price_per_kg: parseFloat(obj.base_price_per_kg || obj.price || obj.base_price || 0)
-      };
-    });
-    renderProducts();
-  }catch(e){ console.error('sheet fetch error', e); }
-}
-
-/* Render mobile-first products */
 function renderProducts(){
-  const wrap = $('products'); wrap.innerHTML=''; const q = ($('search').value || '').toLowerCase();
-  const items = products.filter(p => p.name.toLowerCase().includes(q));
-  items.forEach(p=>{
-    const card = document.createElement('div'); card.className='card';
-    card.innerHTML = `
-      <img src="${p.image}" alt="${p.name}">
-      <div class="meta">
-        <div>
-          <div class="title">${p.name}</div>
-          <div class="small">Per kg: <span class="price">${rupee(p.base_price_per_kg)}</span></div>
-        </div>
-        <div>
-          <div class="weight-row">
-            <select class="weight" data-id="${p.id}">
-              <option value="0.25">250 g</option>
-              <option value="0.5">500 g</option>
-              <option value="1" selected>1 kg</option>
-              <option value="2">2 kg</option>
-              <option value="5">5 kg</option>
-            </select>
-            <input class="qty" type="number" min="1" value="1" data-id="${p.id}" />
-            <div style="margin-left:auto;text-align:right"><div class="price" data-price-id="${p.id}">${rupee(p.base_price_per_kg)}</div><div class="small">selected</div></div>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn" onclick="addToCart('${p.id}')">Add</button>
-            <button class="btn ghost" onclick="quickBuy('${p.id}')">Buy</button>
-          </div>
-        </div>
+  const box=document.getElementById("productList");
+  box.innerHTML="";
+  products.forEach(p=>{
+    box.innerHTML+=`
+      <div class='card'>
+        <img src="${p.img}">
+        <div class='title'>${p.name}</div>
+        <div class='price'>₹${p.price}/kg</div>
+
+        <select id="w${p.id}">
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="1">1kg</option>
+          <option value="2">2kg</option>
+        </select>
+        <input id="q${p.id}" type="number" value="1" min="1">
+
+        <button class='btn' onclick="addToCart(${p.id})">Add to Cart</button>
       </div>
     `;
-    wrap.appendChild(card);
-  });
-  document.querySelectorAll('.weight').forEach(s=>s.onchange = updatePricePreview);
-  document.querySelectorAll('.qty').forEach(i=>i.oninput = updatePricePreview);
-  updatePricePreview();
-}
-
-/* Update price preview */
-function updatePricePreview(){
-  document.querySelectorAll('.weight').forEach(sel=>{
-    const id = sel.dataset.id;
-    const qtyEl = document.querySelector(`.qty[data-id="${id}"]`);
-    const qty = Number(qtyEl ? qtyEl.value : 1);
-    const weight = parseFloat(sel.value);
-    const p = products.find(x => String(x.id) === String(id));
-    const priceEl = document.querySelector(`[data-price-id="${id}"]`);
-    if(p && priceEl) priceEl.innerText = rupee((p.base_price_per_kg||0) * weight * qty);
   });
 }
 
-/* Cart ops */
-function saveCart(){ localStorage.setItem('vk_cart_mobile', JSON.stringify(cart)); renderCart(); }
-function renderCart(){
-  const fabCount = $('fab-count'); const fabTotal = $('fab-total'); const sheetItems = $('sheet-items'); const sheetSub = $('sheet-sub'); const sheetTotal = $('sheet-total');
-  sheetItems.innerHTML=''; let total=0;
-  cart.forEach((it, idx) => {
-    const div = document.createElement('div'); div.style.display='flex'; div.style.justifyContent='space-between'; div.style.alignItems='center';
-    div.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><img src="${it.image}" style="width:56px;height:44px;object-fit:cover;border-radius:6px"/><div><div style="font-weight:700">${it.name}</div><div class="small">${it.qty} × ${it.weight}kg</div></div></div><div style="text-align:right"><div class="price">${rupee(it.unitPrice*it.qty)}</div><div style="margin-top:6px"><button class="btn ghost" onclick="removeFromCart(${idx})">Remove</button></div></div>`;
-    sheetItems.appendChild(div);
-    total += (it.unitPrice*it.qty);
-  });
-  fabCount.innerText = cart.length;
-  fabTotal.innerText = rupee(total);
-  sheetSub.innerText = `${cart.length} items`;
-  sheetTotal.innerText = rupee(total);
-}
+/* ---------------- CART ---------------- */
+let cart=[];
 function addToCart(id){
-  const sel = document.querySelector(`select.weight[data-id="${id}"]`);
-  const qtyEl = document.querySelector(`input.qty[data-id="${id}"]`);
-  const weight = parseFloat(sel.value); const qty = Number(qtyEl.value || 1);
-  const p = products.find(x => String(x.id) === String(id));
-  if(!p) return;
-  const item = { id: p.id, name: p.name, image: p.image, weight, qty, unitPrice: (p.base_price_per_kg || 0) * weight, addedAt: Date.now() };
-  cart.push(item);
-  saveCart(); toast('Added to cart');
-}
-function quickBuy(id){ addToCart(id); toggleSheet(true); placeOrderMobile(); }
-function removeFromCart(i){ cart.splice(i,1); saveCart(); toast('Removed'); }
-function clearCart(){ cart = []; saveCart(); toast('Cart cleared'); }
+  let p = products.find(x=>x.id===id);
+  let w = parseFloat(document.getElementById("w"+id).value);
+  let q = parseInt(document.getElementById("q"+id).value);
 
-/* Sheet toggle */
-function toggleSheet(show){ const s = $('cart-sheet'); if(show) s.classList.add('open'); else s.classList.remove('open'); }
-
-/* Place order -> opens WhatsApp with prefilled message */
-function placeOrderMobile(){
-  if(cart.length === 0){ toast('Cart is empty'); return; }
-  const name = prompt('तुमचं नाव (Name):') || 'नाव न दिले';
-  const address = prompt('Delivery address:') || '';
-  const phone = prompt('Phone (with country code, e.g. 91xxxxxxxxxx):');
-  if(!phone){ toast('Phone आवश्यक आहे'); return; }
-  const orderId = 'ORD' + Date.now();
-  const order = { id: orderId, name, address, phone, items: cart.slice(), createdAt: Date.now(), status: 'placed', history: [{t:Date.now(),status:'placed'}], assignedTo: null };
-  orders.push(order); localStorage.setItem('vk_orders_mobile', JSON.stringify(orders));
-  let msg = `New Order ${orderId}%0AName: ${name}%0AAddress: ${address}%0APhone: ${phone}%0AItems:%0A`;
-  cart.forEach(it => { msg += `${it.name} - ${it.qty} x ${it.weight}kg = ₹${(it.unitPrice * it.qty).toFixed(0)}%0A`; });
-  msg += `Total: ₹${(cart.reduce((s,i)=>s+i.unitPrice*i.qty,0)).toFixed(0)}%0AOrder ID: ${orderId}`;
-  const waNumber = phone.replace(/\D/g,'');
-  clearCart(); toggleSheet(false);
-  window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
-  toast('Order placed — WhatsApp उघडला');
-  localStorage.setItem('vk_new_order_mobile', Date.now());
-  renderAdminOrders(); renderDeliveryOrders();
-}
-
-/* Admin & Delivery functions (simple) */
-function renderAdminOrders(){
-  const panel = document.getElementById('overlay-panel'); if(!panel) return;
-  const ao = $('admin-orders'); ao.innerHTML = '<h4>Orders (Admin)</h4>';
-  orders.slice().reverse().forEach(o=>{
-    const div = document.createElement('div'); div.className='card'; div.style.margin='8px 0';
-    div.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${o.id}</strong><div class="small">${o.name} • ${o.phone}</div></div><div class="small">${new Date(o.createdAt).toLocaleString()}</div></div><div style="margin-top:8px">${o.items.map(it=>`<div class="small">${it.name} — ${it.qty}×${it.weight}kg — ₹${(it.unitPrice*it.qty).toFixed(0)}</div>`).join('')}</div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="assignToDelivery('${o.id}')">Assign</button><button class="btn ghost" onclick="markDelivered('${o.id}')">Delivered</button></div>`;
-    ao.appendChild(div);
+  cart.push({
+    name:p.name,
+    weight:w,
+    qty:q,
+    amount:p.price*w*q
   });
-}
-function assignToDelivery(orderId){
-  const did = prompt('Assign to delivery ID (eg D1):'); if(!did) return;
-  const o = orders.find(x=>x.id===orderId); if(!o) return;
-  o.assignedTo = did; o.status='assigned'; o.history.push({t:Date.now(),status:'assigned',to:did});
-  localStorage.setItem('vk_orders_mobile', JSON.stringify(orders)); renderAdminOrders(); renderDeliveryOrders(); toast('Assigned to ' + did);
-}
-function markDelivered(orderId){ const o = orders.find(x=>x.id===orderId); if(!o) return; o.status='delivered'; o.history.push({t:Date.now(),status:'delivered'}); localStorage.setItem('vk_orders_mobile', JSON.stringify(orders)); renderAdminOrders(); renderDeliveryOrders(); toast('Marked delivered'); }
 
-let boundDeliveryId = localStorage.getItem('vk_delivery_id_mobile') || null;
-function renderDeliveryOrders(){
-  const doElem = $('delivery-orders'); doElem.innerHTML = '<h4>Delivery Orders</h4>';
-  const assigned = orders.filter(o => o.assignedTo && (!boundDeliveryId || o.assignedTo === boundDeliveryId));
-  assigned.forEach(o=>{
-    const div = document.createElement('div'); div.className='card'; div.style.margin='8px 0';
-    div.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${o.id}</strong><div class="small">${o.name} • ${o.phone}</div></div><div class="small">${o.assignedTo}</div></div><div style="margin-top:8px">${o.items.map(it=>`<div class="small">${it.name} — ${it.qty}×${it.weight}kg</div>`).join('')}</div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="updateStatus('${o.id}','picked')">Picked</button><button class="btn" onclick="updateStatus('${o.id}','on_the_way')">On the way</button><button class="btn ghost" onclick="updateStatus('${o.id}','delivered')">Delivered</button><button class="btn ghost" onclick="navigateTo('${o.id}')">Nav</button></div>`;
-    doElem.appendChild(div);
+  updateCart();
+}
+
+function updateCart(){
+  document.getElementById("cartCount").innerText=cart.length;
+}
+
+function openCart(){
+  let panel=document.getElementById("cartPanel");
+  let list=document.getElementById("cartItems");
+  list.innerHTML="";
+  let total=0;
+
+  cart.forEach(c=>{
+    list.innerHTML+=`
+      <div class='item-row'>
+        <div>${c.name} ${c.weight}kg × ${c.qty}</div>
+        <div>₹${c.amount}</div>
+      </div>
+    `;
+    total+=c.amount;
   });
+
+  document.getElementById("cartTotal").innerText=total;
+  panel.classList.add("open");
 }
-function updateStatus(orderId,status){ const o = orders.find(x=>x.id===orderId); if(!o) return; o.status=status; o.history.push({t:Date.now(),status}); localStorage.setItem('vk_orders_mobile', JSON.stringify(orders)); renderAdminOrders(); renderDeliveryOrders(); toast('Status: '+status); }
-function navigateTo(orderId){ const o = orders.find(x=>x.id===orderId); if(!o) return; const addr = encodeURIComponent(o.address || ''); window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank'); }
+function closeCart(){ document.getElementById("cartPanel").classList.remove("open"); }
 
-/* Quick menu overlay */
-function openQuickMenu(){ $('overlay').style.display='flex'; renderAdminOrders(); renderDeliveryOrders(); }
-function closeOverlay(e){ if(e.target.id === 'overlay') $('overlay').style.display='none'; }
-function quickOpenAdmin(){ const v = $('quick-pin').value; if(v === ADMIN_PIN){ alert('Admin unlocked'); location.href='?panel=admin'; } else alert('Wrong PIN'); }
-function quickOpenDelivery(){ location.href='?panel=delivery'; }
+function placeOrder(){
+  let msg="*VegShop Order*%0A%0A";
+  cart.forEach(c=>{
+    msg+=`${c.name} - ${c.weight}kg × ${c.qty} = ₹${c.amount}%0A`;
+  });
+  msg+=`%0A*Total:* ₹${document.getElementById("cartTotal").innerText}`;
 
-/* toast & helpers */
-function toast(t){ const d = document.createElement('div'); d.innerText = t; d.style = 'position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#111;color:#fff;padding:8px 12px;border-radius:8px;z-index:9999'; document.body.appendChild(d); setTimeout(()=>d.remove(),2000); }
-function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+  window.open("https://wa.me/91XXXXXXXXXX?text="+msg, "_blank");
+}
 
-/* demo fallback products if sheet not configured */
-setTimeout(()=>{ if(!products.length){ products = [
-  {id:'p1', name:'बटाटा (Potato)', image:'https://images.unsplash.com/photo-1574226516831-e1dff420e12b?q=80&w=800&auto=format&fit=crop', base_price_per_kg:40},
-  {id:'p2', name:'टोमॅटो (Tomato)', image:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?q=80&w=800&auto=format&fit=crop', base_price_per_kg:45},
-  {id:'p3', name:'कांदा (Onion)', image:'https://images.unsplash.com/photo-1582515073490-399813c4a6b6?q=80&w=800&auto=format&fit=crop', base_price_per_kg:35},
-]; renderProducts(); } }, 500);
+/* ---------------- LOGIN SYSTEM ---------------- */
+function showLogin(){
+  document.getElementById("loginScreen").style.display="block";
+  document.getElementById("userArea").style.display="none";
+  document.getElementById("adminPanel").style.display="none";
+  document.getElementById("deliveryPanel").style.display="none";
+}
 
-/* init */
-(function init(){
-  renderCart(); renderAdminOrders(); renderDeliveryOrders();
-  fetchPricesNow(); setInterval(fetchPricesNow, PRICE_REFRESH_INTERVAL_MS);
-  window.addEventListener('storage', (e)=>{ if(e.key === 'vk_new_order_mobile'){ toast('नवीन ऑर्डर आली आहे'); renderAdminOrders(); }});
-})();
+function login(){
+  let u=document.getElementById("username").value;
+  let p=document.getElementById("password").value;
+
+  // USER
+  if(u==="" && p===""){
+    loginSuccess("user");
+    return;
+  }
+
+  // ADMIN LOGIN
+  if(u==="admin" && p==="admin"){
+    loginSuccess("admin");
+    return;
+  }
+
+  // DELIVERY LOGIN
+  if(u==="deepak" && p==="1234"){
+    loginSuccess("delivery");
+    return;
+  }
+
+  alert("Wrong Login");
+}
+
+function loginSuccess(role){
+  document.getElementById("loginScreen").style.display="none";
+
+  if(role==="user"){
+    document.getElementById("userArea").style.display="block";
+    document.getElementById("cartBtn").style.display="block";
+    renderProducts();
+  }
+
+  if(role==="admin"){
+    document.getElementById("adminPanel").style.display="block";
+    loadAdminOrders();
+  }
+
+  if(role==="delivery"){
+    document.getElementById("deliveryPanel").style.display="block";
+    loadDeliveryOrders();
+  }
+}
+
+/* ---------------- ADMIN PANEL ---------------- */
+let allOrders = []; // stored orders
+
+function loadAdminOrders(){
+  document.getElementById("adminOrders").innerHTML="<p>No orders yet</p>";
+}
+
+/* ---------------- DELIVERY PANEL ---------------- */
+function loadDeliveryOrders(){
+  document.getElementById("deliveryOrders").innerHTML="<p>No assigned orders</p>";
+}
+
 </script>
 </body>
 </html>
