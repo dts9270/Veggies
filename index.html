@@ -3,324 +3,655 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DS Vegetable - Parbhani (Web App)</title>
+  <title>DS Vegetable - Parbhani (Admin | User | Delivery)</title>
+
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    body{font-family: 'Poppins', sans-serif; background:#f7fbf7}
-    .brand{font-weight:700}
-    .card-img{height:90px; object-fit:cover}
-    .marathi{font-family: 'Noto Sans Devanagari', sans-serif}
-    .small-note{font-size:0.9rem; color:#555}
+    :root{
+      --ds-green:#0f4d3f; /* dark green */
+      --ds-accent:#2a7a57;
+      --muted:#6c757d;
+    }
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Devanagari', sans-serif; background:#f3f6f4; color:#222;}
+    .topbar{background:var(--ds-green); color:#fff; padding:10px 16px;}
+    .logo-circle{width:44px;height:44px;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.12)}
+    .brand-text{font-weight:700;margin-left:10px}
+    .nav-actions .btn{margin-left:8px}
+    .page{padding:20px 16px}
+    .card-product{border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(15,77,63,0.06)}
+    .card-product .card-body{padding:12px}
+    .price{color:var(--ds-green); font-weight:700; font-size:1.05rem}
+    .btn-add{background:var(--ds-accent); color:#fff; border:none}
+    .sidebar{background:var(--ds-green); color:#fff; min-height:80vh; padding:16px; border-radius:10px;}
+    .sidebar a{color:#e9f3ef; display:block; padding:8px 6px; border-radius:6px; text-decoration:none}
+    .sidebar a.active{background:rgba(255,255,255,0.06)}
+    .stat-card{border-radius:10px; background:#fff; padding:12px; box-shadow:0 6px 18px rgba(15,77,63,0.04)}
+    .badge-status{padding:4px 8px;border-radius:8px;font-size:0.8rem}
+    .status-pending{background:#fff3cd;color:#856404;border:1px solid #ffeeba}
+    .status-packed{background:#d1ecf1;color:#0c5460;border:1px solid #bee5eb}
+    .status-otw{background:#fff5e6;color:#8a6d3b;border:1px solid #ffe6b3}
+    .status-delivered{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+    .small-note{color:var(--muted); font-size:0.9rem}
+    /* responsive product grid */
+    .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+    @media (max-width:1000px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:600px){ .grid{grid-template-columns:repeat(1,1fr)} .sidebar{display:none} }
+    .logo-svg{width:36px;height:36px}
   </style>
 </head>
+<body>
 
-<body class="marathi">
-
-<!---------------- NAVBAR ---------------->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="https://img.icons8.com/fluency/48/vegetarian-food.png" style="height:40px;margin-right:8px">
-      <div>
-        <div class="brand">DS Vegetable</div>
-        <div style="font-size:0.8rem">Parbhani — Donhi</div>
-      </div>
-    </a>
-
-    <div>
-      <button class="btn btn-outline-success me-2" id="adminBtn">Admin</button>
-      <button class="btn btn-success" id="cartBtn">
-        कार्ट (<span id="cartCount">0</span>)
-      </button>
+<!-- TOPBAR -->
+<div class="topbar d-flex align-items-center justify-content-between">
+  <div class="d-flex align-items-center">
+    <div class="logo-circle">
+      <!-- SVG circle logo (white lettuce icon + DS) -->
+      <svg class="logo-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+        <circle cx="32" cy="32" r="32" fill="none" />
+        <g transform="translate(8,6)">
+          <path d="M24 2c-4 0-8 3-8 6s2 7 6 9c4-2 6-6 6-9s-2-6-4-6z" />
+          <path d="M12 14c-3-2-8-3-10 0 0 4 8 10 14 12 3-3 2-8-4-12z" />
+          <path d="M34 14c3-2 8-3 10 0 0 4-8 10-14 12-3-3-2-8 4-12z" />
+        </g>
+      </svg>
     </div>
-  </div>
-</nav>
-
-<div class="container">
-
-  <!---------------- HEADER ---------------->
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <h4>आजची उपलब्धता — DS Vegetable</h4>
-      <p class="small-note">तुम्ही खाली आयटमचे प्रमाण द्या (उदा. 1 kg / 250 g)</p>
-    </div>
-
-    <div class="col-md-4 text-end">
-      <div class="card p-2">
-        <div><strong>डिलिव्हरी एरिया:</strong> Parbhani City (Donhi)</div>
-        <div><strong>फ्री डिलिव्हरी:</strong> ₹500 वर</div>
-        <div><strong>डिलिव्हरी चार्ज:</strong> ₹20</div>
-      </div>
+    <div class="brand-text ms-2">
+      <div style="font-size:1rem">DS VEGETABLE</div>
+      <div style="font-size:0.8rem; opacity:0.9" class="small-note">Parbhani — Donhi</div>
     </div>
   </div>
 
-  <!---------------- PRODUCT GRID ---------------->
-  <div id="productGrid" class="row g-3"></div>
-
-  <hr class="my-4">
-
-  <!---------------- GOOGLE SHEET INFO ---------------->
-  <div class="d-flex justify-content-between align-items-center">
-    <div>
-      <label class="form-label"><strong>Google Sheet वापरून स्टॉक अपडेट करा</strong></label>
-      <p class="small-note">
-        Admin → Load From Google Sheet दाबा.  
-        Sheet public असणे आवश्यक आहे.
-      </p>
-    </div>
+  <div class="nav-actions d-flex align-items-center">
+    <a class="btn btn-outline-light btn-sm me-2 text-white" href="#/">Shop</a>
+    <a class="btn btn-outline-light btn-sm me-2 text-white" href="#/orders">Orders</a>
+    <a class="btn btn-light btn-sm" href="#/admin" title="Admin Login">Admin</a>
   </div>
-
 </div>
 
-<!---------------------------------------------------
-                     CART MODAL
---------------------------------------------------->
-<div class="modal fade" id="cartModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+<!-- MAIN LAYOUT -->
+<div class="page container-fluid">
+  <div id="appRoot"></div>
+</div>
 
-      <div class="modal-header">
-        <h5 class="modal-title">तुझा कार्ट</h5>
-        <button class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Templates (hidden) -->
+<template id="user-template">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar">
+        <h5>Menu</h5>
+        <a href="#/" class="link-home active">Shop</a>
+        <a href="#/orders" class="link-orders">My Orders</a>
+        <hr style="border-color:rgba(255,255,255,0.06)">
+        <div class="small-note">Delivery Area: Parbhani City (Donhi)</div>
+        <div class="mt-3"><button id="openCartBtn" class="btn btn-light w-100">कार्ट पाहा (<span id="uiCartCount">0</span>)</button></div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+        <div>
+          <h4>Fresh Vegetables & Fruits</h4>
+          <div class="small-note">Daily fresh — Marathi UI</div>
+        </div>
+        <div>
+          <input id="searchInput" placeholder="Search (उदा. टोमॅटो)" class="form-control" style="min-width:240px">
+        </div>
       </div>
 
-      <div class="modal-body">
+      <div id="productGrid" class="grid"></div>
 
-        <div id="cartItems"></div>
-        <hr>
-
-        <div class="d-flex justify-content-between">
-          <div>
-            <label>नाव:</label>
-            <input id="custName" class="form-control">
-
-            <label class="mt-2">पत्ता:</label>
-            <input id="custAddress" class="form-control">
-
-            <label class="mt-2">फोन:</label>
-            <input id="custPhone" class="form-control">
-          </div>
-
-          <div style="min-width:260px">
-            <h6>Order Summary</h6>
-
-            <div>Subtotal: ₹<span id="subtotal">0</span></div>
-            <div>डिलिव्हरी चार्ज: ₹<span id="deliveryCharge">0</span></div>
-            <div class="fw-bold mt-2">Total: ₹<span id="totalAmount">0</span></div>
-
-            <button id="whatsappOrder" class="btn btn-success w-100 mt-3">WhatsApp वर पाठवा</button>
+      <!-- Cart Modal (simple) -->
+      <div class="modal fade" id="uiCartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header"><h5>तुमचा कार्ट</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+              <div id="cartItemsUI"></div>
+              <hr>
+              <div class="d-flex justify-content-between">
+                <div style="max-width:60%">
+                  <input id="custName" class="form-control mb-2" placeholder="नाव">
+                  <input id="custAddress" class="form-control mb-2" placeholder="पत्ता (Parbhani मध्ये)">
+                  <input id="custPhone" class="form-control mb-2" placeholder="मोबाईल नंबर">
+                </div>
+                <div style="min-width:240px">
+                  <div>Subtotal: ₹<span id="uiSubtotal">0</span></div>
+                  <div>Delivery: ₹<span id="uiDelivery">0</span></div>
+                  <div class="fw-bold mt-2">Total: ₹<span id="uiTotal">0</span></div>
+                  <button id="uiPlaceCOD" class="btn btn-success w-100 mt-3">Cash On Delivery</button>
+                  <button id="uiWhats" class="btn btn-outline-secondary w-100 mt-2">WhatsApp वर पाठवा</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<!---------------------------------------------------
-                     ADMIN MODAL
---------------------------------------------------->
-<div class="modal fade" id="adminModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Admin — DS Vegetable</h5>
-        <button class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-
-        <h6 class="mb-2">Google Sheet</h6>
-
-        <input id="sheetUrl" class="form-control mb-2"
-               value="https://docs.google.com/spreadsheets/d/1CbbHxN3b_1BXCwhzh3kqI1v-wMSaQYCYPvFj2pWcO0I/edit?usp=drivesdk">
-
-        <input id="sheetName" class="form-control mb-3" value="Sheet1">
-
-        <button id="loadSheet" class="btn btn-success">Load From Google Sheet</button>
-
-        <hr>
-
-        <h6>Existing Items</h6>
-        <div id="adminList"></div>
       </div>
 
     </div>
   </div>
-</div>
+</template>
 
-<!---------------------------------------------------
-                 JAVASCRIPT SECTION
---------------------------------------------------->
+<template id="admin-template">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar">
+        <h5>Admin</h5>
+        <a href="#/admin" class="admin-link-dashboard active">Dashboard</a>
+        <a href="#/admin/products" class="admin-link-products">Products</a>
+        <a href="#/admin/orders" class="admin-link-orders">Orders</a>
+        <a href="#/admin/delivery" class="admin-link-delivery">Delivery Boys</a>
+        <hr style="border-color:rgba(255,255,255,0.06)">
+        <div><button id="adminLogout" class="btn btn-outline-light btn-sm w-100">Logout</button></div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div id="adminContent"></div>
+    </div>
+  </div>
+</template>
+
+<template id="delivery-template">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar">
+        <h5>Delivery</h5>
+        <a href="#/delivery" class="dlink-home active">Assigned</a>
+        <a href="#/delivery/profile" class="dlink-profile">Profile</a>
+        <hr style="border-color:rgba(255,255,255,0.06)">
+        <div><button id="dLogout" class="btn btn-outline-light btn-sm w-100">Logout</button></div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div id="deliveryContent"></div>
+    </div>
+  </div>
+</template>
+
+<!-- bootstrap bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-function $(id){return document.getElementById(id)}
+/*
+  DS Vegetable - 3 Panel UI (Single-file)
+  - Hash routing: #/         => user shop
+                #/orders   => user orders
+                #/admin    => admin login / dashboard
+                #/admin/...=> admin subpages
+                #/delivery => delivery login / dashboard
 
-function extractSheetId(url){
-  try { return url.match(/\/d\/(.*?)\//)[1]; }
-  catch(e){ return null; }
+  Demo credentials:
+    Admin demo: user=admin@ds pass=admin123
+    Delivery demo: user=del1@ds pass=del123
+  (You can change these values below)
+*/
+
+const DEMO = {
+  admin: {user:'admin@ds', pass:'admin123'},
+  delivery: {user:'del1@ds', pass:'del123'}
+};
+
+// --- localStorage keys
+const KEY = {
+  products: 'ds_products_v1',
+  orders: 'ds_orders_v1',
+  deliveryBoys: 'ds_delivery_v1',
+  usersession: 'ds_user_session_v1'
+};
+
+// init demo data if not present
+function ensureDemoData(){
+  if(!localStorage.getItem(KEY.products)){
+    const demo = [
+      {id:1,name:'टोमॅटो',category:'भाजी',price:40,unit:'per kg',qty:50,image:''},
+      {id:2,name:'कांदा',category:'भाजी',price:35,unit:'per kg',qty:80,image:''},
+      {id:3,name:'बटाटे',category:'भाजी',price:30,unit:'per kg',qty:60,image:''},
+      {id:4,name:'केळी',category:'फळ',price:90,unit:'per dozen',qty:30,image:''},
+      {id:5,name:'पालक',category:'भाजी',price:20,unit:'per bunch',qty:40,image:''}
+    ];
+    localStorage.setItem(KEY.products, JSON.stringify(demo));
+  }
+  if(!localStorage.getItem(KEY.orders)){
+    localStorage.setItem(KEY.orders, JSON.stringify([]));
+  }
+  if(!localStorage.getItem(KEY.deliveryBoys)){
+    const db = [{id:'del1', name:'Rahul', phone:'9000000001', user:DEMO.delivery.user, pass:DEMO.delivery.pass}];
+    localStorage.setItem(KEY.deliveryBoys, JSON.stringify(db));
+  }
+}
+ensureDemoData();
+
+/* ----------------- Router ----------------- */
+function router(){
+  const hash = location.hash || '#/';
+  const root = document.getElementById('appRoot');
+
+  if(hash.startsWith('#/admin')){
+    // if not logged in as admin -> show login screen
+    if(!sessionIsAdmin()){
+      renderAdminLogin();
+    } else {
+      renderAdminUI(hash);
+    }
+  } else if(hash.startsWith('#/delivery')){
+    if(!sessionIsDelivery()){
+      renderDeliveryLogin();
+    } else {
+      renderDeliveryUI(hash);
+    }
+  } else {
+    // user routes
+    renderUserUI(hash);
+  }
 }
 
-async function fetchGoogleSheet(sheetId, sheetName){
-  const url = `https://opensheet.elk.sh/${sheetId}/${sheetName}`;
-  const res = await fetch(url);
-  const data = await res.json();
+/* ----------------- Sessions ----------------- */
+function setSession(role, info){
+  localStorage.setItem(KEY.usersession, JSON.stringify({role, info}));
+}
+function clearSession(){ localStorage.removeItem(KEY.usersession); }
+function getSession(){ return JSON.parse(localStorage.getItem(KEY.usersession)||'null'); }
+function sessionIsAdmin(){ const s=getSession(); return s && s.role==='admin'; }
+function sessionIsDelivery(){ const s=getSession(); return s && s.role==='delivery'; }
 
-  const products = data.map((r,idx)=>({
-    id: Date.now()+idx,
-    name: r.name,
-    category: r.category || "भाजी",
-    price: parseFloat(r.price)||0,
-    unit: r.unit || "per kg",
-    qty: r.qty || "",
-    image: r.image || ""
-  }));
+/* ----------------- Utilities ----------------- */
+function uid(){ return Date.now() + Math.floor(Math.random()*999); }
+function getProducts(){ return JSON.parse(localStorage.getItem(KEY.products)||'[]'); }
+function saveProducts(arr){ localStorage.setItem(KEY.products, JSON.stringify(arr)); }
+function getOrders(){ return JSON.parse(localStorage.getItem(KEY.orders)||'[]'); }
+function saveOrders(arr){ localStorage.setItem(KEY.orders, JSON.stringify(arr)); }
+function getDeliveryBoys(){ return JSON.parse(localStorage.getItem(KEY.deliveryBoys)||'[]'); }
+function saveDeliveryBoys(arr){ localStorage.setItem(KEY.deliveryBoys, JSON.stringify(arr)); }
 
-  localStorage.setItem("products", JSON.stringify(products));
-  renderProducts();
-  renderAdmin();
-  alert("Google Sheet मधून डेटा यशस्वीपणे लोड झाला!");
+/* -------------- USER UI -------------- */
+function renderUserUI(hash){
+  const root = document.getElementById('appRoot');
+  const tpl = document.getElementById('user-template').content.cloneNode(true);
+  root.innerHTML = ''; root.appendChild(tpl);
+
+  const products = getProducts();
+  const grid = document.getElementById('productGrid');
+  const search = document.getElementById('searchInput');
+  const cartCountEl = document.getElementById('uiCartCount');
+
+  function renderGrid(filter=''){
+    grid.innerHTML='';
+    const filtered = products.filter(p=>p.name.includes(filter) || p.category.includes(filter) || !filter);
+    filtered.forEach(p=>{
+      const card = document.createElement('div');
+      card.className='card-product';
+      card.innerHTML = `
+        <div style="background:#fff;padding:12px">
+          <div style="height:140px; display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f7f9f7)">
+            <img src="${p.image||'https://img.icons8.com/fluency/96/vegetarian-food.png'}" style="max-height:110px">
+          </div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div><strong>${p.name}</strong><div class="small-note">${p.category} • ${p.unit}</div></div>
+              <div class="price">₹${p.price}</div>
+            </div>
+            <div class="mt-2 d-flex gap-2">
+              <input class="form-control qty-box" placeholder="उदा. 1 kg" style="flex:1" data-id="${p.id}">
+              <button class="btn btn-add" data-id="${p.id}">Add</button>
+            </div>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    attachAddEvents();
+  }
+  renderGrid();
+
+  search.addEventListener('input', e=> renderGrid(e.target.value.trim()));
+
+  // CART (stored in localStorage key 'ds_cart_local')
+  function getCart(){ return JSON.parse(localStorage.getItem('ds_cart_local')||'[]'); }
+  function saveCart(c){ localStorage.setItem('ds_cart_local', JSON.stringify(c)); updateCartCountUI(); }
+
+  function attachAddEvents(){
+    document.querySelectorAll('.btn-add').forEach(b=>{
+      b.onclick = ()=>{
+        const id = +b.dataset.id; const inp = document.querySelector(`.qty-box[data-id="${id}"]`);
+        const q = inp.value.trim(); if(!q){ alert('कृपया प्रमाण टाका'); return; }
+        const prod = products.find(x=>x.id===id);
+        const cart = getCart();
+        cart.push({id:prod.id, name:prod.name, qtyText:q, price:prod.price});
+        saveCart(cart); inp.value=''; alert(prod.name + ' कार्टमध्ये अँड झाले');
+      };
+    });
+  }
+
+  function updateCartCountUI(){ const c=getCart(); cartCountEl.innerText = c.length; }
+  updateCartCountUI();
+
+  // open cart modal
+  document.getElementById('openCartBtn').addEventListener('click', ()=>{
+    const modal = new bootstrap.Modal(document.getElementById('uiCartModal'));
+    renderCartModal();
+    modal.show();
+  });
+
+  function renderCartModal(){
+    const cart = getCart(); const cont = document.getElementById('cartItemsUI');
+    cont.innerHTML='';
+    let subtotal = 0;
+    if(!cart.length){ cont.innerHTML = '<div>कार्ट रिकामा आहे.</div>'; document.getElementById('uiSubtotal').innerText=0; document.getElementById('uiDelivery').innerText=0; document.getElementById('uiTotal').innerText=0; return; }
+    cart.forEach((it, idx)=>{
+      subtotal += it.price;
+      const row = document.createElement('div');
+      row.innerHTML = `<div class="d-flex justify-content-between p-2 border mb-2">
+        <div><strong>${it.name}</strong><div class="small-note">${it.qtyText}</div></div>
+        <div><div>₹${it.price}</div><button class="btn btn-sm btn-outline-danger mt-2" data-idx="${idx}">Remove</button></div>
+      </div>`;
+      cont.appendChild(row);
+    });
+    const delivery = subtotal>=500?0:20;
+    document.getElementById('uiSubtotal').innerText = subtotal;
+    document.getElementById('uiDelivery').innerText = delivery;
+    document.getElementById('uiTotal').innerText = subtotal + delivery;
+
+    // remove handlers
+    cont.querySelectorAll('button[data-idx]').forEach(b=> b.onclick = ()=>{
+      const i = +b.dataset.idx; cart.splice(i,1); saveCart(cart); renderCartModal();
+    });
+  }
+
+  // place COD
+  document.getElementById('uiPlaceCOD').addEventListener('click', ()=>{
+    const name = document.getElementById('custName').value.trim();
+    const addr = document.getElementById('custAddress').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    if(!name||!addr||!phone){ alert('कृपया नाव, पत्ता व फोन भरा'); return; }
+    const cart = getCart(); if(!cart.length){ alert('कार्ट रिकामा आहे'); return; }
+    // create order
+    const orders = getOrders();
+    const subtotal = Number(document.getElementById('uiSubtotal').innerText);
+    const deliveryCharge = Number(document.getElementById('uiDelivery').innerText);
+    const total = subtotal + deliveryCharge;
+    const order = { id: uid(), customer:{name,addr,phone}, items:cart, subtotal, deliveryCharge, total, status:'pending', assignedTo:null, placedAt: Date.now() };
+    orders.push(order); saveOrders(orders);
+    // clear cart
+    localStorage.removeItem('ds_cart_local');
+    updateCartCountUI(); renderCartModal();
+    alert('Order placed (Cash on Delivery). आम्ही लवकरच संपर्क करू.');
+  });
+
+  document.getElementById('uiWhats').addEventListener('click', ()=>{
+    const cart = getCart(); if(!cart.length){ alert('कार्ट रिकामा आहे'); return; }
+    const name = document.getElementById('custName').value.trim() || 'Customer';
+    const phone = document.getElementById('custPhone').value.trim() || '';
+    let msg = `*DS Vegetable Order*%0Aनाव: ${name}%0Aफोन: ${phone}%0A%0AItems:%0A`;
+    cart.forEach(it => { msg += `${it.name} - ${it.qtyText} - ₹${it.price}%0A`; });
+    const total = document.getElementById('uiTotal').innerText;
+    msg += `%0ATotal: ₹${total}%0A`;
+    const merchant = '91XXXXXXXXXX'; // replace with real merchant no
+    window.open(`https://wa.me/${merchant}?text=${msg}`, '_blank');
+  });
+
+  // orders page (hash #/orders)
+  if(location.hash === '#/orders'){
+    // show orders history
+    const orders = getOrders();
+    const container = document.querySelector('.col-md-9');
+    container.innerHTML = '<h4>तुमची ऑर्डर हिस्ट्री</h4>';
+    if(!orders.length){ container.innerHTML += '<div class="small-note">कोणतीही ऑर्डर नाही.</div>'; return; }
+    orders.slice().reverse().forEach(o=>{
+      container.innerHTML += `<div class="p-3 mb-2 stat-card">
+        <div class="d-flex justify-content-between align-items-center">
+          <div><strong>Order #${o.id}</strong><div class="small-note">Placed: ${new Date(o.placedAt).toLocaleString()}</div></div>
+          <div><span class="badge-status ${o.status==='delivered'?'status-delivered':o.status==='pending'?'status-pending':'status-otw'}">${o.status}</span></div>
+        </div>
+        <div class="mt-2"><strong>Amount:</strong> ₹${o.total}</div>
+      </div>`;
+    });
+  }
 }
 
-function loadProducts(){
-  return JSON.parse(localStorage.getItem("products")||"[]");
+/* -------------- ADMIN UI -------------- */
+function renderAdminLogin(){
+  const root = document.getElementById('appRoot');
+  root.innerHTML = `
+    <div class="card p-4" style="max-width:480px;margin:20px auto">
+      <h4>Admin Login</h4>
+      <input id="admUser" class="form-control mt-2" placeholder="Username (demo: ${DEMO.admin.user})">
+      <input id="admPass" type="password" class="form-control mt-2" placeholder="Password (demo: ${DEMO.admin.pass})">
+      <div class="mt-3 d-flex gap-2">
+        <button id="admLoginBtn" class="btn btn-success">Login</button>
+        <a href="#/" class="btn btn-outline-secondary">Back to Shop</a>
+      </div>
+      <div class="small-note mt-3">Demo admin credentials included for local use.</div>
+    </div>
+  `;
+  document.getElementById('admLoginBtn').addEventListener('click', ()=>{
+    const u=document.getElementById('admUser').value.trim();
+    const p=document.getElementById('admPass').value.trim();
+    if(u===DEMO.admin.user && p===DEMO.admin.pass){
+      setSession('admin',{user:u}); location.hash = '#/admin'; router();
+    } else { alert('Invalid admin credentials (demo)'); }
+  });
 }
 
-function renderProducts(){
-  const products = loadProducts();
-  const grid = $("productGrid");
-  grid.innerHTML = "";
-
-  products.forEach(p=>{
-    const div = document.createElement("div");
-    div.className="col-md-3";
-
-    div.innerHTML = `
-      <div class="card shadow-sm h-100">
-        <img src="${p.image||'https://img.icons8.com/fluency/96/vegetarian-food.png'}" class="card-img">
-        <div class="card-body">
-          <h6>${p.name}</h6>
-          <div class="small-note">${p.category} • ${p.unit}</div>
-          <div class="mt-2 fw-bold">₹${p.price}</div>
-
-          <input type="text" placeholder="प्रमाण" class="form-control mt-2 qtyInput" data-id="${p.id}">
-
-          <button class="btn btn-success w-100 mt-2 addBtn" data-id="${p.id}">
-            Add
-          </button>
+function renderAdminUI(hash){
+  const root = document.getElementById('appRoot');
+  const tpl = document.getElementById('admin-template').content.cloneNode(true);
+  root.innerHTML = ''; root.appendChild(tpl);
+  // default admin content (dashboard)
+  const content = document.getElementById('adminContent');
+  function dashboard(){
+    const orders = getOrders();
+    const prods = getProducts();
+    const delivery = getDeliveryBoys();
+    content.innerHTML = `
+      <div class="d-flex gap-3 mb-3">
+        <div class="stat-card" style="flex:1">
+          <div class="small-note">Total Orders</div><h4>${orders.length}</h4>
+        </div>
+        <div class="stat-card" style="flex:1">
+          <div class="small-note">Products</div><h4>${prods.length}</h4>
+        </div>
+        <div class="stat-card" style="flex:1">
+          <div class="small-note">Delivery Boys</div><h4>${delivery.length}</h4>
         </div>
       </div>
+      <div><h5>Recent Orders</h5></div>
     `;
+    orders.slice().reverse().slice(0,5).forEach(o=>{
+      content.innerHTML += `<div class="p-2 mb-2 stat-card">
+        <div class="d-flex justify-content-between">
+          <div><strong>Order #${o.id}</strong><div class="small-note">${o.customer.name} • ${o.customer.phone}</div></div>
+          <div>₹${o.total}</div>
+        </div>
+      </div>`;
+    });
+  }
 
-    grid.appendChild(div);
+  function productsPage(){
+    const prods = getProducts();
+    content.innerHTML = `<div><h4>Products <button id="addProdBtn" class="btn btn-sm btn-success ms-2">Add New</button></h4><div id="prodList" class="mt-3"></div></div>`;
+    const list = document.getElementById('prodList');
+    list.innerHTML='';
+    prods.forEach(p=>{
+      list.innerHTML += `<div class="p-2 mb-2 stat-card d-flex justify-content-between align-items-center">
+        <div><strong>${p.name}</strong><div class="small-note">${p.category} • ${p.unit} • Stock: ${p.qty}</div></div>
+        <div><div class="price">₹${p.price}</div><button class="btn btn-sm btn-outline-danger ms-2" data-id="${p.id}">Delete</button></div>
+      </div>`;
+    });
+    document.getElementById('addProdBtn').addEventListener('click', ()=>{
+      const name = prompt('नाव'); if(!name) return;
+      const category = prompt('कॅटेगरी (भाजी/फळ)')||'भाजी';
+      const price = Number(prompt('किंमत'))||0;
+      const unit = prompt('युनिट (per kg)')||'per kg';
+      const qty = Number(prompt('स्टॉक'))||0;
+      const prods2 = getProducts(); prods2.push({id:uid(),name,category,price,unit,qty,image:''}); saveProducts(prods2); productsPage();
+    });
+    list.querySelectorAll('button[data-id]').forEach(b=> b.onclick = ()=>{
+      if(!confirm('Delete करायचं का?')) return;
+      const id = +b.dataset.id; let arr=getProducts(); arr = arr.filter(x=>x.id!==id); saveProducts(arr); productsPage();
+    });
+  }
+
+  function ordersPage(){
+    const orders = getOrders();
+    content.innerHTML = '<div><h4>All Orders</h4><div id="ordersTable" class="mt-3"></div></div>';
+    const table = document.getElementById('ordersTable');
+    table.innerHTML='';
+    orders.slice().reverse().forEach(o=>{
+      table.innerHTML += `<div class="p-2 mb-2 stat-card">
+        <div class="d-flex justify-content-between">
+          <div><strong>Order #${o.id}</strong><div class="small-note">${o.customer.name} • ${o.customer.phone}</div></div>
+          <div>
+            <select data-order="${o.id}" class="form-select form-select-sm mb-2 assign-select">
+              <option value="">Assign Delivery</option>
+            </select>
+            <div><select data-order-status="${o.id}" class="form-select form-select-sm">
+              <option ${o.status==='pending'?'selected':''} value="pending">pending</option>
+              <option ${o.status==='packed'?'selected':''} value="packed">packed</option>
+              <option ${o.status==='out_for_delivery'?'selected':''} value="out_for_delivery">out_for_delivery</option>
+              <option ${o.status==='delivered'?'selected':''} value="delivered">delivered</option>
+            </select></div>
+          </div>
+        </div>
+      </div>`;
+    });
+    // populate delivery selects
+    const del = getDeliveryBoys();
+    document.querySelectorAll('.assign-select').forEach(sel=>{
+      del.forEach(d=>{
+        const opt = document.createElement('option'); opt.value = d.id; opt.text = d.name; sel.appendChild(opt);
+      });
+      sel.onchange = ()=>{
+        const orderId = +sel.dataset.order;
+        const assigned = sel.value;
+        const orders = getOrders();
+        const oidx = orders.findIndex(x=>x.id===orderId);
+        if(oidx>=0){ orders[oidx].assignedTo = assigned || null; saveOrders(orders); alert('Assigned'); }
+      };
+    });
+    document.querySelectorAll('select[data-order-status]').forEach(s=>{
+      s.onchange = ()=> {
+        const orderId = +s.dataset.orderStatus;
+        const orders = getOrders();
+        const idx = orders.findIndex(x=>x.id===orderId);
+        if(idx>=0){ orders[idx].status = s.value; saveOrders(orders); alert('Status updated'); }
+      };
+    });
+  }
+
+  function deliveryBoysPage(){
+    const db = getDeliveryBoys();
+    content.innerHTML = `<div><h4>Delivery Boys <button id="addDB" class="btn btn-sm btn-success ms-2">Add</button></h4><div id="dbList" class="mt-3"></div></div>`;
+    const list = document.getElementById('dbList'); list.innerHTML='';
+    db.forEach(d => {
+      list.innerHTML += `<div class="p-2 mb-2 stat-card d-flex justify-content-between"><div><strong>${d.name}</strong><div class="small-note">${d.phone}</div></div><div><button class="btn btn-sm btn-outline-danger" data-id="${d.id}">Delete</button></div></div>`;
+    });
+    document.getElementById('addDB').addEventListener('click', ()=>{
+      const name = prompt('नाव'); if(!name) return;
+      const phone = prompt('फोन'); const user = prompt('username')||('del'+Math.floor(Math.random()*999));
+      const pass = prompt('password')||('delpass');
+      const arr = getDeliveryBoys(); arr.push({id:uid().toString(),name,phone,user,pass}); saveDeliveryBoys(arr); deliveryBoysPage();
+    });
+    list.querySelectorAll('button[data-id]').forEach(b=> b.onclick = ()=>{
+      const id = b.dataset.id; let arr = getDeliveryBoys(); arr = arr.filter(x=>x.id!==id); saveDeliveryBoys(arr); deliveryBoysPage();
+    });
+  }
+
+  // nav links
+  document.querySelector('.admin-link-dashboard').addEventListener('click', dashboard);
+  document.querySelector('.admin-link-products').addEventListener('click', productsPage);
+  document.querySelector('.admin-link-orders').addEventListener('click', ordersPage);
+  document.querySelector('.admin-link-delivery').addEventListener('click', deliveryBoysPage);
+
+  // logout
+  document.getElementById('adminLogout').addEventListener('click', ()=>{
+    clearSession(); location.hash = '#/'; router();
   });
 
-  attachEvents();
+  // initial subpage based on hash
+  if(hash.includes('/products')) productsPage();
+  else if(hash.includes('/orders')) ordersPage();
+  else if(hash.includes('/delivery')) deliveryBoysPage();
+  else dashboard();
 }
 
-function attachEvents(){
-  document.querySelectorAll(".addBtn").forEach(btn=>{
-    btn.onclick = ()=>{
-      const id = btn.dataset.id;
-      const qty = document.querySelector(`.qtyInput[data-id="${id}"]`).value;
-
-      if(!qty) return alert("प्रमाण टाका");
-
-      let cart = JSON.parse(localStorage.getItem("cart")||"[]");
-      const products = loadProducts();
-      const p = products.find(x=>x.id==id);
-
-      cart.push({name:p.name, qty, price:p.price});
-      localStorage.setItem("cart", JSON.stringify(cart));
-
-      updateCart();
-      alert("कार्टमध्ये अँड झाले!");
-    };
-  });
-}
-
-function updateCart(){
-  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
-  $("cartCount").innerText = cart.length;
-}
-
-function openCart(){
-  const modal = new bootstrap.Modal($("#cartModal"));
-  renderCart();
-  modal.show();
-}
-
-function renderCart(){
-  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
-  let html = "";
-  let subtotal = 0;
-
-  cart.forEach((c,i)=>{
-    subtotal += c.price;
-
-    html += `
-      <div class="d-flex justify-content-between mt-2">
-        <div>${c.name} — ${c.qty}</div>
-        <div>₹${c.price}</div>
+/* -------------- DELIVERY UI -------------- */
+function renderDeliveryLogin(){
+  const root = document.getElementById('appRoot');
+  root.innerHTML = `
+    <div style="max-width:420px;margin:24px auto" class="card p-3">
+      <h4>Delivery Login</h4>
+      <input id="dUser" class="form-control mt-2" placeholder="Username (demo: ${DEMO.delivery.user})">
+      <input id="dPass" type="password" class="form-control mt-2" placeholder="Password (demo: ${DEMO.delivery.pass})">
+      <div class="mt-3 d-flex gap-2">
+        <button id="dLoginBtn" class="btn btn-success">Login</button>
+        <a href="#/" class="btn btn-outline-secondary">Back</a>
       </div>
-    `;
-  });
-
-  $("cartItems").innerHTML = html;
-  $("subtotal").innerText = subtotal;
-  $("deliveryCharge").innerText = subtotal >= 500 ? 0 : 20;
-  $("totalAmount").innerText = subtotal + (subtotal>=500?0:20);
-}
-
-$("#cartBtn").onclick = openCart;
-updateCart();
-
-$("#adminBtn").onclick = ()=>{
-  const modal = new bootstrap.Modal($("#adminModal"));
-  modal.show();
-  renderAdmin();
-};
-
-function renderAdmin(){
-  const products = loadProducts();
-  const list = $("adminList");
-  list.innerHTML = "";
-
-  products.forEach(p=>{
-    list.innerHTML += `
-      <div class="border p-2 mb-2 d-flex justify-content-between">
-        <div>${p.name} — ₹${p.price}</div>
-      </div>
-    `;
+    </div>
+  `;
+  document.getElementById('dLoginBtn').addEventListener('click', ()=>{
+    const u=document.getElementById('dUser').value.trim(), p=document.getElementById('dPass').value.trim();
+    // verify against stored delivery boys (demo)
+    const db = getDeliveryBoys();
+    const match = db.find(x=> x.user===u && x.pass===p);
+    if(match){ setSession('delivery', {id:match.id, name:match.name}); location.hash = '#/delivery'; router(); }
+    else alert('Invalid delivery credentials (demo).');
   });
 }
 
-$("#loadSheet").onclick = ()=>{
-  const url = $("sheetUrl").value;
-  const name = $("sheetName").value;
+function renderDeliveryUI(hash){
+  const root = document.getElementById('appRoot');
+  const tpl = document.getElementById('delivery-template').content.cloneNode(true);
+  root.innerHTML = ''; root.appendChild(tpl);
 
-  const id = extractSheetId(url);
-  if(!id) return alert("Sheet ID सापडला नाही!");
+  const content = document.getElementById('deliveryContent');
+  const session = getSession();
+  const myId = session && session.info && session.info.id;
 
-  fetchGoogleSheet(id, name);
-};
+  function assignedList(){
+    const orders = getOrders();
+    const mine = orders.filter(o=> o.assignedTo === myId && o.status !== 'delivered');
+    content.innerHTML = `<h4>Assigned Orders (${mine.length})</h4><div id="dList"></div>`;
+    const list = document.getElementById('dList');
+    if(!mine.length) list.innerHTML = '<div class="small-note">कोणतीही assigned order नाही.</div>';
+    mine.forEach(o=>{
+      list.innerHTML += `<div class="p-2 mb-2 stat-card">
+        <div class="d-flex justify-content-between">
+          <div><strong>Order #${o.id}</strong><div class="small-note">${o.customer.name} • ${o.customer.phone}</div></div>
+          <div>₹${o.total}</div>
+        </div>
+        <div class="mt-2 small-note">Status: ${o.status}</div>
+        <div class="mt-2"><button class="btn btn-sm btn-success" data-id="${o.id}" data-action="picked">Picked</button>
+          <button class="btn btn-sm btn-warning" data-id="${o.id}" data-action="otw">On the way</button>
+          <button class="btn btn-sm btn-outline-success" data-id="${o.id}" data-action="delivered">Delivered</button></div>
+      </div>`;
+    });
+    // bind actions
+    document.querySelectorAll('button[data-action]').forEach(b=>{
+      b.onclick = ()=>{
+        const id = +b.dataset.id; const action = b.dataset.action;
+        const orders = getOrders(); const idx = orders.findIndex(x=>x.id===id);
+        if(idx>=0){
+          if(action==='picked') orders[idx].status='packed';
+          if(action==='otw') orders[idx].status='out_for_delivery';
+          if(action==='delivered') orders[idx].status='delivered';
+          saveOrders(orders); assignedList(); alert('Status updated');
+        }
+      };
+    });
+  }
 
-$("#whatsappOrder").onclick = ()=>{
-  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
-  let msg = "*DS Vegetable Order*%0A%0A";
+  assignedList();
 
-  cart.forEach(c=>{
-    msg += `${c.name} - ${c.qty} - ₹${c.price}%0A`;
-  });
+  document.getElementById('dLogout').addEventListener('click', ()=>{ clearSession(); location.hash = '#/'; router(); });
+}
 
-  msg += "%0ATotal: ₹" + $("totalAmount").innerText;
+/* -------------- BOOT -------------- */
+window.addEventListener('hashchange', router);
+window.addEventListener('load', router);
 
-  window.open(`https://wa.me/91XXXXXXXXXX?text=${msg}`);
-};
 </script>
-
 </body>
-      </html>
+</html>
