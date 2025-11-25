@@ -2,533 +2,302 @@
 <html lang="mr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DS Vegetable • Parbhani — Premium</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>VegKart — Mobile Web App</title>
+<link rel="icon" href="data:,">
 <style>
-:root{
-  --blue:#0b78d1;
-  --g1:#00E589;
-  --g2:#00C271;
-  --bg:#f6f8f9;
-  --card:#ffffff;
-  --muted:#6e7574;
-  --radius:16px;
-  --shadow-lg:0 18px 50px rgba(11,120,209,0.08);
-  --shadow-md:0 10px 30px rgba(4,80,60,0.06);
-  --brand-dark:#053826;
-  --glass:rgba(255,255,255,0.72);
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,'Noto Sans Devanagari',sans-serif;-webkit-font-smoothing:antialiased;background:linear-gradient(180deg,#f3fff6,#fbfefc);color:var(--brand-dark)}
-.container{max-width:1080px;margin:14px auto;padding:12px}
-
-/* TOP HEADER */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:14px;
-  background:var(--card);box-shadow:var(--shadow-lg);border:1px solid rgba(0,0,0,0.03);
-}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.05rem;box-shadow:0 10px 30px rgba(0,180,110,0.12)}
-.loc{font-weight:800}
-.searchbar{flex:1;margin:0 12px}
-.search{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);background:linear-gradient(180deg,#fff,#f7fff7);box-shadow:var(--shadow-md)}
-
-/* SLIDER */
-.slider-wrap{margin-top:12px;position:relative;border-radius:18px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.06)}
-.slider-track{display:flex;transition:transform .6s cubic-bezier(.2,.9,.2,1);will-change:transform}
-.slide{min-width:100%;height:220px;position:relative}
-.slide img{width:100%;height:100%;object-fit:cover;display:block}
-.slide-overlay{position:absolute;left:0;right:0;bottom:0;padding:16px;background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.28));color:#fff}
-.slider-dots{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;display:flex;gap:8px}
-.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.6);transition:all .25s}
-.dot.active{background:var(--blue);transform:scale(1.3);box-shadow:0 6px 18px rgba(11,120,209,0.18)}
-
-/* CATEGORIES - round */
-.cats{display:flex;gap:12px;overflow:auto;padding:12px 4px;margin-top:12px}
-.cat{min-width:92px;flex:0 0 auto;background:var(--card);border-radius:999px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.04);cursor:pointer}
-.cat .icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f2fff7,#eef9ff);font-size:24px}
-.cat p{margin:0;font-weight:700;color:var(--muted);font-size:.9rem}
-
-/* SECTIONS */
-.section{margin-top:18px}
-.section h3{margin:0;font-size:1.05rem}
-.sub{color:var(--muted);font-size:.9rem;margin-top:4px}
-
-/* PRODUCTS GRID */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
-@media(min-width:900px){ .grid{grid-template-columns:repeat(3,1fr)} }
-.card{background:var(--card);border-radius:14px;padding:12px;box-shadow:var(--shadow-md);transition:transform .18s}
-.card:hover{transform:translateY(-8px);box-shadow:0 24px 70px rgba(4,80,60,0.08)}
-.media{height:120px;border-radius:12px;background:linear-gradient(180deg,#fbfff9,#f3fff3);display:flex;align-items:center;justify-content:center}
-.title{font-weight:800;margin-top:10px}
-.meta{color:var(--muted);font-size:0.9rem;margin-top:6px}
-.row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.price-pill{background:linear-gradient(90deg,var(--g1),var(--g2));padding:8px 10px;border-radius:12px;color:#052a22;font-weight:900;box-shadow:0 10px 30px rgba(0,197,137,0.12)}
-.qty-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.qty-btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.04);background:linear-gradient(180deg,#fff,#fbfff9);cursor:pointer;font-weight:800;min-width:76px;text-align:center}
-.add-btn{background:linear-gradient(90deg,var(--g1),var(--g2));padding:10px;border-radius:12px;border:none;color:#052a22;font-weight:900;cursor:pointer;width:100%;margin-top:10px;box-shadow:0 12px 36px rgba(0,197,137,0.12)}
-
-/* CART PAGE */
-.cart-wrap{margin-top:12px}
-.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.04);margin-bottom:10px}
-.cart-left{display:flex;gap:12px;align-items:center}
-.thumb{width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,#f6fff6,#eefefe);display:flex;align-items:center;justify-content:center}
-.remove{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:8px;cursor:pointer}
-
-/* GLASS TOTAL */
-.glass-total{position:sticky;bottom:18px;margin-top:12px;padding:14px;border-radius:14px;background:var(--glass);backdrop-filter:blur(6px);box-shadow:0 20px 60px rgba(4,80,60,0.06);border:1px solid rgba(255,255,255,0.6)}
-.glass-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.total-big{font-weight:900;font-size:1.1rem;color:var(--brand-dark)}
-
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);display:flex;justify-content:space-around;padding:8px 6px;border-top:1px solid rgba(0,0,0,0.04);box-shadow:0 -8px 30px rgba(0,0,0,0.04)}
-.nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);cursor:pointer;gap:6px;padding:4px}
-.nav-item.active{color:var(--blue);font-weight:800}
-.badge{background:var(--blue);color:#fff;padding:4px 8px;border-radius:999px;font-weight:800;font-size:12px}
-
-/* small toasts */
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:linear-gradient(90deg,var(--g1),var(--g2));color:#052a22;padding:10px 14px;border-radius:999px;font-weight:800;box-shadow:0 14px 40px rgba(0,197,137,0.12);display:none;z-index:9999}
-.hidden{display:none}
+  :root{--accent:#0ea96a;--bg:#fbfbfb;--card:#fff;--muted:#6b6b6b}
+  html,body{height:100%;margin:0;background:var(--bg);font-family:"Noto Sans",system-ui,Roboto,Arial}
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:10px;background:#fff;border-bottom:1px solid #eee}
+  .logo{font-weight:800;color:var(--accent);font-size:18px}
+  .search{flex:1;padding:8px;border-radius:10px;border:1px solid #eee}
+  .hamb{width:38px;height:38px;border-radius:10px;background:var(--card);display:flex;align-items:center;justify-content:center}
+  .banner{height:160px;background:#ddd;border-radius:10px;margin:12px;padding:0;overflow:hidden}
+  .banner img{width:100%;height:100%;object-fit:cover}
+  .container{padding:12px;max-width:720px;margin:0 auto}
+  h2{font-size:16px;margin:6px 0 12px}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .card{display:flex;gap:10px;background:var(--card);padding:10px;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.06)}
+  .card img{width:110px;height:92px;object-fit:cover;border-radius:8px}
+  .meta{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+  .title{font-weight:700}
+  .small{font-size:13px;color:var(--muted)}
+  .price{font-weight:800;color:var(--accent)}
+  .weight-row{display:flex;gap:8px;align-items:center;margin-top:6px}
+  select.weight{padding:6px;border-radius:8px;border:1px solid #eee;background:#fff}
+  input.qty{width:62px;padding:6px;border-radius:8px;border:1px solid #eee;text-align:center}
+  .btn{background:var(--accent);color:#fff;padding:9px 12px;border-radius:10px;border:none;font-weight:700}
+  .btn.ghost{background:#f3f3f3;color:#111}
+  .cart-fab{position:fixed;right:14px;bottom:18px;z-index:60}
+  .fab-btn{background:var(--accent);color:#fff;padding:12px 16px;border-radius:999px;box-shadow:0 12px 30px rgba(14,169,106,.18);display:flex;align-items:center;gap:8px;font-weight:700}
+  .sheet{position:fixed;left:8px;right:8px;bottom:8px;background:var(--card);border-radius:14px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.18);max-height:70vh;overflow:auto;display:none;z-index:70}
+  .sheet.open{display:block}
+  nav.bottom-nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 12px;background:#fff;border-top:1px solid #eee;z-index:55}
+  nav .nav-item{font-size:12px;color:var(--muted)}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:80}
+  .panel{background:var(--card);padding:12px;border-radius:12px;width:94%;max-width:720px;max-height:86vh;overflow:auto}
+  @media(min-width:700px){ .list{flex-direction:row;flex-wrap:wrap} .card{width:calc(50% - 8px)} .banner{height:220px} }
 </style>
 </head>
 <body>
+<header>
+  <div class="logo">VegKart</div>
+  <input id="search" class="search" placeholder="शोधा (उदा. आलू, टोमॅटो)" />
+  <div class="hamb" title="Menu" onclick="openQuickMenu()">≡</div>
+</header>
 
 <div class="container">
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">DS</div>
-      <div>
-        <div class="loc">Parbhani • Donhi</div>
-        <div class="muted" style="font-size:12px">Fresh Vegetables & Fruits</div>
-      </div>
-    </div>
+  <div class="banner" id="banner"><img id="banner-img" src="https://images.unsplash.com/photo-1541542684-65a06f2b16cf?q=80&w=1600&auto=format&fit=crop" alt="banner"></div>
 
-    <div class="searchbar">
-      <input id="searchInput" class="search" placeholder="Search 'Featured Products'...">
-    </div>
-
-    <div style="display:flex;gap:10px;align-items:center">
-      <div style="text-align:right">
-        <div style="font-weight:800">431401</div>
-        <div class="muted" style="font-size:12px">Change</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDER (rounded) -->
-  <div class="slider-wrap" id="sliderWrap" style="margin-top:12px">
-    <div class="slider-track" id="sliderTrack"></div>
-    <div class="slider-dots" id="sliderDots"></div>
-  </div>
-
-  <!-- categories -->
-  <div class="cats" id="catsRoot" style="margin-top:12px"></div>
-
-  <!-- main content -->
-  <div id="mainContent" style="margin-top:12px"></div>
+  <h2>ताज्या भाज्या & फळे</h2>
+  <div id="products" class="list"></div>
 </div>
 
-<!-- toast -->
-<div id="toast"></div>
+<div class="cart-fab">
+  <button class="fab-btn" id="fab-open" onclick="toggleSheet(true)"><span id="fab-count">0</span> • Cart • <span id="fab-total">₹0</span></button>
+</div>
 
-<!-- bottom nav -->
-<div class="bottom-nav">
-  <div class="nav-item active" data-route="#/" onclick="navigate('#/')"> 
-    <div>🏠</div><div>Home</div>
+<div id="cart-sheet" class="sheet" role="dialog" aria-modal="true">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div><strong>तुमचा कार्ट</strong><div class="small" id="sheet-sub">items</div></div>
+    <div><button onclick="toggleSheet(false)" class="btn ghost">Close</button></div>
   </div>
-  <div class="nav-item" data-route="#/categories" onclick="navigate('#/categories')">
-    <div>🗂️</div><div>Categories</div>
+  <div class="items" id="sheet-items"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+    <div><div class="small">Total</div><div class="price" id="sheet-total">₹0</div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn ghost" onclick="clearCart()">Clear</button>
+      <button class="btn" onclick="placeOrderMobile()">Place Order</button>
+    </div>
   </div>
-  <div class="nav-item" data-route="#/cart" onclick="navigate('#/cart')">
-    <div style="position:relative">🛒 <span id="cartBadge" class="badge hidden">0</span></div><div>Cart</div>
-  </div>
-  <div class="nav-item" data-route="#/account" onclick="navigate('#/account')">
-    <div>👤</div><div>Account</div>
-  </div>
-  <div class="nav-item" data-route="#/menu" onclick="navigate('#/menu')">
-    <div>☰</div><div>Menu</div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="scrollToTop()">Home</div>
+  <div class="nav-item" onclick="location.href='?panel=admin'">Admin</div>
+  <div class="nav-item" onclick="location.href='?panel=delivery'">Delivery</div>
+</nav>
+
+<div id="overlay" class="overlay" onclick="closeOverlay(event)">
+  <div class="panel" id="overlay-panel" onclick="event.stopPropagation()">
+    <h3>Quick Menu</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div class="small">Admin PIN</div><input id="quick-pin" placeholder="Enter PIN" style="padding:6px;border-radius:8px;border:1px solid #eee"/></div>
+      <div style="display:flex;gap:8px"><button class="btn" onclick="quickOpenAdmin()">Open Admin</button><button class="btn ghost" onclick="quickOpenDelivery()">Open Delivery</button></div>
+      <hr/>
+      <div class="small muted">Admin & Delivery panels internally full-featured (orders, assign, track).</div>
+      <div id="admin-orders" style="margin-top:12px"></div>
+      <div id="delivery-orders" style="margin-top:12px"></div>
+    </div>
   </div>
 </div>
 
 <script>
-/* =================== KEYS & SEED =================== */
-const KEY_PROD='ds_prod_final_v1', KEY_CART='ds_cart_final_v1', KEY_BANNERS='ds_banners_final_v1', KEY_SPEED='ds_slider_speed_final_v1', KEY_ADMIN='ds_admin_v1';
+/* ========== CONFIG ========== */
+const GOOGLE_SHEET_KEY = 'REPLACE_WITH_YOUR_SHEET_KEY'; // replace with your sheet key or leave to use demo products
+const ADMIN_PIN = '1234';
+const PRICE_REFRESH_INTERVAL_MS = 60_000;
+/* ============================ */
 
-if(!localStorage.getItem(KEY_PROD)){
-  localStorage.setItem(KEY_PROD, JSON.stringify([
-    {id:1,name:'टोमॅटो',price:40,cat:'Vegetables'},
-    {id:2,name:'बटाटा',price:30,cat:'Vegetables'},
-    {id:3,name:'कांदा',price:35,cat:'Vegetables'},
-    {id:4,name:'पालक',price:22,cat:'Vegetables'},
-    {id:5,name:'केळी',price:90,cat:'Fruits'},
-    {id:6,name:'सफरचंद',price:130,cat:'Fruits'}
-  ]));
+let products = [];
+let cart = JSON.parse(localStorage.getItem('vk_cart_mobile') || '[]');
+let orders = JSON.parse(localStorage.getItem('vk_orders_mobile') || '[]');
+const BANNERS = [
+  'https://images.unsplash.com/photo-1514516346750-3f61b684b3a6?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=1600&auto=format&fit=crop'
+];
+
+function rupee(v){ return '₹' + Number(v||0).toFixed(0); }
+function $(id){ return document.getElementById(id); }
+
+/* Banner rotate */
+let bi = 0; setInterval(()=>{ bi=(bi+1)%BANNERS.length; $('banner-img').src=BANNERS[bi]; }, 4500);
+
+/* Fetch Google Sheet (gviz JSON) */
+async function fetchPricesNow(){
+  if(!GOOGLE_SHEET_KEY || GOOGLE_SHEET_KEY.includes('REPLACE')){ console.warn('Set GOOGLE_SHEET_KEY to fetch live prices.'); return; }
+  try{
+    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_KEY}/gviz/tq?tqx=out:json`;
+    const res = await fetch(url); const txt = await res.text();
+    const jsonStr = txt.substring(txt.indexOf('{'), txt.lastIndexOf('}')+1);
+    const g = JSON.parse(jsonStr);
+    const header = g.table.cols.map(c => c.label.trim());
+    const rows = g.table.rows.map(r=> r.c.map(c => c ? c.v : ''));
+    products = rows.map(r => {
+      const obj = {};
+      header.forEach((h,i)=>obj[h]=r[i]);
+      return {
+        id: obj.id || obj.ID || obj.name,
+        name: obj.name || obj.Name || 'Unknown',
+        image: obj.image || obj.img || 'https://images.unsplash.com/photo-1547516508-4a8f6f0b6f0a?q=80&w=800&auto=format&fit=crop',
+        base_price_per_kg: parseFloat(obj.base_price_per_kg || obj.price || obj.base_price || 0)
+      };
+    });
+    renderProducts();
+  }catch(e){ console.error('sheet fetch error', e); }
 }
-if(!localStorage.getItem(KEY_CART)) localStorage.setItem(KEY_CART, JSON.stringify([]));
-if(!localStorage.getItem(KEY_BANNERS)) localStorage.setItem(KEY_BANNERS, JSON.stringify([
-  "https://i.imgur.com/BwnYrHq.jpg",
-  "https://i.imgur.com/czZ1EoG.jpg",
-  "https://i.imgur.com/0h7rUvp.jpg"
-]));
-if(!localStorage.getItem(KEY_SPEED)) localStorage.setItem(KEY_SPEED, '3500');
-if(!localStorage.getItem(KEY_ADMIN)) localStorage.setItem(KEY_ADMIN, JSON.stringify({user:'admin@ds',pass:'admin123'}));
 
-/* helpers */
-const products = ()=> JSON.parse(localStorage.getItem(KEY_PROD)||'[]');
-const cart = ()=> JSON.parse(localStorage.getItem(KEY_CART)||'[]');
-const saveCart = arr => localStorage.setItem(KEY_CART, JSON.stringify(arr));
-const banners = ()=> JSON.parse(localStorage.getItem(KEY_BANNERS)||'[]');
-const sliderSpeed = ()=> Number(localStorage.getItem(KEY_SPEED)||3500);
+/* Render mobile-first products */
+function renderProducts(){
+  const wrap = $('products'); wrap.innerHTML=''; const q = ($('search').value || '').toLowerCase();
+  const items = products.filter(p => p.name.toLowerCase().includes(q));
+  items.forEach(p=>{
+    const card = document.createElement('div'); card.className='card';
+    card.innerHTML = `
+      <img src="${p.image}" alt="${p.name}">
+      <div class="meta">
+        <div>
+          <div class="title">${p.name}</div>
+          <div class="small">Per kg: <span class="price">${rupee(p.base_price_per_kg)}</span></div>
+        </div>
+        <div>
+          <div class="weight-row">
+            <select class="weight" data-id="${p.id}">
+              <option value="0.25">250 g</option>
+              <option value="0.5">500 g</option>
+              <option value="1" selected>1 kg</option>
+              <option value="2">2 kg</option>
+              <option value="5">5 kg</option>
+            </select>
+            <input class="qty" type="number" min="1" value="1" data-id="${p.id}" />
+            <div style="margin-left:auto;text-align:right"><div class="price" data-price-id="${p.id}">${rupee(p.base_price_per_kg)}</div><div class="small">selected</div></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" onclick="addToCart('${p.id}')">Add</button>
+            <button class="btn ghost" onclick="quickBuy('${p.id}')">Buy</button>
+          </div>
+        </div>
+      </div>
+    `;
+    wrap.appendChild(card);
+  });
+  document.querySelectorAll('.weight').forEach(s=>s.onchange = updatePricePreview);
+  document.querySelectorAll('.qty').forEach(i=>i.oninput = updatePricePreview);
+  updatePricePreview();
+}
+
+/* Update price preview */
+function updatePricePreview(){
+  document.querySelectorAll('.weight').forEach(sel=>{
+    const id = sel.dataset.id;
+    const qtyEl = document.querySelector(`.qty[data-id="${id}"]`);
+    const qty = Number(qtyEl ? qtyEl.value : 1);
+    const weight = parseFloat(sel.value);
+    const p = products.find(x => String(x.id) === String(id));
+    const priceEl = document.querySelector(`[data-price-id="${id}"]`);
+    if(p && priceEl) priceEl.innerText = rupee((p.base_price_per_kg||0) * weight * qty);
+  });
+}
+
+/* Cart ops */
+function saveCart(){ localStorage.setItem('vk_cart_mobile', JSON.stringify(cart)); renderCart(); }
+function renderCart(){
+  const fabCount = $('fab-count'); const fabTotal = $('fab-total'); const sheetItems = $('sheet-items'); const sheetSub = $('sheet-sub'); const sheetTotal = $('sheet-total');
+  sheetItems.innerHTML=''; let total=0;
+  cart.forEach((it, idx) => {
+    const div = document.createElement('div'); div.style.display='flex'; div.style.justifyContent='space-between'; div.style.alignItems='center';
+    div.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><img src="${it.image}" style="width:56px;height:44px;object-fit:cover;border-radius:6px"/><div><div style="font-weight:700">${it.name}</div><div class="small">${it.qty} × ${it.weight}kg</div></div></div><div style="text-align:right"><div class="price">${rupee(it.unitPrice*it.qty)}</div><div style="margin-top:6px"><button class="btn ghost" onclick="removeFromCart(${idx})">Remove</button></div></div>`;
+    sheetItems.appendChild(div);
+    total += (it.unitPrice*it.qty);
+  });
+  fabCount.innerText = cart.length;
+  fabTotal.innerText = rupee(total);
+  sheetSub.innerText = `${cart.length} items`;
+  sheetTotal.innerText = rupee(total);
+}
+function addToCart(id){
+  const sel = document.querySelector(`select.weight[data-id="${id}"]`);
+  const qtyEl = document.querySelector(`input.qty[data-id="${id}"]`);
+  const weight = parseFloat(sel.value); const qty = Number(qtyEl.value || 1);
+  const p = products.find(x => String(x.id) === String(id));
+  if(!p) return;
+  const item = { id: p.id, name: p.name, image: p.image, weight, qty, unitPrice: (p.base_price_per_kg || 0) * weight, addedAt: Date.now() };
+  cart.push(item);
+  saveCart(); toast('Added to cart');
+}
+function quickBuy(id){ addToCart(id); toggleSheet(true); placeOrderMobile(); }
+function removeFromCart(i){ cart.splice(i,1); saveCart(); toast('Removed'); }
+function clearCart(){ cart = []; saveCart(); toast('Cart cleared'); }
+
+/* Sheet toggle */
+function toggleSheet(show){ const s = $('cart-sheet'); if(show) s.classList.add('open'); else s.classList.remove('open'); }
+
+/* Place order -> opens WhatsApp with prefilled message */
+function placeOrderMobile(){
+  if(cart.length === 0){ toast('Cart is empty'); return; }
+  const name = prompt('तुमचं नाव (Name):') || 'नाव न दिले';
+  const address = prompt('Delivery address:') || '';
+  const phone = prompt('Phone (with country code, e.g. 91xxxxxxxxxx):');
+  if(!phone){ toast('Phone आवश्यक आहे'); return; }
+  const orderId = 'ORD' + Date.now();
+  const order = { id: orderId, name, address, phone, items: cart.slice(), createdAt: Date.now(), status: 'placed', history: [{t:Date.now(),status:'placed'}], assignedTo: null };
+  orders.push(order); localStorage.setItem('vk_orders_mobile', JSON.stringify(orders));
+  let msg = `New Order ${orderId}%0AName: ${name}%0AAddress: ${address}%0APhone: ${phone}%0AItems:%0A`;
+  cart.forEach(it => { msg += `${it.name} - ${it.qty} x ${it.weight}kg = ₹${(it.unitPrice * it.qty).toFixed(0)}%0A`; });
+  msg += `Total: ₹${(cart.reduce((s,i)=>s+i.unitPrice*i.qty,0)).toFixed(0)}%0AOrder ID: ${orderId}`;
+  const waNumber = phone.replace(/\D/g,'');
+  clearCart(); toggleSheet(false);
+  window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
+  toast('Order placed — WhatsApp उघडला');
+  localStorage.setItem('vk_new_order_mobile', Date.now());
+  renderAdminOrders(); renderDeliveryOrders();
+}
+
+/* Admin & Delivery functions (simple) */
+function renderAdminOrders(){
+  const panel = document.getElementById('overlay-panel'); if(!panel) return;
+  const ao = $('admin-orders'); ao.innerHTML = '<h4>Orders (Admin)</h4>';
+  orders.slice().reverse().forEach(o=>{
+    const div = document.createElement('div'); div.className='card'; div.style.margin='8px 0';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${o.id}</strong><div class="small">${o.name} • ${o.phone}</div></div><div class="small">${new Date(o.createdAt).toLocaleString()}</div></div><div style="margin-top:8px">${o.items.map(it=>`<div class="small">${it.name} — ${it.qty}×${it.weight}kg — ₹${(it.unitPrice*it.qty).toFixed(0)}</div>`).join('')}</div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="assignToDelivery('${o.id}')">Assign</button><button class="btn ghost" onclick="markDelivered('${o.id}')">Delivered</button></div>`;
+    ao.appendChild(div);
+  });
+}
+function assignToDelivery(orderId){
+  const did = prompt('Assign to delivery ID (eg D1):'); if(!did) return;
+  const o = orders.find(x=>x.id===orderId); if(!o) return;
+  o.assignedTo = did; o.status='assigned'; o.history.push({t:Date.now(),status:'assigned',to:did});
+  localStorage.setItem('vk_orders_mobile', JSON.stringify(orders)); renderAdminOrders(); renderDeliveryOrders(); toast('Assigned to ' + did);
+}
+function markDelivered(orderId){ const o = orders.find(x=>x.id===orderId); if(!o) return; o.status='delivered'; o.history.push({t:Date.now(),status:'delivered'}); localStorage.setItem('vk_orders_mobile', JSON.stringify(orders)); renderAdminOrders(); renderDeliveryOrders(); toast('Marked delivered'); }
+
+let boundDeliveryId = localStorage.getItem('vk_delivery_id_mobile') || null;
+function renderDeliveryOrders(){
+  const doElem = $('delivery-orders'); doElem.innerHTML = '<h4>Delivery Orders</h4>';
+  const assigned = orders.filter(o => o.assignedTo && (!boundDeliveryId || o.assignedTo === boundDeliveryId));
+  assigned.forEach(o=>{
+    const div = document.createElement('div'); div.className='card'; div.style.margin='8px 0';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${o.id}</strong><div class="small">${o.name} • ${o.phone}</div></div><div class="small">${o.assignedTo}</div></div><div style="margin-top:8px">${o.items.map(it=>`<div class="small">${it.name} — ${it.qty}×${it.weight}kg</div>`).join('')}</div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="updateStatus('${o.id}','picked')">Picked</button><button class="btn" onclick="updateStatus('${o.id}','on_the_way')">On the way</button><button class="btn ghost" onclick="updateStatus('${o.id}','delivered')">Delivered</button><button class="btn ghost" onclick="navigateTo('${o.id}')">Nav</button></div>`;
+    doElem.appendChild(div);
+  });
+}
+function updateStatus(orderId,status){ const o = orders.find(x=>x.id===orderId); if(!o) return; o.status=status; o.history.push({t:Date.now(),status}); localStorage.setItem('vk_orders_mobile', JSON.stringify(orders)); renderAdminOrders(); renderDeliveryOrders(); toast('Status: '+status); }
+function navigateTo(orderId){ const o = orders.find(x=>x.id===orderId); if(!o) return; const addr = encodeURIComponent(o.address || ''); window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank'); }
+
+/* Quick menu overlay */
+function openQuickMenu(){ $('overlay').style.display='flex'; renderAdminOrders(); renderDeliveryOrders(); }
+function closeOverlay(e){ if(e.target.id === 'overlay') $('overlay').style.display='none'; }
+function quickOpenAdmin(){ const v = $('quick-pin').value; if(v === ADMIN_PIN){ alert('Admin unlocked'); location.href='?panel=admin'; } else alert('Wrong PIN'); }
+function quickOpenDelivery(){ location.href='?panel=delivery'; }
+
+/* toast & helpers */
+function toast(t){ const d = document.createElement('div'); d.innerText = t; d.style = 'position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#111;color:#fff;padding:8px 12px;border-radius:8px;z-index:9999'; document.body.appendChild(d); setTimeout(()=>d.remove(),2000); }
+function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* demo fallback products if sheet not configured */
+setTimeout(()=>{ if(!products.length){ products = [
+  {id:'p1', name:'बटाटा (Potato)', image:'https://images.unsplash.com/photo-1574226516831-e1dff420e12b?q=80&w=800&auto=format&fit=crop', base_price_per_kg:40},
+  {id:'p2', name:'टोमॅटो (Tomato)', image:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?q=80&w=800&auto=format&fit=crop', base_price_per_kg:45},
+  {id:'p3', name:'कांदा (Onion)', image:'https://images.unsplash.com/photo-1582515073490-399813c4a6b6?q=80&w=800&auto=format&fit=crop', base_price_per_kg:35},
+]; renderProducts(); } }, 500);
 
 /* init */
-window.addEventListener('load', init);
-window.addEventListener('hashchange', route);
-document.getElementById('searchInput').addEventListener('input', (e)=> {
-  const q = e.target.value.trim().toLowerCase();
-  if(location.hash==='#/'||!location.hash) renderHome(q);
-});
-
-function init(){
-  loadSlider();
-  initCats();
-  route();
-  updateCartBadge();
-  autoClearAtMidnight();
-}
-
-/* ================= SLIDER ================= */
-let sliderInterval=null;
-function loadSlider(){
-  const list = banners();
-  const track = document.getElementById('sliderTrack');
-  const dots = document.getElementById('sliderDots');
-  track.innerHTML=''; dots.innerHTML='';
-  list.forEach((url,i)=>{
-    const s = document.createElement('div'); s.className='slide';
-    s.innerHTML = `<img src="${url}" alt="banner ${i+1}"><div class="slide-overlay"><div style="font-weight:800;font-size:1.05rem">DS Vegetable</div><div style="font-size:13px;margin-top:6px">Fresh From Parbhani • Delivered to Your Home</div></div>`;
-    track.appendChild(s);
-    const d = document.createElement('div'); d.className='dot' + (i===0?' active':''); d.dataset.index=i;
-    d.onclick = ()=> { goToSlide(i); };
-    dots.appendChild(d);
-  });
-  let cur = 0;
-  const speed = sliderSpeed();
-  if(sliderInterval) clearInterval(sliderInterval);
-  sliderInterval = setInterval(()=> { cur = (cur+1) % list.length; track.style.transform = `translateX(-${cur*100}%)`; document.querySelectorAll('.dot').forEach((dd,idx)=> dd.classList.toggle('active', idx===cur)); }, speed);
-  addSwipeSupport(track, list.length);
-}
-function goToSlide(i){
-  const track = document.getElementById('sliderTrack'); track.style.transform = `translateX(-${i*100}%)`; document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===i));
-}
-function addSwipeSupport(track, count){
-  let startX=0, current=0;
-  track.addEventListener('touchstart', e=> startX = e.touches[0].clientX);
-  track.addEventListener('touchend', e=>{
-    const endX = e.changedTouches[0].clientX; const dx = endX - startX;
-    if(Math.abs(dx) > 40){
-      if(dx < 0) current = Math.min(count-1, current+1);
-      else current = Math.max(0, current-1);
-      track.style.transform = `translateX(-${current*100}%)`;
-      document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===current));
-    }
-  });
-}
-
-/* ================ CATEGORIES ================= */
-function initCats(){
-  const root = document.getElementById('catsRoot');
-  const catList = [
-    {id:'all',label:'All',icon:'🏷️'},
-    {id:'Vegetables',label:'Vegetables',icon:'🥬'},
-    {id:'Fruits',label:'Fruits',icon:'🍎'},
-    {id:'Greens',label:'Greens',icon:'🌿'},
-    {id:'Offers',label:'Offers',icon:'💥'}
-  ];
-  root.innerHTML='';
-  catList.forEach(c=>{
-    const el=document.createElement('div'); el.className='cat'; el.onclick = ()=> navigateToCategory(c.id);
-    el.innerHTML = `<div class="icon">${c.icon}</div><p>${c.label}</p>`;
-    root.appendChild(el);
-  });
-}
-
-/* ================ ROUTING & PAGES ================= */
-function route(){
-  const h = location.hash || '#/';
-  document.querySelectorAll('.nav-item').forEach(n=> n.classList.toggle('active', n.dataset.route === h));
-  if(h==='#/' || h==='' ) renderHome();
-  else if(h.startsWith('#/categories')) renderCategories();
-  else if(h.startsWith('#/cart')) renderCart();
-  else if(h.startsWith('#/account')) renderAccount();
-  else if(h.startsWith('#/menu')) renderMenu();
-  else if(h.startsWith('#/admin')) renderAdmin();
-  else if(h.startsWith('#/vegetables')) renderProducts('Vegetables');
-  else if(h.startsWith('#/fruits')) renderProducts('Fruits');
-  else renderHome();
-  updateCartBadge();
-}
-
-function navigate(hash){
-  location.hash = hash;
-}
-
-/* HOME */
-function renderHome(q=''){
-  const main = document.getElementById('mainContent');
-  const all = products();
-  const list = q ? all.filter(p => p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q)) : all;
-  let html = `<div class="section"><h3>Trending Products</h3><div class="sub muted">Best picks for today</div></div>`;
-  html += `<div class="grid">`;
-  list.forEach(p=> html += productCard(p));
-  html += `</div>`;
-  main.innerHTML = html;
-  attachQtyEvents();
-}
-
-/* CATEGORIES page */
-function renderCategories(){
-  const main = document.getElementById('mainContent');
-  main.innerHTML = `<div class="section"><h3>Categories</h3><div class="sub muted">Select a category</div></div>`;
-  // reuse cats root to show big icons
-  const allCats = ['Vegetables','Fruits','Greens','Offers'];
-  let html = `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">`;
-  allCats.forEach(c => html += `<div class="cat" onclick="navigate('#/${c.toLowerCase()}')"><div class="icon">${c==='Vegetables'?'🥬':'🍎'}</div><p>${c}</p></div>`);
-  html += `</div>`;
-  main.innerHTML += html;
-}
-
-/* PRODUCTS by category */
-function renderProducts(category){
-  const main = document.getElementById('mainContent');
-  const list = products().filter(p => p.cat === category);
-  let html = `<div class="section"><h3>${category}</h3><div class="sub muted">Best of ${category}</div></div><div class="grid">`;
-  list.forEach(p=> html += productCard(p));
-  html += `</div>`;
-  main.innerHTML = html;
-  attachQtyEvents();
-}
-
-/* product card HTML */
-function productCard(p){
-  return `<div class="card">
-    <div class="media"><img src="https://img.icons8.com/fluency/96/vegetarian-food.png" alt="${p.name}"></div>
-    <div class="title">${p.name}</div>
-    <div class="meta">₹${p.price}/kg • ${p.cat}</div>
-    <div class="row"><div class="price-pill">₹${p.price}</div></div>
-    <div class="qty-options" data-id="${p.id}">
-      <button class="qty-btn" data-q="0.25">250 gm</button>
-      <button class="qty-btn" data-q="0.5">500 gm</button>
-      <button class="qty-btn" data-q="1">1 kg</button>
-      <button class="qty-btn" data-q="2">2 kg</button>
-      <button class="qty-btn" data-q="5">5 kg</button>
-    </div>
-    <button class="add-btn" data-id="${p.id}" onclick="quickAdd(${p.id})">Add to Cart</button>
-  </div>`;
-}
-
-/* attach qty events */
-function attachQtyEvents(){
-  document.querySelectorAll('.qty-btn').forEach(b=>{
-    b.onclick = (e)=>{
-      const pEl = b.parentElement;
-      const id = pEl.dataset.id;
-      const factor = Number(b.dataset.q);
-      const prod = products().find(x=> x.id==id);
-      const price = +(prod.price * factor).toFixed(2);
-      // visual feedback
-      b.style.transform='scale(.98)'; setTimeout(()=> b.style.transform='',180);
-      showToast(`${prod.name} (${b.innerText}) — ₹${price}`);
-    }
-  });
-}
-
-/* quick add from button (uses default 1kg) */
-function quickAdd(id){
-  const prod = products().find(p=> p.id===id);
-  const price = prod.price * 1;
-  const c = cart();
-  c.push({id:prod.id,name:prod.name,qtyText:'1 kg',price});
-  saveCart(c);
-  updateCartBadge();
-  showToast(`${prod.name} (1 kg) added`);
-}
-
-/* add via qty buttons will push on click of qty (we implement by hooking)* /
-document.addEventListener('click', function(e){
-  if(e.target && e.target.classList.contains('qty-btn')){
-    const btn = e.target;
-    const id = btn.parentElement.dataset.id;
-    const factor = Number(btn.dataset.q);
-    const prod = products().find(x=> x.id==id);
-    const price = +(prod.price * factor).toFixed(2);
-    const c = cart(); c.push({id:prod.id,name:prod.name,qtyText:btn.innerText,price});
-    saveCart(c); updateCartBadge(); showToast(`${prod.name} (${btn.innerText}) added`);
-  }
-});*/
-
-/* CART page */
-function renderCart(){
-  const main = document.getElementById('mainContent');
-  const items = cart();
-  if(!items.length){ main.innerHTML = '<h3>कार्ट रिकामा आहे</h3>'; return; }
-  let subtotal = 0;
-  let html = `<div class="cart-wrap"><h3>तुमचा कार्ट</h3>`;
-  items.forEach((it,idx)=>{ subtotal += Number(it.price); html += `<div class="cart-item"><div class="cart-left"><div class="thumb">🥗</div><div><strong>${it.name}</strong><div class="muted">${it.qtyText}</div></div></div><div style="text-align:right"><div style="font-weight:900">₹${it.price}</div><div style="margin-top:8px"><button class="remove" onclick="removeFromCart(${idx})">Remove</button></div></div></div>` });
-  const delivery = subtotal >= 500 ? 0 : 20;
-  const total = subtotal + delivery;
-  html += `</div>`;
-  html += `<div class="glass-total"><div class="glass-row"><div class="muted">Subtotal</div><div>₹${subtotal}</div></div><div class="glass-row"><div class="muted">Delivery</div><div>₹${delivery}</div></div><div class="glass-row" style="margin-top:8px"><div class="total-big">Total</div><div class="total-big">₹${total}</div></div><div style="display:flex;gap:8px;margin-top:10px"><button onclick="placeOrder()" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:800">Order via WhatsApp</button><button onclick="checkoutCOD()" style="flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff">Cash on Delivery</button></div></div>`;
-  main.innerHTML = html;
-}
-
-/* remove */
-function removeFromCart(i){ const c = cart(); c.splice(i,1); saveCart(c); renderCart(); updateCartBadge(); showToast('Item removed'); }
-
-/* place order */
-function placeOrder(){
-  const items = cart(); if(!items.length) return;
-  const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
-  if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
-  let msg = `*New Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
-  items.forEach(it=> msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
-  const subtotal = items.reduce((s,x)=> s + Number(x.price), 0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
-  msg += encodeURIComponent(`%0ATotal: ₹${total}`);
-  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank'); // OWNER
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`🙏 धन्यवाद ${name}!\\nआपली ऑर्डर मिळाली आहे.\\nDS Vegetable — Parbhani`)}`, '_blank'); // CUSTOMER
-  saveCart([]); renderHome(); updateCartBadge(); showToast('Order placed');
-}
-
-/* COD fallback */
-function checkoutCOD(){
-  const items = cart(); if(!items.length) return;
-  const name = prompt('नाव:'); const phone = prompt('फोन:'); const addr = prompt('पत्ता:');
-  if(!name||!phone||!addr){ alert('सर्व माहिती भरा'); return; }
-  const subtotal = items.reduce((s,x)=> s + Number(x.price), 0); const delivery = subtotal>=500?0:20; const total = subtotal + delivery;
-  let msg = `*New COD Order*%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A`;
-  items.forEach(it=> msg += encodeURIComponent(`• ${it.name} - ${it.qtyText} - ₹${it.price}\n`));
-  msg += encodeURIComponent(`%0ATotal: ₹${total}%0A%0APayment: Cash on Delivery`);
-  window.open(`https://wa.me/7020970727?text=${msg}`, '_blank');
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`🙏 धन्यवाद ${name}!\\nआपली ऑर्डर मिळाली आहे. आम्ही लवकरच संपर्क करू.`)}`, '_blank');
-  saveCart([]); renderHome(); updateCartBadge(); showToast('Order placed (COD)');
-}
-
-/* ACCOUNT & MENU placeholders */
-function renderAccount(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Account</h3><div class="sub muted">Profile & Orders — Coming Soon</div></div>`;}
-function renderMenu(){ document.getElementById('mainContent').innerHTML = `<div class="section"><h3>Menu</h3><div class="sub muted">Settings • Help • About</div></div>`;}
-
-/* ADMIN (simple controls for banners, speed, products) */
-function renderAdmin(){
-  const admin = JSON.parse(localStorage.getItem(KEY_ADMIN)||'{}');
-  const main = document.getElementById('mainContent');
-  main.innerHTML = `<div class="section"><h3>Admin Panel</h3><div style="margin-top:8px"><div><strong>Demo Admin:</strong> ${admin.user} / ${admin.pass}</div></div>
-  <div style="margin-top:12px">
-    <h4>Banner Images (comma separated URLs)</h4>
-    <textarea id="bannerInput" style="width:100%;height:72px;padding:8px">${(banners()||[]).join(',')}</textarea>
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <input id="speedInput" placeholder="Slider speed ms (e.g. 3000)" style="padding:8px;width:200px" value="${sliderSpeed()}">
-      <button onclick="saveBannerConfig()" style="padding:8px;border-radius:8px;background:var(--blue);color:#fff;border:none">Save</button>
-    </div>
-  </div>
-  <div style="margin-top:12px">
-    <h4>Products</h4>
-    <div id="adminProducts"></div>
-    <div style="margin-top:8px"><button onclick="showAddProduct()" style="padding:8px;border-radius:8px;background:var(--g1);border:none;color:#052a22">Add Product</button></div>
-  </div>
-  </div>`;
-  renderAdminProducts();
-}
-function saveBannerConfig(){
-  const val = document.getElementById('bannerInput').value.trim();
-  const arr = val ? val.split(',').map(s=>s.trim()).filter(Boolean) : [];
-  localStorage.setItem(KEY_BANNERS, JSON.stringify(arr));
-  const sp = Number(document.getElementById('speedInput').value) || 3500;
-  localStorage.setItem(KEY_SPEED, String(sp));
-  loadSlider();
-  showToast('Banner & speed saved');
-}
-function renderAdminProducts(){
-  const wrap = document.getElementById('adminProducts');
-  wrap.innerHTML = '';
-  products().forEach(p=>{
-    const d = document.createElement('div'); d.style.marginBottom='8px'; d.style.padding='8px'; d.style.border='1px solid #eee'; d.style.borderRadius='8px';
-    d.innerHTML = `<div style="display:flex;justify-content:space-between"><div><strong>${p.name}</strong><div class="muted">₹${p.price} • ${p.cat}</div></div><div><button onclick="deleteProduct(${p.id})" style="padding:6px;border-radius:8px;border:1px solid #ddd">Delete</button></div></div>`;
-    wrap.appendChild(d);
-  });
-}
-function showAddProduct(){
-  const name = prompt('Product name'); if(!name) return;
-  const price = Number(prompt('Price per kg'))||0;
-  const cat = prompt('Category (Vegetables / Fruits / Greens)') || 'Vegetables';
-  const arr = products(); arr.push({id:Date.now(),name,price,cat}); localStorage.setItem(KEY_PROD, JSON.stringify(arr)); renderAdminProducts(); showToast('Product added');
-}
-function deleteProduct(id){ let arr=products(); arr=arr.filter(p=>p.id!==id); localStorage.setItem(KEY_PROD, JSON.stringify(arr)); renderAdminProducts(); showToast('Deleted'); }
-
-/* navigation helpers */
-function navigateToCategory(id){
-  if(id==='all') navigate('#/');
-  else if(id.toLowerCase()==='vegetables') navigate('#/vegetables');
-  else if(id.toLowerCase()==='fruits') navigate('#/fruits');
-  else navigate('#/categories');
-}
-function navigate(h){ location.hash = h; }
-
-/* toast */
-let toastTimer=0;
-function showToast(msg){
-  clearTimeout(toastTimer);
-  const t = document.getElementById('toast');
-  t.innerText = msg; t.style.display='block'; t.style.opacity='1';
-  toastTimer = setTimeout(()=> { t.style.opacity='0'; setTimeout(()=> t.style.display='none',300); },1400);
-}
-
-/* update cart badge */
-function updateCartBadge(){
-  const c = cart(); const b = document.getElementById('cartBadge');
-  if(c.length){ b.innerText = c.length; b.classList.remove('hidden'); } else b.classList.add('hidden');
-}
-
-/* auto-clear cart at midnight */
-function autoClearAtMidnight(){
-  const now = new Date(), next = new Date();
-  next.setHours(24,0,0,0);
-  setTimeout(()=>{
-    localStorage.removeItem(KEY_CART); updateCartBadge(); autoClearAtMidnight();
-  }, next - now);
-}
-
-/* misc small helpers */
-function renderAdmin(){
-  // simple auth prompt to access admin UI
-  const admin = JSON.parse(localStorage.getItem(KEY_ADMIN)||'{}');
-  const user = prompt('Admin username:'); const pass = prompt('Password:');
-  if(user===admin.user && pass===admin.pass){ renderAdminPanel(); } else { alert('Invalid'); navigate('#/'); }
-}
-function renderAdminPanel(){
-  // reuse renderAdmin
-  renderAdmin();
-}
-
-/* initial routing call */
-function route(){ /* placeholder to satisfy earlier listener */ }
-window.addEventListener('load', ()=>{ route(); /* show home by default */ const h = location.hash || '#/'; if(!location.hash || location.hash==='#/') renderHome(); else window.dispatchEvent(new Event('hashchange')); });
-
-/* attach one-time click listener for qty buttons since attachQtyEvents may not catch dynamic elements */
-document.addEventListener('click', function(e){
-  if(e.target && e.target.classList.contains('qty-btn')){
-    const btn = e.target; const id = btn.parentElement.dataset.id; const factor = Number(btn.dataset.q);
-    const prod = products().find(x=> x.id==id);
-    const price = +(prod.price * factor).toFixed(2);
-    const c = cart(); c.push({id:prod.id,name:prod.name,qtyText:btn.innerText,price}); saveCart(c); updateCartBadge(); showToast(`${prod.name} (${btn.innerText}) added`);
-  }
-});
-
-/* ensure slider and initial content load */
-loadSlider();
-renderHome();
-updateCartBadge();
-autoClearAtMidnight();
+(function init(){
+  renderCart(); renderAdminOrders(); renderDeliveryOrders();
+  fetchPricesNow(); setInterval(fetchPricesNow, PRICE_REFRESH_INTERVAL_MS);
+  window.addEventListener('storage', (e)=>{ if(e.key === 'vk_new_order_mobile'){ toast('नवीन ऑर्डर आली आहे'); renderAdminOrders(); }});
+})();
 </script>
 </body>
 </html>
