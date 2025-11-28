@@ -507,4 +507,300 @@
         // Geo-location आणि ऑर्डर प्लेसमेंट लॉजिक
         document.getElementById('place-order-btn').addEventListener('click', () => {
             if (cart.length === 0) {
-                alert('ऑर्डर देण्यासाठी कार
+                alert('ऑर्डर देण्यासाठी कार्टमध्ये वस्तू निवडा.');
+                return;
+            }
+            
+            const name = document.getElementById('customer-name').value.trim();
+            const mobile = document.getElementById('customer-mobile').value.trim();
+            const address = document.getElementById('customer-address').value.trim();
+            
+            if (!name || !mobile || !address) {
+                alert('कृपया नाव, मोबाईल नंबर आणि पत्ता ही सर्व माहिती भरा.');
+                return;
+            }
+
+            if (navigator.geolocation) {
+                alert("कृपया तुमचे अचूक स्थान (Location) देण्यासाठी 'Allow' (परवानगी द्या) बटण दाबा.");
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        
+                        placeOrder(name, mobile, address, latitude, longitude); 
+                    },
+                    function(error) {
+                        alert('माफ करा, अचूक स्थान (Location) आवश्यक आहे. कृपया लोकेशन ॲक्सेस द्या.');
+                    }
+                );
+            } else {
+                alert('तुमचा ब्राउझर Geolocation ला सपोर्ट करत नाही.');
+            }
+        });
+
+        // Geo-location मिळाल्यावर ऑर्डर डेटा सेव्ह करणारा नवीन फंक्शन
+        function placeOrder(name, mobile, address, lat, lon) {
+            const total = parseFloat(document.getElementById('checkout-total').textContent);
+            
+            // ✨ किमान ऑर्डर किंमत तपासणे ✨
+            if (total < MIN_ORDER_VALUE) {
+                alert(`ऑर्डर प्लेस करण्यासाठी किमान ₹${MIN_ORDER_VALUE} ची खरेदी आवश्यक आहे. सध्याची किंमत: ₹${total.toFixed(2)}`);
+                return; 
+            }
+
+            const newOrder = {
+                id: orderIdCounter++,
+                items: JSON.parse(JSON.stringify(cart)),
+                total: total,
+                name: name,
+                mobile: mobile,
+                address: address,
+                latitude: lat,
+                longitude: lon,
+                status: 'New', 
+                time: new Date().toLocaleTimeString(),
+                userId: currentUser ? currentUser.username : 'GUEST', 
+            };
+            orders.push(newOrder);
+
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                product.stock -= item.quantity;
+            });
+
+            alert(`✅ ${name}, तुमची ऑर्डर ${newOrder.id} यशस्वी झाली!`);
+            
+            cart = [];
+            document.getElementById('customer-name').value = currentUser.name || '';
+            document.getElementById('customer-mobile').value = currentUser.username || '';
+            document.getElementById('customer-address').value = '';
+            
+            showPanel('customer-view'); 
+            renderProducts();
+            renderOrders('admin-orders-list', true); 
+        }
+
+        // *************** ॲडमिन विभाग कार्यक्षमता (Admin) ***************
+
+        function addProduct() {
+            const name = document.getElementById('new-name').value;
+            const price = parseFloat(document.getElementById('new-price').value);
+            const unit = document.getElementById('new-unit').value;
+            const stock = parseInt(document.getElementById('new-stock').value);
+            const image = document.getElementById('new-image').value.trim(); 
+
+            if (!name || isNaN(price) || !unit || isNaN(stock)) {
+                alert("कृपया सर्व माहिती अचूक भरा.");
+                return;
+            }
+
+            const newId = products.length ? products[products.length - 1].id + 1 : 1;
+            const imageUrl = image || 'https://via.placeholder.com/150/CCCCCC?text=No+Image';
+            
+            products.push({ id: newId, name, price, unit, stock, isActive: true, image: imageUrl }); 
+            
+            document.getElementById('new-name').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-unit').value = '';
+            document.getElementById('new-stock').value = '';
+            document.getElementById('new-image').value = ''; 
+
+            renderAdminProducts();
+            renderProducts();
+            alert(`${name} उत्पादन यशस्वीरित्या जोडले!`);
+        }
+
+        function renderAdminProducts() {
+            const adminList = document.getElementById('admin-product-list');
+            adminList.innerHTML = '';
+            
+            products.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'admin-product-item';
+
+                const statusText = product.isActive ? 'ON' : 'OFF';
+                const statusColor = product.isActive ? 'green' : 'red';
+                const toggleButtonText = product.isActive ? 'OFF करा' : 'ON करा';
+
+                div.innerHTML = `
+                    <span>
+                        ${product.name} | 
+                        <strong style="color: ${statusColor};">स्थिती: ${statusText}</strong>
+                    </span>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <input type="number" id="price-${product.id}" value="${product.price}" style="width: 60px;">
+                        <input type="number" id="stock-${product.id}" value="${product.stock}" style="width: 60px;">
+                        <button onclick="updateProduct(${product.id})" style="background-color: #007bff; padding: 5px 8px;">अपडेट</button>
+                        <button onclick="toggleProductStatus(${product.id})" 
+                                style="background-color: ${product.isActive ? '#dc3545' : '#28a745'}; padding: 5px 8px;">
+                            ${toggleButtonText}
+                        </button>
+                        <button onclick="deleteProduct(${product.id})" 
+                                style="background-color: #6c757d; padding: 5px 8px;">
+                            ❌ हटवा
+                        </button>
+                    </div>
+                `;
+                adminList.appendChild(div);
+            });
+        }
+
+        function updateProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            const newPrice = parseFloat(document.getElementById(`price-${productId}`).value);
+            const newStock = parseInt(document.getElementById(`stock-${productId}`).value);
+
+            if (product) {
+                product.price = newPrice;
+                product.stock = newStock;
+                alert(`${product.name} ची माहिती अपडेट झाली!`);
+                renderAdminProducts();
+                renderProducts();
+            }
+        }
+        
+        function toggleProductStatus(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                product.isActive = !product.isActive;
+                alert(`${product.name} चा स्टेटस आता ${product.isActive ? 'ON' : 'OFF'} आहे!`);
+                renderAdminProducts();
+                renderProducts();
+            }
+        }
+        
+        function deleteProduct(productId) {
+            if (confirm("तुम्ही निश्चितपणे हे उत्पादन हटवू इच्छिता?")) {
+                const initialLength = products.length;
+                products = products.filter(p => p.id !== productId);
+                
+                if (products.length < initialLength) {
+                    alert("उत्पादन यशस्वीरित्या हटवले!");
+                    renderAdminProducts();
+                    renderProducts();
+                } else {
+                    alert("उत्पादन हटवण्यात अयशस्वी.");
+                }
+            }
+        }
+
+        // *************** ऑर्डर आणि डिलिव्हरी कार्यक्षमता (Orders & Delivery) ***************
+        
+        function renderOrders(containerId, is_admin) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            const ordersToShow = is_admin ? orders : orders.filter(o => o.status !== 'New');
+
+            if (ordersToShow.length === 0) {
+                container.innerHTML = '<p style="color: #555; text-align: center;">सध्या कोणतीही ऑर्डर नाही.</p>';
+                return;
+            }
+
+            ordersToShow.forEach(order => {
+                const card = document.createElement('div');
+                card.className = 'order-card';
+                
+                const customerDetails = is_admin ? `<p><strong>नाव:</strong> ${order.name} | <strong>मोबाईल:</strong> ${order.mobile}</p>` : '';
+
+                // Geo-location लिंक जोडली
+                const mapLink = (order.latitude && order.longitude) ? 
+                    `<p style="margin-top: 10px;">
+                        <a href="http://www.google.com/maps/place/$${order.latitude},${order.longitude}" target="_blank" style="color: blue; font-weight: bold;">
+                            📍 Google Map वर लोकेशन पहा
+                        </a>
+                    </p>` : `<p style="color: red;">स्थान (Location) उपलब्ध नाही.</p>`;
+
+
+                card.innerHTML = `
+                    <h4>ऑर्डर ID: ${order.id} | स्थिती: <span class="status-${order.status.toLowerCase().replace(' ', '')}">${order.status}</span></h4>
+                    ${customerDetails}
+                    <p><strong>पत्ता:</strong> ${order.address}</p>
+                    <p><strong>वेळ:</strong> ${order.time}</p>
+                    <p><strong>एकूण:</strong> ₹${order.total.toFixed(2)}</p>
+                    
+                    ${mapLink} 
+
+                    <ul style="list-style-type: square; margin-left: 20px; font-size: 0.9em;">
+                        ${order.items.map(item => `<li>${item.name} x${item.quantity}</li>`).join('')}
+                    </ul>
+                `;
+
+                if (is_admin) {
+                    if (order.status === 'New') {
+                        card.innerHTML += `<button onclick="updateOrderStatus(${order.id}, 'Processing')">पॅकिंगसाठी पाठवा</button>`;
+                    } else if (order.status === 'Processing') {
+                        card.innerHTML += `<button onclick="updateOrderStatus(${order.id}, 'Out for Delivery')" style="background-color: #007bff;">डिलिव्हरीसाठी पाठवा</button>`;
+                    }
+                } else { // डिलिव्हरी पॅनेलसाठी
+                    if (order.status === 'Out for Delivery') {
+                        card.innerHTML += `<button onclick="updateOrderStatus(${order.id}, 'Delivered')" style="background-color: #28a745;">डिलिव्हर केले (Complete)</button>`;
+                    } else if (order.status !== 'Delivered') {
+                        card.innerHTML += `<p style="color: gray;">ऑर्डर ${order.status} आहे.</p>`;
+                    }
+                }
+                
+                container.appendChild(card);
+            });
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                alert(`ऑर्डर ${orderId} ची स्थिती ${newStatus} अशी बदलली!`);
+                renderOrders('admin-orders-list', true);
+                renderOrders('delivery-orders-list', false);
+            }
+        }
+        
+        // *************** ऑर्डर इतिहास फंक्शन ***************
+
+        function renderOrderHistory() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            
+            if (!currentUser) {
+                 historyList.innerHTML = '<p style="text-align: center; color: red;">ऑर्डर इतिहास पाहण्यासाठी कृपया लॉगिन करा.</p>';
+                 return;
+            }
+
+            const userOrders = orders.filter(order => order.userId === currentUser.username).reverse(); 
+
+            if (userOrders.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #007bff; font-weight: bold;">तुम्ही अजून कोणतीही ऑर्डर केलेली नाही.</p>';
+                return;
+            }
+
+            userOrders.forEach(order => {
+                const statusColor = order.status === 'Delivered' ? 'green' : (order.status === 'New' ? 'blue' : 'orange');
+
+                const card = document.createElement('div');
+                card.className = 'panel-container'; 
+                card.style.borderLeft = `5px solid ${statusColor}`;
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4>ऑर्डर ID: ${order.id}</h4>
+                        <p>स्थिती: <strong style="color: ${statusColor};">${order.status}</strong></p>
+                    </div>
+                    <p><strong>एकूण:</strong> ₹${order.total.toFixed(2)}</p>
+                    <p><strong>वेळ:</strong> ${order.time} | <strong>पत्ता:</strong> ${order.address}</p>
+                    <details>
+                        <summary style="font-weight: bold; cursor: pointer; color: #4CAF50;">वस्तूंचा तपशील पहा</summary>
+                        <ul style="list-style-type: disc; margin-left: 20px;">
+                            ${order.items.map(item => `<li>${item.name} (x${item.quantity}) - ₹${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
+                        </ul>
+                    </details>
+                `;
+                historyList.appendChild(card);
+            });
+        }
+
+
+        // *************** ॲप सुरू करणे ***************
+        renderProducts();
+        showPanel('customer-view'); 
+    </script>
+</body>
+</html>
