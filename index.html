@@ -3,19 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📱 अंतिम कोड: व्यावसायिक भाजी शॉप 🥦</title>
+    <title>📱 अंतिम कोड: Glass & Glow UI सह भाजी शॉप 🥦</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script> 
+
+    <script>
+        // तुमची Firebase कॉन्फिगरेशन
+        var firebaseConfig = {
+            apiKey: "AIzaSyD1hs3_40f4Zz1nBz58EtL8oYDMPSXFJzU",
+            authDomain: "dsveggies-65411.firebaseapp.com",
+            projectId: "dsveggies-65411",
+            storageBucket: "dsveggies-65411.firebasestorage.app",
+            messagingSenderId: "867000105496",
+            appId: "1:867000105496:web:7ea836772c4a0665f5a16d"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+        var auth = firebase.auth();
+        var trackingInterval = null;
+        var confirmationResult = null; 
+        var SIMULATED_OTP = '1234'; 
+    </script>
     
     <style>
-        /* बेस स्टाईल */
+        /* GLASSMORHPISM THEME */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f2f5;
+            /* गडद, चमकदार पार्श्वभूमी */
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
+            color: #ffffff; /* डिफॉल्ट टेक्स्ट पांढरा */
         }
 
         header {
-            background-color: #4CAF50;
+            background-color: rgba(255, 255, 255, 0.1); /* पारदर्शक */
+            backdrop-filter: blur(5px);
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -24,173 +50,103 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
         
         nav a {
             color: white;
-            margin-left: 15px;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
         
         #cart-info {
-            background-color: #FF9800;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
+            background-color: rgba(255, 193, 7, 0.8);
+            color: #343a40;
+            border-radius: 20px;
         }
 
         main {
             padding: 20px;
         }
 
+        /* ग्लास कंटेनर */
         .panel-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            margin-bottom: 25px;
         }
-
-        /* आकर्षक टेक्स्ट बॉक्ससाठी CSS */
+        
+        /* इनपुट फिल्ड स्टाईल */
         input[type="text"],
         input[type="number"],
         input[type="tel"],
         input[type="password"],
-        .checkout-form input,
-        #admin-controls input,
-        .admin-product-item input {
-            width: calc(100% - 22px);
-            padding: 10px;
+        select {
+            background: rgba(255, 255, 255, 0.15); /* इनपुटलाही ग्लास इफेक्ट */
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 12px;
             margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1em;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        input:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        /* उत्पादन सूची */
-        #product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .product-card {
-            border: 1px solid #ddd;
             border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-            background-color: #fff;
-            transition: transform 0.2s;
         }
-        .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        /* प्लेसहोल्डर टेक्स्ट फिकट करणे */
+        ::placeholder { 
+            color: rgba(255, 255, 255, 0.7); 
         }
 
-        .product-card button {
+        input:focus, select:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #80bdff;
+            box-shadow: 0 0 10px rgba(128, 189, 255, 0.8); /* चमकणारा इफेक्ट */
+        }
+
+        /* लॉगिन कार्ड स्टाईल */
+        #login-view h3 {
+            color: #ffc107;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        button {
             background-color: #007bff;
             color: white;
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 4px;
-            width: 100%;
-            margin-top: 10px;
-        }
-        
-        /* चेकआउट/कार्ट स्टाईल */
-        #cart-items-checkout li {
-            padding: 10px 0;
-            border-bottom: 1px dotted #ccc;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .quantity-controls button {
-            background: #eee;
-            border: 1px solid #ccc;
-            padding: 2px 8px;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-        
-        #place-order-btn {
-            background-color: #28a745;
-            color: white;
             padding: 12px;
-            width: 100%;
             border: none;
-            border-radius: 4px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-        
-        /* ऑर्डर स्टाईल */
-        .order-card {
-            border: 1px solid #ffc107;
-            padding: 15px;
-            margin-bottom: 15px;
             border-radius: 6px;
-            background-color: #fff3cd;
+        }
+
+        /* उत्पादन कार्ड स्टाईल */
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .product-card button {
+            background-color: #28a745;
         }
         
-        .order-card button {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 5px;
+        /* ऑर्डर कार्ड */
+        .order-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .status-new { color: blue; }
-        .status-processing { color: orange; }
-        .status-outfordelivery { color: purple; }
-        .status-delivered { color: green; }
-
-        /* मोबाईल रिस्पॉन्सिव्ह डिझाइन */
+        /* ग्रीन/रेड/ब्लू स्टेटसला व्हाईट/लाईट इफेक्ट देण्यासाठी */
+        .status-new, .status-processing, .status-outfordelivery, .status-delivered { 
+             text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* इतर लहान फिक्सेस */
+        hr { border-color: rgba(255, 255, 255, 0.2) !important; }
+        .checkout-form p { color: #f8d7da; } /* एरर टेक्स्ट */
+        
         @media (max-width: 600px) {
             header {
-                flex-direction: column;
                 padding: 10px;
-            }
-            header h2 {
-                margin-bottom: 10px;
-            }
-            nav {
-                margin-top: 10px;
-            }
-            nav a {
-                margin: 0 8px;
-                font-size: 0.9em;
-            }
-            #product-list {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                gap: 10px;
-            }
-            main {
-                padding: 10px;
-            }
-            input[type="text"], input[type="number"], input[type="tel"], input[type="password"],
-            .checkout-form input, #admin-controls input, .admin-product-item input {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-            #admin-controls input {
-                width: 100% !important;
             }
         }
     </style>
@@ -211,23 +167,33 @@
 
     <main>
         <section id="login-view" class="panel-container" style="display: none;">
-            <h2>🔐 लॉगिन / नोंदणी</h2>
-            
             <div style="max-width: 400px; margin: 0 auto;">
                 <h3 id="auth-title">लॉगिन</h3>
-                <input type="text" id="auth-username" placeholder="Username / मोबाईल नंबर" required>
-                <input type="password" id="auth-password" placeholder="पासवर्ड" required>
                 
-                <div id="signup-fields" style="display: none;">
-                    <input type="text" id="auth-name" placeholder="तुमचे पूर्ण नाव" required>
-                    <input type="tel" id="auth-mobile" placeholder="मोबाईल नंबर (नोंदणीसाठी)" required>
+                <div id="login-form-fields">
+                    <input type="text" id="auth-username" placeholder="Username / मोबाईल नंबर" required>
+                    <input type="password" id="auth-password" placeholder="पासवर्ड" required>
+                    
+                    <div id="signup-fields" style="display: none;">
+                        <input type="text" id="auth-name" placeholder="तुमचे पूर्ण नाव" required>
+                        <input type="tel" id="auth-mobile" placeholder="मोबाईल नंबर (नोंदणीसाठी)" required>
+                    </div>
+
+                    <button id="auth-btn">लॉगिन करा</button>
+                    <div id="recaptcha-container"></div>
+                    
+                    <p style="text-align: center; margin-top: 15px;">
+                        <a href="#" onclick="toggleAuthMode()" style="color: #ffc107;">नवीन आहात? **नोंदणी करा**</a>
+                    </p>
+                </div>
+                
+                <div id="otp-verify-form" style="display: none; text-align: center;">
+                    <h4>OTP पडताळणी</h4>
+                    <p style="color: #c4c4c4;">नोंदणी केलेल्या नंबरवर पाठवलेला OTP टाका.</p>
+                    <input type="number" id="otp-input" placeholder="6 अंकी OTP" required style="width: 150px; text-align: center;">
+                    <button id="otp-verify-btn" style="background-color: #28a745;">OTP व्हेरिफाय करा</button>
                 </div>
 
-                <button id="auth-btn" style="background-color: #007bff; color: white; padding: 10px; width: 100%; border: none; border-radius: 4px; margin-bottom: 10px;">लॉगिन करा</button>
-                
-                <p style="text-align: center;">
-                    <a href="#" onclick="toggleAuthMode()">तुम्ही नवीन आहात? **नोंदणी करा**</a>
-                </p>
             </div>
         </section>
 
@@ -241,19 +207,31 @@
             <h2>📝 ऑर्डर निश्चित करा (Checkout)</h2>
             
             <h3>तुमचे कार्ट</h3>
-            <ul id="cart-items-checkout"></ul>
+            <ul id="cart-items-checkout" style="list-style: none; padding: 0;"></ul>
             
             <h3 style="margin-top: 20px;">एकूण देय रक्कम: ₹<span id="checkout-total">0.00</span></h3>
-            <p style="color: red; font-weight: bold;">*किमान ऑर्डर ₹100 आवश्यक आहे.</p>
+            <p style="color: #ffcccc; font-weight: bold;">*किमान ऑर्डर ₹100 आवश्यक आहे.</p>
 
             <div class="checkout-form">
                 <h3>ग्राहक माहिती</h3>
                 <input type="text" id="customer-name" placeholder="पूर्ण नाव" required>
                 <input type="tel" id="customer-mobile" placeholder="मोबाईल नंबर (उदा. 9876543210)" required>
                 <input type="text" id="customer-address" placeholder="डिलिव्हरीचा पूर्ण पत्ता" required>
-                <p style="color: red; font-size: 0.9em;">*ऑर्डर देण्यासाठी तुमचे अचूक स्थान (Location) देणे अनिवार्य आहे.</p>
+                <p style="color: #ffcccc; font-size: 0.9em;">*ऑर्डर देण्यासाठी तुमचे अचूक स्थान (Location) देणे अनिवार्य आहे.</p>
             </div>
-            <button id="place-order-btn">ऑर्डर प्लेस करा</button>
+            
+            <div class="checkout-form" style="margin-top: 20px; border-top: 1px dashed rgba(255, 255, 255, 0.2); padding-top: 15px;">
+                <h3>💰 पेमेंट पर्याय</h3>
+                
+                <button id="pay-upi-btn" style="background-color: #794DFF; margin-bottom: 15px;">
+                    💳 UPI ॲप्सने पेमेंट करा
+                </button>
+                
+                <button id="place-cod-btn" style="background-color: #6c757d;">
+                    ऑर्डर प्लेस करा (कॅश ऑन डिलिव्हरी)
+                </button>
+            </div>
+
         </section>
         
         <section id="admin-view" class="panel-container" style="display: none;">
@@ -262,13 +240,13 @@
             <h3>नवीन उत्पादन जोडा</h3>
             <div id="admin-controls" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px;">
                 <input type="text" id="new-name" placeholder="नाव" required style="width: 30%;">
-                <input type="number" id="new-price" placeholder="किंमत" required style="width: 15%;">
-                <input type="text" id="new-unit" placeholder="युनिट" required style="width: 15%;">
-                <input type="number" id="new-stock" placeholder="स्टॉक" required style="width: 15%;">
+                <input type="number" id="new-price" placeholder="किंमत (प्रति kg)" required style="width: 15%;">
+                <input type="text" id="new-unit" placeholder="युनिट (kg)" value="kg" required style="width: 15%;" disabled>
+                <input type="number" id="new-stock" placeholder="स्टॉक (kg)" required style="width: 15%;">
                 
                 <input type="text" id="new-image" placeholder="इमेज लिंक (URL)" style="width: 48%;"> 
                 
-                <button onclick="addProduct()" style="background-color: #28a745; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; width: 48%; margin-top: -15px;">जोडा</button>
+                <button onclick="addProduct()" style="background-color: #28a745; color: white; padding: 10px; border-radius: 4px; cursor: pointer; width: 48%; margin-top: -15px;">जोडा</button>
             </div>
 
             <h3>सध्याची उत्पादने</h3>
@@ -280,42 +258,187 @@
 
         <section id="delivery-view" class="panel-container" style="display: none;">
             <h2>🛵 डिलिव्हरी पॅनेल - ऑर्डर्सची स्थिती बदला</h2>
+            
+            <div style="border: 1px dashed #007bff; padding: 15px; margin-bottom: 20px;">
+                <h3>ट्रॅकिंग नियंत्रण</h3>
+                <button onclick="toggleDeliveryTracking()" id="tracking-toggle-btn" style="background-color: #28a745; color: white; padding: 10px; border-radius: 5px;">
+                    ▶️ ट्रॅकिंग सुरू करा
+                </button>
+                <p id="tracking-status" style="margin-top: 10px;">ट्रॅकिंग: बंद</p>
+            </div>
+
             <div id="delivery-orders-list"></div>
         </section>
         
         <section id="order-history-view" class="panel-container" style="display: none;">
-            <h2>⏳ तुमचा ऑर्डर इतिहास</h2>
+            <h2>⏳ तुमचा ऑर्डर इतिहास (पावती आणि रेटिंग)</h2>
             <div id="history-list">
-                <p style="text-align: center; color: #777;">लॉगिन केल्यानंतर तुमच्या ऑर्डर्स इथे दिसतील.</p>
+                <p style="text-align: center; color: #c4c4c4;">लॉगिन केल्यानंतर तुमच्या ऑर्डर्स इथे दिसतील.</p>
             </div>
         </section>
     </main>
     
     <script>
-        // *************** ग्लोबल डेटा (डेटाबेसचे काम) ***************
+        // *************** ग्लोबल डेटा आणि कॉन्स्टंट्स ***************
         let products = [
-            { id: 1, name: "कांदा", price: 30.00, unit: "प्रति किलो", stock: 100, isActive: true, image: 'https://via.placeholder.com/150/90EE90?text=Kanda' }, 
-            { id: 2, name: "बटाटा", price: 25.00, unit: "प्रति किलो", stock: 150, isActive: true, image: 'https://via.placeholder.com/150/DAA520?text=Batata' },
-            { id: 3, name: "टोमॅटो", price: 45.00, unit: "प्रति किलो", stock: 80, isActive: false, image: 'https://via.placeholder.com/150/FF6347?text=Tomato' },
+            { id: 1, name: "कांदा", price: 60.00, baseUnit: "kg", stock: 100, isActive: true, image: 'https://via.placeholder.com/150/90EE90?text=Kanda' }, 
+            { id: 2, name: "बटाटा", price: 50.00, baseUnit: "kg", stock: 150, isActive: true, image: 'https://via.placeholder.com/150/DAA520?text=Batata' },
+            { id: 3, name: "टोमॅटो", price: 90.00, baseUnit: "kg", stock: 80, isActive: true, image: 'https://via.placeholder.com/150/FF6347?text=Tomato' },
         ];
-        let cart = [];
+        
+        const UNIT_OPTIONS = [
+            { label: "250 ग्रॅम", value: 0.25, discount: 0 },
+            { label: "500 ग्रॅम", value: 0.5, discount: 0 },
+            { label: "1 किलो", value: 1.0, discount: 0 },
+            { label: "2 किलो (5% Discount)", value: 2.0, discount: 0.05 },
+            { label: "5 किलो (10% Discount)", value: 5.0, discount: 0.10 }
+        ];
+
+        let cart = []; 
         let orders = [];
-        let orderIdCounter = 1001;
         let authMode = 'login';
         let currentUser = null;
-        const MIN_ORDER_VALUE = 100; // ✨ किमान ऑर्डर किंमत सेट केली ✨
-        
-        let users = [
+        const MIN_ORDER_VALUE = 100;
+        const UPI_ID = "Dts9270@oksbi"; 
+        const MERCHANT_NAME = "Online Bhaji Shop";
+
+        let defaultUsers = [
             { username: 'admin', password: 'admin', role: 'admin', name: 'Admin User' },
             { username: 'deepak', password: 'd', role: 'delivery', name: 'Deepak Delivery' },
-            { username: '9988776655', password: 'p', role: 'customer', name: 'Priya Customer' },
         ];
-        // *******************************************************
+        let allUsers = [...defaultUsers]; 
+        let pendingSignupUser = null; 
 
-        // *************** DOM घटक ***************
-        const authUsernameInput = document.getElementById('auth-username');
-        const authPasswordInput = document.getElementById('auth-password');
+        // *************** डेटा लोडिंग आणि ॲप इनिशियलायझेशन ***************
+        
+        var recaptchaVerifier = new firebase.auth.RecaptchaVerifier('auth-btn', {
+            'size': 'invisible', 
+            'callback': (response) => {
+                console.log("Recaptcha यशस्वी.");
+            }
+        });
+
+        function loadUsersFromFirebase() {
+            database.ref('registered_users').once('value')
+                .then(snapshot => {
+                    const registered = snapshot.val();
+                    if (registered) {
+                        const firebaseUsers = Object.values(registered);
+                        allUsers = [...defaultUsers, ...firebaseUsers];
+                    }
+                    renderProducts();
+                    showPanel('customer-view'); 
+                })
+                .catch(error => {
+                    console.error("Firebase युजर्स वाचताना त्रुटी:", error);
+                    allUsers = [...defaultUsers]; 
+                    renderProducts();
+                    showPanel('customer-view'); 
+                });
+        }
+
+        function getUnitDetails(unitValue) {
+            return UNIT_OPTIONS.find(u => u.value == unitValue);
+        }
+
+        // *************** लॉगिन/नोंदणी/OTP कार्यक्षमता ***************
+
         const authBtn = document.getElementById('auth-btn');
+        const otpVerifyBtn = document.getElementById('otp-verify-btn');
+
+        function toggleAuthMode() {
+            authMode = authMode === 'login' ? 'signup' : 'login';
+            document.getElementById('auth-title').textContent = authMode === 'login' ? 'लॉगिन' : 'नवीन नोंदणी';
+            document.getElementById('auth-btn').textContent = authMode === 'login' ? 'लॉगिन करा' : 'नोंदणी करा';
+            document.getElementById('signup-fields').style.display = authMode === 'login' ? 'none' : 'block';
+            document.getElementById('login-form-fields').style.display = 'block';
+            document.getElementById('otp-verify-form').style.display = 'none';
+        }
+
+        authBtn.addEventListener('click', () => {
+            const inputUsername = document.getElementById('auth-username').value.trim();
+            const inputPassword = document.getElementById('auth-password').value.trim();
+
+            if (authMode === 'login') {
+                const user = allUsers.find(u => u.username === inputUsername && u.password === inputPassword);
+                
+                if (user) {
+                    currentUser = user;
+                    alert(`✅ ${user.name} म्हणून यशस्वीरित्या लॉगिन केले! (${user.role})`);
+                    
+                    if (user.role === 'admin') {
+                        showPanel('admin-view');
+                    } else if (user.role === 'delivery') {
+                        showPanel('delivery-view');
+                    } else {
+                        showPanel('customer-view');
+                    }
+                } else {
+                    alert('लॉगिन अयशस्वी. चुकीचे Username किंवा Password.');
+                }
+            } else { 
+                const name = document.getElementById('auth-name').value.trim();
+                const mobile = document.getElementById('auth-mobile').value.trim();
+                const inputPassword = document.getElementById('auth-password').value.trim();
+                
+                if (!name || !mobile || inputPassword.length < 3) {
+                    return alert('कृपया सर्व आवश्यक फील्ड्स भरा.');
+                }
+
+                if (allUsers.find(u => u.username === mobile)) {
+                    return alert('या मोबाईल नंबरने आधीच नोंदणी झाली आहे. कृपया लॉगिन करा.');
+                }
+
+                pendingSignupUser = { 
+                    username: mobile, 
+                    password: inputPassword, 
+                    role: 'customer', 
+                    name: name 
+                };
+                
+                const phoneNumber = "+91" + mobile; 
+                
+                auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+                    .then((confirmation) => {
+                        confirmationResult = confirmation;
+                        document.getElementById('login-form-fields').style.display = 'none';
+                        document.getElementById('otp-verify-form').style.display = 'block';
+                        document.getElementById('auth-title').textContent = 'OTP पडताळणी';
+                        alert('OTP तुमच्या नंबरवर पाठवला आहे. पडताळणी पूर्ण करा.');
+                    })
+                    .catch((error) => {
+                        console.error("OTP पाठवताना त्रुटी:", error);
+                        alert(`OTP पाठवण्यात अपयश आले. (त्रुटी: ${error.message})`);
+                    });
+            }
+        });
+
+        otpVerifyBtn.addEventListener('click', () => {
+            const otpInput = document.getElementById('otp-input').value.trim();
+
+            if (confirmationResult && otpInput) {
+                confirmationResult.confirm(otpInput)
+                    .then((result) => {
+                        database.ref('registered_users/' + pendingSignupUser.username).set(pendingSignupUser);
+                        loadUsersFromFirebase(); 
+                        alert('✅ मोबाईल पडताळणी आणि नोंदणी यशस्वी! आता लॉगिन करा.');
+                        document.getElementById('otp-verify-form').style.display = 'none';
+                        document.getElementById('login-form-fields').style.display = 'block';
+                        document.getElementById('auth-title').textContent = 'लॉगिन';
+                        document.getElementById('auth-username').value = pendingSignupUser.username;
+                        document.getElementById('auth-password').value = ''; 
+                        authMode = 'login';
+                        pendingSignupUser = null;
+                    })
+                    .catch((error) => {
+                        alert('OTP चुकीचा आहे किंवा कालबाह्य झाला आहे.');
+                        console.error("OTP व्हेरिफिकेशन त्रुटी:", error);
+                    });
+            } else {
+                alert('कृपया वैध OTP टाका.');
+            }
+        });
+
 
         // *************** मुख्य पटल बदलणे (Show Panel) ***************
 
@@ -327,7 +450,6 @@
                 return showPanel('login-view');
             }
 
-            // ॲडमिन/डिलिव्हरी ॲक्सेस कंट्रोल (नेव्हिगेशन लपवले असले तरी)
             if (panelId === 'admin-view' && currentUser && currentUser.role !== 'admin') {
                 alert('माफ करा! तुमच्याकडे ॲडमिन ॲक्सेस नाहीये.');
                 return showPanel('customer-view'); 
@@ -358,60 +480,6 @@
             }
         }
         
-        // *************** लॉगिन/नोंदणी कार्यक्षमता ***************
-        
-        function toggleAuthMode() {
-            authMode = authMode === 'login' ? 'signup' : 'login';
-            document.getElementById('auth-title').textContent = authMode === 'login' ? 'लॉगिन' : 'नवीन नोंदणी';
-            document.getElementById('auth-btn').textContent = authMode === 'login' ? 'लॉगिन करा' : 'नोंदणी करा';
-            document.getElementById('signup-fields').style.display = authMode === 'login' ? 'none' : 'block';
-        }
-
-        authBtn.addEventListener('click', () => {
-            const inputUsername = authUsernameInput.value.trim();
-            const inputPassword = authPasswordInput.value.trim();
-
-            if (authMode === 'login') {
-                const user = users.find(u => u.username === inputUsername && u.password === inputPassword);
-                
-                if (user) {
-                    currentUser = user;
-                    alert(`✅ ${user.name} म्हणून यशस्वीरित्या लॉगिन केले! (${user.role})`);
-                    
-                    // ✨ नवीन: भूमिकेनुसार रीडायरेक्ट करा ✨
-                    if (user.role === 'admin') {
-                        showPanel('admin-view');
-                    } else if (user.role === 'delivery') {
-                        showPanel('delivery-view');
-                    } else { // customer or default
-                        showPanel('customer-view');
-                    }
-                } else {
-                    alert('लॉगिन अयशस्वी. चुकीचे Username किंवा Password.');
-                }
-            } else { // signup mode
-                const name = document.getElementById('auth-name').value.trim();
-                const mobile = document.getElementById('auth-mobile').value.trim();
-                
-                if (!name || !mobile || inputPassword.length < 3) {
-                    return alert('कृपया सर्व आवश्यक फील्ड्स भरा आणि पासवर्ड किमान 3 अंकी ठेवा.');
-                }
-
-                if (users.find(u => u.username === mobile)) {
-                    return alert('या मोबाईल नंबरने आधीच नोंदणी झाली आहे. कृपया लॉगिन करा.');
-                }
-                
-                users.push({ 
-                    username: mobile, 
-                    password: inputPassword, 
-                    role: 'customer', 
-                    name: name 
-                });
-                alert('✅ नोंदणी यशस्वी झाली! आता लॉगिन करा.');
-                toggleAuthMode();
-            }
-        });
-
         // *************** ग्राहक विभाग कार्यक्षमता (Customer) ***************
 
         function renderProducts() {
@@ -423,33 +491,63 @@
             activeProducts.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
+
+                const unitOptionsHTML = UNIT_OPTIONS.map(unit => {
+                    const finalPrice = (product.price * unit.value * (1 - unit.discount)).toFixed(2);
+                    return `<option value="${unit.value}"> ${unit.label} - ₹${finalPrice} </option>`;
+                }).join('');
+
                 card.innerHTML = `
                     <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 5px;"> 
                     <h3>${product.name}</h3>
-                    <p>₹${product.price.toFixed(2)} / ${product.unit}</p>
+                    <p>बेस किंमत: ₹${product.price.toFixed(2)} / ${product.baseUnit}</p>
+                    <p style="font-size: 0.8em; color: #c4c4c4;">(मोठ्या युनिट्सवर डिस्काउंट)</p>
+
+                    <select id="unit-select-${product.id}" style="width: 100%; margin-bottom: 10px;">
+                        ${unitOptionsHTML}
+                    </select>
+
                     <button ${product.stock === 0 ? 'disabled' : ''} onclick="addToCart(${product.id})">🛒 कार्टमध्ये टाका</button>
                 `;
                 list.appendChild(card);
             });
             updateCartCount();
         }
+
         function updateCartCount() {
-            document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = cart.length; 
         }
+        
         function addToCart(productId) {
+            const unitSelect = document.getElementById(`unit-select-${productId}`);
+            const selectedUnitValue = parseFloat(unitSelect.value);
+            const unitDetails = getUnitDetails(selectedUnitValue);
+
             const product = products.find(p => p.id === productId);
-            if (product.stock <= 0) {
-                alert(`${product.name} चा स्टॉक संपला आहे!`);
+
+            const baseQuantity = selectedUnitValue;
+            const originalPrice = (product.price * baseQuantity);
+            const discountAmount = originalPrice * unitDetails.discount;
+            const finalPrice = originalPrice - discountAmount;
+            
+            if (product.stock < baseQuantity) {
+                alert(`${product.name} चा फक्त ${product.stock} किलो स्टॉक उपलब्ध आहे. तुम्ही ${unitDetails.label} निवडला आहे.`);
                 return;
             }
             
-            const cartItem = cart.find(item => item.id === productId);
-            if (cartItem) {
-                cartItem.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
+            cart.push({
+                id: Date.now(), 
+                productId: productId,
+                name: product.name, 
+                basePricePerKg: product.price, 
+                unitLabel: unitDetails.label, 
+                totalQuantityInKg: baseQuantity, 
+                price: finalPrice, 
+                discount: discountAmount,
+            });
+            
             updateCartCount();
+            alert(`${unitDetails.label} ${product.name} कार्टमध्ये जोडले.`);
         }
         
         // *************** चेकआउट/कार्ट पेज कार्यक्षमता (Checkout) ***************
@@ -460,21 +558,19 @@
             let total = 0;
 
             if (cart.length === 0) {
-                list.innerHTML = '<p style="text-align: center; color: #777;">तुमचे कार्ट रिकामे आहे.</p>';
+                list.innerHTML = '<p style="text-align: center; color: #c4c4c4;">तुमचे कार्ट रिकामे आहे.</p>';
             }
 
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+            cart.forEach((item, index) => {
+                total += item.price;
                 const li = document.createElement('li');
+                li.style.cssText = 'display: flex; justify-content: space-between; border-bottom: 1px dotted rgba(255, 255, 255, 0.3); padding: 10px 0;';
                 li.innerHTML = `
-                    <span>${item.name} (${item.unit})</span>
-                    <div class="quantity-controls">
-                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                    <span>${item.name} (${item.unitLabel})</span>
+                    <div style="display: flex; align-items: center;">
+                        <span style="font-weight: bold;">₹${item.price.toFixed(2)}</span>
+                        <button onclick="removeCartItem(${index})" style="background-color: #dc3545; padding: 5px; width: auto; margin-left: 10px;">❌</button>
                     </div>
-                    <span>₹${itemTotal.toFixed(2)}</span>
                 `;
                 list.appendChild(li);
             });
@@ -482,76 +578,99 @@
             document.getElementById('checkout-total').textContent = total.toFixed(2);
         }
 
-        function updateQuantity(productId, change) {
-            const cartItemIndex = cart.findIndex(item => item.id === productId);
-            const product = products.find(p => p.id === productId);
-
-            if (cartItemIndex > -1) {
-                const cartItem = cart[cartItemIndex];
-                
-                if (change > 0 && cartItem.quantity >= product.stock) {
-                    alert(`माफ करा! ${product.name} चा फक्त ${product.stock} युनिट स्टॉक उपलब्ध आहे.`);
-                    return;
-                }
-                
-                cartItem.quantity += change;
-
-                if (cartItem.quantity <= 0) {
-                    cart.splice(cartItemIndex, 1);
-                }
-            }
+        function removeCartItem(cartIndex) {
+            cart.splice(cartIndex, 1);
             renderCheckoutCart();
             updateCartCount();
         }
 
         // Geo-location आणि ऑर्डर प्लेसमेंट लॉजिक
-        document.getElementById('place-order-btn').addEventListener('click', () => {
-            if (cart.length === 0) {
-                alert('ऑर्डर देण्यासाठी कार्टमध्ये वस्तू निवडा.');
-                return;
+        document.getElementById('pay-upi-btn').addEventListener('click', () => {
+            const total = parseFloat(document.getElementById('checkout-total').textContent);
+            if (total < MIN_ORDER_VALUE || cart.length === 0) {
+                alert(`ऑर्डर प्लेस करण्यासाठी किमान ₹${MIN_ORDER_VALUE} ची खरेदी आवश्यक आहे.`);
+                return; 
             }
-            
             const name = document.getElementById('customer-name').value.trim();
             const mobile = document.getElementById('customer-mobile').value.trim();
             const address = document.getElementById('customer-address').value.trim();
+            if (!name || !mobile || !address) {
+                alert('कृपया नाव, मोबाईल नंबर आणि पत्ता ही सर्व माहिती भरा.');
+                return;
+            }
             
+            const transactionId = Date.now(); 
+            const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tid=${transactionId}`;
+
+            if (navigator.geolocation) {
+                alert("कृपया UPI ॲपवर पेमेंट पूर्ण करा आणि स्थान (Location) देण्यासाठी 'Allow' दाबा.");
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        placeOrder(name, mobile, address, latitude, longitude, 'UPI');
+                        window.open(upiLink, '_blank');
+                    },
+                    function(error) {
+                        alert('माफ करा, अचूक स्थान आवश्यक आहे.');
+                    }
+                );
+            }
+        });
+
+        document.getElementById('place-cod-btn').addEventListener('click', () => {
+            const total = parseFloat(document.getElementById('checkout-total').textContent);
+            if (total < MIN_ORDER_VALUE || cart.length === 0) {
+                alert(`ऑर्डर प्लेस करण्यासाठी किमान ₹${MIN_ORDER_VALUE} ची खरेदी आवश्यक आहे.`);
+                return; 
+            }
+            const name = document.getElementById('customer-name').value.trim();
+            const mobile = document.getElementById('customer-mobile').value.trim();
+            const address = document.getElementById('customer-address').value.trim();
             if (!name || !mobile || !address) {
                 alert('कृपया नाव, मोबाईल नंबर आणि पत्ता ही सर्व माहिती भरा.');
                 return;
             }
 
             if (navigator.geolocation) {
-                alert("कृपया तुमचे अचूक स्थान (Location) देण्यासाठी 'Allow' (परवानगी द्या) बटण दाबा.");
+                alert("ऑर्डर COD (कॅश ऑन डिलिव्हरी) मध्ये प्लेस करत आहोत. स्थान (Location) देण्यासाठी 'Allow' दाबा.");
                 
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
                         const latitude = position.coords.latitude;
                         const longitude = position.coords.longitude;
-                        
-                        placeOrder(name, mobile, address, latitude, longitude); 
+                        placeOrder(name, mobile, address, latitude, longitude, 'COD');
+                        alert("COD ऑर्डर यशस्वीरित्या प्लेस झाली!");
                     },
                     function(error) {
-                        alert('माफ करा, अचूक स्थान (Location) आवश्यक आहे. कृपया लोकेशन ॲक्सेस द्या.');
+                        alert('माफ करा, अचूक स्थान आवश्यक आहे.');
                     }
                 );
-            } else {
-                alert('तुमचा ब्राउझर Geolocation ला सपोर्ट करत नाही.');
             }
         });
 
-        // Geo-location मिळाल्यावर ऑर्डर डेटा सेव्ह करणारा नवीन फंक्शन
-        function placeOrder(name, mobile, address, lat, lon) {
+
+        function placeOrder(name, mobile, address, lat, lon, paymentType) {
             const total = parseFloat(document.getElementById('checkout-total').textContent);
             
-            // ✨ किमान ऑर्डर किंमत तपासणे ✨
-            if (total < MIN_ORDER_VALUE) {
-                alert(`ऑर्डर प्लेस करण्यासाठी किमान ₹${MIN_ORDER_VALUE} ची खरेदी आवश्यक आहे. सध्याची किंमत: ₹${total.toFixed(2)}`);
-                return; 
+            const stockUpdates = {};
+            cart.forEach(item => {
+                const pId = item.productId;
+                if (!stockUpdates[pId]) stockUpdates[pId] = 0;
+                stockUpdates[pId] += item.totalQuantityInKg;
+            });
+
+            for (const pId in stockUpdates) {
+                const product = products.find(p => p.id === pId);
+                if (product) {
+                    product.stock -= stockUpdates[pId];
+                }
             }
 
             const newOrder = {
-                id: orderIdCounter++,
-                items: JSON.parse(JSON.stringify(cart)),
+                id: Date.now(), 
+                items: JSON.parse(JSON.stringify(cart)), 
                 total: total,
                 name: name,
                 mobile: mobile,
@@ -559,21 +678,17 @@
                 latitude: lat,
                 longitude: lon,
                 status: 'New', 
+                paymentStatus: (paymentType === 'UPI') ? 'Pending' : 'Paid', // COD ला Paid मानले
+                paymentType: paymentType,
                 time: new Date().toLocaleTimeString(),
                 userId: currentUser ? currentUser.username : 'GUEST', 
+                rating: null,
             };
             orders.push(newOrder);
 
-            cart.forEach(item => {
-                const product = products.find(p => p.id === item.id);
-                product.stock -= item.quantity;
-            });
-
-            alert(`✅ ${name}, तुमची ऑर्डर ${newOrder.id} यशस्वी झाली!`);
-            
             cart = [];
-            document.getElementById('customer-name').value = currentUser.name || '';
-            document.getElementById('customer-mobile').value = currentUser.username || '';
+            document.getElementById('customer-name').value = currentUser ? currentUser.name : '';
+            document.getElementById('customer-mobile').value = currentUser ? currentUser.username : '';
             document.getElementById('customer-address').value = '';
             
             showPanel('customer-view'); 
@@ -581,7 +696,7 @@
             renderOrders('admin-orders-list', true); 
         }
 
-        // *************** ॲडमिन विभाग कार्यक्षमता (Admin) ***************
+        // *************** ॲडमिन विभाग कार्यक्षमता (Existing Logic) ***************
 
         function addProduct() {
             const name = document.getElementById('new-name').value;
@@ -595,14 +710,14 @@
                 return;
             }
 
-            const newId = products.length ? products[products.length - 1].id + 1 : 1;
+            const newId = Date.now();
             const imageUrl = image || 'https://via.placeholder.com/150/CCCCCC?text=No+Image';
             
-            products.push({ id: newId, name, price, unit, stock, isActive: true, image: imageUrl }); 
+            products.push({ id: newId, name, price, baseUnit: unit, stock, isActive: true, image: imageUrl }); 
             
             document.getElementById('new-name').value = '';
             document.getElementById('new-price').value = '';
-            document.getElementById('new-unit').value = '';
+            document.getElementById('new-unit').value = 'kg';
             document.getElementById('new-stock').value = '';
             document.getElementById('new-image').value = ''; 
 
@@ -624,9 +739,10 @@
                 const toggleButtonText = product.isActive ? 'OFF करा' : 'ON करा';
 
                 div.innerHTML = `
-                    <span>
+                    <span style="color: #c4c4c4;">
                         ${product.name} | 
-                        <strong style="color: ${statusColor};">स्थिती: ${statusText}</strong>
+                        <strong style="color: ${statusColor};">स्थिती: ${statusText}</strong> |
+                        <strong>स्टॉक: ${product.stock} ${product.baseUnit}</strong>
                     </span>
                     <div style="display: flex; gap: 5px; align-items: center;">
                         <input type="number" id="price-${product.id}" value="${product.price}" style="width: 60px;">
@@ -685,7 +801,7 @@
             }
         }
 
-        // *************** ऑर्डर आणि डिलिव्हरी कार्यक्षमता (Orders & Delivery) ***************
+        // *************** ऑर्डर आणि डिलिव्हरी कार्यक्षमता (Existing Logic) ***************
         
         function renderOrders(containerId, is_admin) {
             const container = document.getElementById(containerId);
@@ -694,7 +810,7 @@
             const ordersToShow = is_admin ? orders : orders.filter(o => o.status !== 'New');
 
             if (ordersToShow.length === 0) {
-                container.innerHTML = '<p style="color: #555; text-align: center;">सध्या कोणतीही ऑर्डर नाही.</p>';
+                container.innerHTML = '<p style="color: #c4c4c4; text-align: center;">सध्या कोणतीही ऑर्डर नाही.</p>';
                 return;
             }
 
@@ -702,28 +818,31 @@
                 const card = document.createElement('div');
                 card.className = 'order-card';
                 
-                const customerDetails = is_admin ? `<p><strong>नाव:</strong> ${order.name} | <strong>मोबाईल:</strong> ${order.mobile}</p>` : '';
+                const customerDetails = is_admin ? `<p style="color: #c4c4c4;"><strong>नाव:</strong> ${order.name} | <strong>मोबाईल:</strong> ${order.mobile}</p>` : '';
 
-                // Geo-location लिंक जोडली
-                const mapLink = (order.latitude && order.longitude) ? 
+                const customerMapLink = (order.latitude && order.longitude) ? 
                     `<p style="margin-top: 10px;">
-                        <a href="http://www.google.com/maps/place/$${order.latitude},${order.longitude}" target="_blank" style="color: blue; font-weight: bold;">
-                            📍 Google Map वर लोकेशन पहा
+                        <a href="http://googleusercontent.com/maps.google.com/7${order.latitude},${order.longitude}" target="_blank" style="color: #60c9ff; font-weight: bold;">
+                            📍 ग्राहकाचे लोकेशन
                         </a>
-                    </p>` : `<p style="color: red;">स्थान (Location) उपलब्ध नाही.</p>`;
+                    </p>` : `<p style="color: #ffcccc;">स्थान (Location) उपलब्ध नाही.</p>`;
 
+                const paymentText = order.paymentType === 'UPI' 
+                                    ? `<strong style="color: ${order.paymentStatus === 'Pending' ? '#ffc107' : '#28a745'}">${order.paymentType} (${order.paymentStatus})</strong>`
+                                    : `<strong style="color: #999;">${order.paymentType}</strong>`;
 
                 card.innerHTML = `
-                    <h4>ऑर्डर ID: ${order.id} | स्थिती: <span class="status-${order.status.toLowerCase().replace(' ', '')}">${order.status}</span></h4>
+                    <h4 style="color: white;">ऑर्डर ID: ${order.id}</h4>
+                    <p style="color: #c4c4c4;">पेमेंट: ${paymentText}</p>
+                    <p>स्थिती: <span class="status-${order.status.toLowerCase().replace(' ', '')}">${order.status}</span></p>
                     ${customerDetails}
-                    <p><strong>पत्ता:</strong> ${order.address}</p>
-                    <p><strong>वेळ:</strong> ${order.time}</p>
-                    <p><strong>एकूण:</strong> ₹${order.total.toFixed(2)}</p>
+                    <p style="color: #c4c4c4;"><strong>पत्ता:</strong> ${order.address}</p>
+                    <p style="color: #c4c4c4;"><strong>वेळ:</strong> ${order.time} | <strong>एकूण:</strong> ₹${order.total.toFixed(2)}</p>
                     
-                    ${mapLink} 
+                    ${customerMapLink} 
 
-                    <ul style="list-style-type: square; margin-left: 20px; font-size: 0.9em;">
-                        ${order.items.map(item => `<li>${item.name} x${item.quantity}</li>`).join('')}
+                    <ul style="list-style-type: square; margin-left: 20px; font-size: 0.9em; color: #c4c4c4;">
+                        ${order.items.map(item => `<li>${item.name} (${item.unitLabel}) - ₹${item.price.toFixed(2)}</li>`).join('')}
                     </ul>
                 `;
 
@@ -733,7 +852,7 @@
                     } else if (order.status === 'Processing') {
                         card.innerHTML += `<button onclick="updateOrderStatus(${order.id}, 'Out for Delivery')" style="background-color: #007bff;">डिलिव्हरीसाठी पाठवा</button>`;
                     }
-                } else { // डिलिव्हरी पॅनेलसाठी
+                } else { 
                     if (order.status === 'Out for Delivery') {
                         card.innerHTML += `<button onclick="updateOrderStatus(${order.id}, 'Delivered')" style="background-color: #28a745;">डिलिव्हर केले (Complete)</button>`;
                     } else if (order.status !== 'Delivered') {
@@ -748,14 +867,39 @@
         function updateOrderStatus(orderId, newStatus) {
             const order = orders.find(o => o.id === orderId);
             if (order) {
+                let whatsappMessage = '';
+                
+                if (newStatus === 'Processing') {
+                    whatsappMessage = `नमस्ते ${order.name}, tumchi order #${order.id} aamhi pack karat aahot. Tyaamule status 'Processing' zalela ahe. Tumchya dhairyasaathi dhanyavaad!`;
+                } else if (newStatus === 'Out for Delivery') {
+                    whatsappMessage = `Chaangli baatmi! Tumchi order #${order.id} delivery sathi nighali ahe. Aamcha delivery boy lavkarach tumchya pattyavar pohochle. Status: Out for Delivery.`;
+                }
+
+                if (whatsappMessage) {
+                    const whatsappURL = generateWhatsAppLink(order.mobile, whatsappMessage);
+                    const confirmRedirect = confirm(`ऑर्डर #${order.id} ची स्थिती ${newStatus} अशी बदलणार. ग्राहकाला WhatsApp वर सूचना पाठवायची?`);
+                    
+                    if (confirmRedirect) {
+                         window.open(whatsappURL, '_blank');
+                    }
+                }
+                
                 order.status = newStatus;
                 alert(`ऑर्डर ${orderId} ची स्थिती ${newStatus} अशी बदलली!`);
+
                 renderOrders('admin-orders-list', true);
                 renderOrders('delivery-orders-list', false);
+                renderOrderHistory();
             }
         }
         
-        // *************** ऑर्डर इतिहास फंक्शन ***************
+        function generateWhatsAppLink(mobile, messageBody) {
+            const phoneNumber = '91' + mobile; 
+            const encodedMessage = encodeURIComponent(messageBody);
+            return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        }
+        
+        // *************** ऑर्डर इतिहास/पावती/फीडबॅक फंक्शन ***************
 
         function renderOrderHistory() {
             const historyList = document.getElementById('history-list');
@@ -775,32 +919,118 @@
 
             userOrders.forEach(order => {
                 const statusColor = order.status === 'Delivered' ? 'green' : (order.status === 'New' ? 'blue' : 'orange');
+                
+                let trackingMapLink = '';
+                if (order.status === 'Out for Delivery') {
+                    trackingMapLink = `
+                        <p style="margin-top: 10px;">
+                            <a href="#" onclick="trackDeliveryBoy('${order.id}')" style="color: purple; font-weight: bold; display: block;">
+                                🛵 डिलिव्हरी ट्रॅक करा (रिअल-टाइम)
+                            </a>
+                        </p>
+                    `;
+                }
+                
+                let feedbackSection = '';
+                if (order.status === 'Delivered' && !order.rating) {
+                    feedbackSection = `
+                        <div style="padding: 10px; border: 1px dashed #28a745; margin-top: 15px; background-color: rgba(40, 167, 69, 0.1);">
+                            <h5>🌟 तुमच्या ऑर्डरला रेटिंग द्या:</h5>
+                            <select id="rating-select-${order.id}" style="padding: 5px; margin-right: 10px; width: 150px;">
+                                <option value="5">⭐⭐⭐⭐⭐ (उत्कृष्ट)</option>
+                                <option value="4">⭐⭐⭐⭐ (खूप चांगले)</option>
+                                <option value="3">⭐⭐⭐ (चांगले)</option>
+                                <option value="2">⭐⭐ (सरासरी)</option>
+                                <option value="1">⭐ (खराब)</option>
+                            </select>
+                            <button onclick="submitFeedback(${order.id})" style="background-color: #007bff; color: white; padding: 6px 10px; border-radius: 4px; width: auto;">फीडबॅक सबमिट करा</button>
+                        </div>
+                    `;
+                } else if (order.rating) {
+                     feedbackSection = `<p style="margin-top: 10px; font-weight: bold; color: green;">
+                        ✅ तुमचे रेटिंग: ${'⭐'.repeat(order.rating)} (${order.rating}/5)
+                     </p>`;
+                }
 
                 const card = document.createElement('div');
                 card.className = 'panel-container'; 
                 card.style.borderLeft = `5px solid ${statusColor}`;
                 card.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h4>ऑर्डर ID: ${order.id}</h4>
-                        <p>स्थिती: <strong style="color: ${statusColor};">${order.status}</strong></p>
+                    <div style="background-color: rgba(255, 255, 255, 0.1); padding: 10px; border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+                        <h4 style="margin: 0; color: #ffc107;">🧾 ऑर्डर पावती (Order ID: ${order.id})</h4>
                     </div>
-                    <p><strong>एकूण:</strong> ₹${order.total.toFixed(2)}</p>
-                    <p><strong>वेळ:</strong> ${order.time} | <strong>पत्ता:</strong> ${order.address}</p>
-                    <details>
-                        <summary style="font-weight: bold; cursor: pointer; color: #4CAF50;">वस्तूंचा तपशील पहा</summary>
-                        <ul style="list-style-type: disc; margin-left: 20px;">
-                            ${order.items.map(item => `<li>${item.name} (x${item.quantity}) - ₹${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
+                    
+                    <div style="padding: 10px; color: #c4c4c4;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <p><strong>स्थिती:</strong> <strong style="color: ${statusColor};">${order.status}</strong></p>
+                            <p><strong>पेमेंट:</strong> ${order.paymentType} (${order.paymentStatus})</p>
+                        </div>
+                        <p><strong>वेळ:</strong> ${order.time} | <strong>पत्ता:</strong> ${order.address}</p>
+                        <hr style="border-top: 1px dashed rgba(255, 255, 255, 0.2);">
+
+                        <h5 style="margin-top: 10px; color: #fff;">वस्तूंचा तपशील:</h5>
+                        <ul style="list-style: none; padding: 0; font-size: 0.9em;">
+                            ${order.items.map(item => {
+                                const discountText = item.discount > 0 ? `<span style="color: #ffcccc; font-size: 0.8em;">(-₹${item.discount.toFixed(2)})</span>` : '';
+                                return `
+                                    <li style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dotted rgba(255, 255, 255, 0.1);">
+                                        <span>${item.name} (${item.unitLabel}) </span>
+                                        <span style="text-align: right;">
+                                            ₹${item.price.toFixed(2)} ${discountText}
+                                        </span>
+                                    </li>`;
+                            }).join('')}
                         </ul>
-                    </details>
+                        <hr style="border-top: 2px solid rgba(255, 255, 255, 0.4);">
+                        <div style="display: flex; justify-content: space-between; font-size: 1.2em; font-weight: bold; padding-top: 5px; color: white;">
+                            <span>एकूण देय रक्कम:</span>
+                            <span>₹${order.total.toFixed(2)}</span>
+                        </div>
+                        
+                        ${trackingMapLink}
+                        ${feedbackSection}
+                    </div>
                 `;
                 historyList.appendChild(card);
             });
         }
+        
+        function submitFeedback(orderId) {
+            const selectElement = document.getElementById(`rating-select-${orderId}`);
+            const rating = parseInt(selectElement.value);
+
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.rating = rating;
+                alert(`तुमचा ${rating} स्टार फीडबॅक यशस्वीरित्या सबमिट झाला. धन्यवाद!`);
+                renderOrderHistory(); 
+            }
+        }
+
+        // *************** ग्राहक ट्रॅकिंग फंक्शन (Existing Logic) ***************
+
+        function trackDeliveryBoy(orderId) {
+            const deliveryBoyId = defaultUsers.find(u => u.role === 'delivery').username; 
+            
+            database.ref('delivery_locations/' + deliveryBoyId).once('value')
+                .then(snapshot => {
+                    const location = snapshot.val();
+                    if (location && location.latitude && location.longitude) {
+                        const mapsUrl = `http://googleusercontent.com/maps.google.com/7${location.latitude},${location.longitude}`;
+                        window.open(mapsUrl, '_blank');
+                    } else {
+                        alert('डिलिव्हरी बॉयचे सध्याचे स्थान उपलब्ध नाही किंवा ट्रॅकिंग सुरू नाही. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा.');
+                    }
+                })
+                .catch(error => {
+                    console.error("Firebase डेटा वाचताना त्रुटी:", error);
+                    alert("ट्रॅकिंगमध्ये त्रुटी आली.");
+                });
+        }
 
 
         // *************** ॲप सुरू करणे ***************
-        renderProducts();
-        showPanel('customer-view'); 
+        loadUsersFromFirebase(); 
     </script>
 </body>
 </html>
