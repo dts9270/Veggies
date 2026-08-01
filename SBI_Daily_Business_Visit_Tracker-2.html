@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#0b4f3c" />
+  <title>SBI Daily Business Visit Tracker</title>
+  <style>
+    :root{
+      --primary:#0b4f3c;
+      --primary2:#147a5b;
+      --accent:#f4b400;
+      --bg:#eef5f2;
+      --card:#ffffff;
+      --text:#17312a;
+      --muted:#6c7c77;
+      --danger:#b42318;
+      --border:#d7e3de;
+      --shadow:0 10px 30px rgba(11,79,60,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Nirmala UI","Mangal","Mukta",Arial,sans-serif;
+      background:linear-gradient(180deg,#e8f4ef 0,#f7faf9 50%,#eef5f2 100%);
+      color:var(--text);
+    }
+    .app{max-width:980px;margin:auto;padding:14px 14px 90px}
+    .hero{
+      background:linear-gradient(135deg,var(--primary),var(--primary2));
+      color:#fff;border-radius:22px;padding:20px;box-shadow:var(--shadow);
+      position:relative;overflow:hidden;
+    }
+    .hero:after{
+      content:"";position:absolute;width:180px;height:180px;border-radius:50%;
+      background:rgba(255,255,255,.08);right:-55px;top:-70px;
+    }
+    .brand{font-size:13px;letter-spacing:.8px;opacity:.9;font-weight:700}
+    h1{margin:5px 0 6px;font-size:25px;line-height:1.22}
+    .hero p{margin:0;font-size:14px;opacity:.9}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+    .stat{
+      background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);
+      border-radius:14px;padding:11px;text-align:center;backdrop-filter:blur(8px)
+    }
+    .stat b{display:block;font-size:23px}
+    .stat span{font-size:11px;opacity:.9}
+    .progress{margin-top:12px;background:rgba(255,255,255,.18);height:10px;border-radius:999px;overflow:hidden}
+    .progress > div{height:100%;width:0;background:linear-gradient(90deg,#ffd76a,#fff0a8);transition:.3s}
+    .section{background:var(--card);border-radius:20px;padding:16px;margin-top:14px;box-shadow:var(--shadow);border:1px solid #edf2ef}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .section-title h2{margin:0;font-size:18px}
+    .pill{font-size:12px;background:#e9f6f1;color:var(--primary);padding:5px 9px;border-radius:999px;font-weight:700}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .full{grid-column:1/-1}
+    label{display:block;font-size:12px;font-weight:700;margin-bottom:5px;color:#3c514a}
+    input,select,textarea{
+      width:100%;border:1px solid var(--border);background:#fbfdfc;border-radius:12px;
+      padding:12px 13px;font-size:15px;color:var(--text);outline:none
+    }
+    input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 3px rgba(20,122,91,.10)}
+    textarea{min-height:84px;resize:vertical}
+    .checks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .check{
+      border:1px solid var(--border);border-radius:11px;padding:9px;background:#fbfdfc;
+      display:flex;align-items:center;gap:7px;font-size:13px
+    }
+    .check input{width:auto;margin:0}
+    .photo-box{
+      border:1.5px dashed #8fb8a9;border-radius:14px;padding:11px;background:#f7fbf9;text-align:center
+    }
+    .photo-preview{
+      display:none;width:100%;max-height:280px;object-fit:contain;border-radius:12px;margin-top:10px;background:#eef2f0
+    }
+    .location-card{
+      display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
+      border:1px solid var(--border);background:#f7fbf9;border-radius:14px;padding:12px
+    }
+    .location-text{font-size:13px;line-height:1.45;color:#496059}
+    .btn{
+      border:0;border-radius:12px;padding:12px 14px;font-weight:800;font-size:14px;
+      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px
+    }
+    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:white}
+    .btn-light{background:#e8f4ef;color:var(--primary)}
+    .btn-gold{background:#fff4ce;color:#7b5600}
+    .btn-danger{background:#fdecea;color:var(--danger)}
+    .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    .visit-list{display:grid;gap:10px}
+    .visit{
+      border:1px solid var(--border);border-radius:15px;padding:12px;background:#fcfefd;
+      display:grid;grid-template-columns:74px 1fr;gap:12px
+    }
+    .thumb{width:74px;height:74px;border-radius:12px;object-fit:cover;background:#e9efec}
+    .visit h3{font-size:15px;margin:0 0 4px}
+    .meta{font-size:12px;color:var(--muted);line-height:1.5}
+    .status{display:inline-block;border-radius:999px;padding:4px 8px;background:#eaf6f1;color:var(--primary);font-size:11px;font-weight:800;margin-top:5px}
+    .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .actions .btn{padding:8px 10px;font-size:12px;border-radius:9px}
+    .empty{text-align:center;color:var(--muted);padding:26px 10px}
+    .notice{font-size:12px;color:#5a6f68;background:#fff8dc;border:1px solid #f0df9e;padding:10px;border-radius:12px;margin-top:10px}
+    .toast{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(80px);
+      background:#17312a;color:#fff;padding:11px 16px;border-radius:12px;font-size:13px;
+      opacity:0;transition:.25s;z-index:9999;max-width:90%;text-align:center
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:700px){
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .form-grid{grid-template-columns:1fr}
+      .full{grid-column:auto}
+      .checks{grid-template-columns:repeat(2,1fr)}
+      h1{font-size:22px}
+    }
+    @media(max-width:400px){.checks{grid-template-columns:1fr}.btn-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="brand">STATE BANK OF INDIA • BUSINESS SOURCE VISIT</div>
+      <h1>दैनिक ५ व्यवसाय भेटी नोंद प्रणाली</h1>
+      <p>फोटो, GPS जिओ-टॅग, तारीख-वेळ आणि स्वतंत्र A4 PDF रिपोर्ट</p>
+      <div class="grid">
+        <div class="stat"><b id="todayCount">0</b><span>आजच्या भेटी</span></div>
+        <div class="stat"><b>5</b><span>दैनिक लक्ष्य</span></div>
+        <div class="stat"><b id="remainingCount">5</b><span>बाकी भेटी</span></div>
+        <div class="stat"><b id="totalCount">0</b><span>एकूण नोंदी</span></div>
+      </div>
+      <div class="progress"><div id="progressBar"></div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>नवीन भेट नोंदवा</h2>
+        <span class="pill" id="liveClock">--</span>
+      </div>
+
+      <form id="visitForm">
+        <div class="form-grid">
+          <div>
+            <label>भेट देणारे अधिकारी *</label>
+            <select id="visitor" required>
+              <option value="">नाव निवडा</option>
+              <option>विजय तिरपुडे सर – Chief Manager</option>
+              <option>प्रिया मार्कड</option>
+              <option>दीपक शेंगुळे</option>
+            </select>
+          </div>
+          <div>
+            <label>शाखेचे नाव</label>
+            <input id="branch" value="State Bank of India" placeholder="शाखेचे नाव" />
+          </div>
+          <div>
+            <label>दुकान / संस्थेचे नाव *</label>
+            <input id="shopName" required placeholder="उदा. श्री गणेश मेडिकल" />
+          </div>
+          <div>
+            <label>मालक / संपर्क व्यक्तीचे नाव *</label>
+            <input id="ownerName" required placeholder="पूर्ण नाव" />
+          </div>
+          <div>
+            <label>मोबाईल नंबर</label>
+            <input id="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10 अंकी मोबाईल नंबर" />
+          </div>
+          <div>
+            <label>व्यवसायाचा प्रकार *</label>
+            <select id="businessType" required>
+              <option value="">प्रकार निवडा</option>
+              <option>किराणा / सुपर मार्केट</option>
+              <option>मेडिकल / हॉस्पिटल</option>
+              <option>हॉटेल / रेस्टॉरंट</option>
+              <option>कापड / रेडिमेड</option>
+              <option>हार्डवेअर / बांधकाम</option>
+              <option>शैक्षणिक संस्था</option>
+              <option>पेट्रोल पंप</option>
+              <option>लघु उद्योग / कारखाना</option>
+              <option>शासकीय / खासगी कार्यालय</option>
+              <option>इतर</option>
+            </select>
+          </div>
+          <div class="full">
+            <label>पूर्ण पत्ता / परिसर *</label>
+            <textarea id="address" required placeholder="दुकान क्रमांक, रोड, परिसर, गाव/शहर"></textarea>
+          </div>
+
+          <div class="full">
+            <label>संभाव्य SBI व्यवसाय / सेवा</label>
+            <div class="checks" id="services">
+              <label class="check"><input type="checkbox" value="Current Account"> Current Account</label>
+              <label class="check"><input type="checkbox" value="Savings Account"> Savings Account</label>
+              <label class="check"><input type="checkbox" value="QR / Merchant Payment"> QR / Merchant</label>
+              <label class="check"><input type="checkbox" value="POS Machine"> POS Machine</label>
+              <label class="check"><input type="checkbox" value="Business Loan / Mudra"> Business Loan / Mudra</label>
+              <label class="check"><input type="checkbox" value="Cash Credit / OD"> Cash Credit / OD</label>
+              <label class="check"><input type="checkbox" value="Insurance"> Insurance</label>
+              <label class="check"><input type="checkbox" value="Deposit"> Deposit</label>
+              <label class="check"><input type="checkbox" value="Other"> इतर</label>
+            </div>
+          </div>
+
+          <div>
+            <label>ग्राहकाचा प्रतिसाद *</label>
+            <select id="response" required>
+              <option value="">प्रतिसाद निवडा</option>
+              <option>Interested</option>
+              <option>Follow-up Required</option>
+              <option>Documents Pending</option>
+              <option>Application Submitted</option>
+              <option>Business Converted</option>
+              <option>Not Interested</option>
+            </select>
+          </div>
+          <div>
+            <label>संभाव्य व्यवसाय रक्कम (₹)</label>
+            <input id="potentialAmount" type="number" inputmode="decimal" min="0" placeholder="अंदाजे रक्कम" />
+          </div>
+          <div>
+            <label>पुढील फॉलोअप तारीख</label>
+            <input id="followupDate" type="date" />
+          </div>
+          <div>
+            <label>भेटीची तारीख व वेळ</label>
+            <input id="visitDateTime" readonly />
+          </div>
+
+          <div class="full">
+            <label>भेटीचा फोटो *</label>
+            <div class="photo-box">
+              <input id="photo" type="file" accept="image/*" capture="environment" required />
+              <img id="photoPreview" class="photo-preview" alt="फोटो पूर्वदृश्य" />
+              <div style="font-size:12px;color:#6c7c77;margin-top:7px">फोटो निवडल्यानंतर तो आकार कमी करून सुरक्षितपणे सेव्ह केला जाईल.</div>
+            </div>
+          </div>
+
+          <div class="full">
+            <label>GPS जिओ-टॅग *</label>
+            <div class="location-card">
+              <div class="location-text" id="locationText">अजून लोकेशन घेतलेले नाही.</div>
+              <button class="btn btn-light" type="button" id="getLocationBtn">📍 लोकेशन घ्या</button>
+            </div>
+            <div class="notice">GPS साठी मोबाईलचे Location सुरू ठेवा आणि ब्राउझरमध्ये Location permission “Allow” करा. अचूकता कमी असल्यास पुन्हा लोकेशन घ्या.</div>
+          </div>
+
+          <div class="full">
+            <label>भेटीची नोंद / चर्चा</label>
+            <textarea id="remarks" placeholder="ग्राहकाची गरज, सध्याची बँक, आवश्यक कागदपत्रे, पुढील कृती इ."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-light" id="resetBtn">फॉर्म साफ करा</button>
+          <button type="submit" class="btn btn-primary">✅ भेट सेव्ह करा</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>आजच्या भेटी</h2>
+        <div class="toolbar">
+          <button class="btn btn-gold" id="backupBtn" type="button">डेटा बॅकअप</button>
+          <label class="btn btn-light" style="cursor:pointer">
+            बॅकअप Restore
+            <input id="restoreInput" type="file" accept=".json,application/json" style="display:none">
+          </label>
+        </div>
+      </div>
+      <div id="visitList" class="visit-list"></div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = (id) => document.getElementById(id);
+  const DB_NAME = "SBI_Business_Visit_DB";
+  const STORE = "visits";
+  const DB_VERSION = 1;
+  let db;
+  let currentLocation = null;
+  let compressedPhoto = "";
+
+  function openDB(){
+    return new Promise((resolve,reject)=>{
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e)=>{
+        const d = e.target.result;
+        if(!d.objectStoreNames.contains(STORE)){
+          const store = d.createObjectStore(STORE,{keyPath:"id"});
+          store.createIndex("visitDate","visitDate",{unique:false});
+        }
+      };
+      req.onsuccess=()=>{db=req.result;resolve(db)};
+      req.onerror=()=>reject(req.error);
+    });
+  }
+
+  function putVisit(v){
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(STORE,"readwrite");
+      tx.objectStore(STORE).put(v);
+      tx.oncomplete=()=>resolve();
+      tx.onerror=()=>reject(tx.error);
+    });
+  }
+
+  function getAllVisits(){
+    return new Promise((resolve,reject)=>{
+      const req=db.transaction(STORE,"readonly").objectStore(STORE).getAll();
+      req.onsuccess=()=>resolve(req.result || []);
+      req.onerror=()=>reject(req.error);
+    });
+  }
+
+  function deleteVisit(id){
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(STORE,"readwrite");
+      tx.objectStore(STORE).delete(id);
+      tx.oncomplete=()=>resolve();
+      tx.onerror=()=>reject(tx.error);
+    });
+  }
+
+  function clearAll(){
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(STORE,"readwrite");
+      tx.objectStore(STORE).clear();
+      tx.oncomplete=()=>resolve();
+      tx.onerror=()=>reject(tx.error);
+    });
+  }
+
+  function nowLocal(){
+    const d = new Date();
+    return {
+      iso: d.toISOString(),
+      local: d.toLocaleString("mr-IN",{
+        day:"2-digit",month:"2-digit",year:"numeric",
+        hour:"2-digit",minute:"2-digit",second:"2-digit"
+      }),
+      dateKey: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`
+    };
+  }
+
+  function formatDate(iso){
+    return new Date(iso).toLocaleString("mr-IN",{
+      day:"2-digit",month:"2-digit",year:"numeric",
+      hour:"2-digit",minute:"2-digit"
+    });
+  }
+
+  function escapeHTML(value){
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+  }
+
+  function showToast(msg){
+    const t=$("toast");
+    t.textContent=msg;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"),2600);
+  }
+
+  function updateClock(){
+    $("liveClock").textContent = new Date().toLocaleTimeString("mr-IN");
+    $("visitDateTime").value = nowLocal().local;
+  }
+  setInterval(updateClock,1000);
+  updateClock();
+
+  $("photo").addEventListener("change", async (e)=>{
+    const file=e.target.files[0];
+    if(!file){compressedPhoto="";$("photoPreview").style.display="none";return;}
+    try{
+      compressedPhoto=await compressImage(file,1100,0.72);
+      $("photoPreview").src=compressedPhoto;
+      $("photoPreview").style.display="block";
+    }catch(err){
+      showToast("फोटो प्रक्रिया करण्यात अडचण आली.");
+    }
+  });
+
+  function compressImage(file,maxSize,quality){
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>{
+        const img=new Image();
+        img.onload=()=>{
+          let w=img.width,h=img.height;
+          const ratio=Math.min(1,maxSize/Math.max(w,h));
+          w=Math.round(w*ratio); h=Math.round(h*ratio);
+          const canvas=document.createElement("canvas");
+          canvas.width=w;canvas.height=h;
+          const ctx=canvas.getContext("2d");
+          ctx.drawImage(img,0,0,w,h);
+          resolve(canvas.toDataURL("image/jpeg",quality));
+        };
+        img.onerror=reject;
+        img.src=reader.result;
+      };
+      reader.onerror=reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  $("getLocationBtn").addEventListener("click",()=>{
+    if(!navigator.geolocation){
+      showToast("या ब्राउझरमध्ये GPS सुविधा उपलब्ध नाही.");
+      return;
+    }
+    $("locationText").textContent="लोकेशन घेत आहे...";
+    navigator.geolocation.getCurrentPosition(
+      pos=>{
+        currentLocation={
+          latitude:pos.coords.latitude,
+          longitude:pos.coords.longitude,
+          accuracy:Math.round(pos.coords.accuracy),
+          capturedAt:new Date().toISOString()
+        };
+        $("locationText").innerHTML =
+          `<b>Latitude:</b> ${currentLocation.latitude.toFixed(6)}<br>`+
+          `<b>Longitude:</b> ${currentLocation.longitude.toFixed(6)}<br>`+
+          `<b>Accuracy:</b> ±${currentLocation.accuracy} मीटर`;
+        showToast("GPS लोकेशन यशस्वीरीत्या घेतले.");
+      },
+      err=>{
+        currentLocation=null;
+        const msg = err.code===1 ? "Location permission नाकारली आहे." :
+                    err.code===2 ? "GPS लोकेशन उपलब्ध नाही." :
+                    "लोकेशन घेण्यासाठी जास्त वेळ लागला.";
+        $("locationText").textContent=msg;
+        showToast(msg);
+      },
+      {enableHighAccuracy:true,timeout:15000,maximumAge:0}
+    );
+  });
+
+  $("visitForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    if(!compressedPhoto){
+      showToast("भेटीचा फोटो आवश्यक आहे.");
+      return;
+    }
+    if(!currentLocation){
+      showToast("GPS लोकेशन घेणे आवश्यक आहे.");
+      return;
+    }
+
+    const mobile=$("mobile").value.trim();
+    if(mobile && !/^[6-9]\d{9}$/.test(mobile)){
+      showToast("योग्य 10 अंकी मोबाईल नंबर टाका.");
+      return;
+    }
+
+    const services=[...document.querySelectorAll("#services input:checked")].map(x=>x.value);
+    const t=nowLocal();
+    const visit={
+      id:"VISIT-"+Date.now(),
+      visitor:$("visitor").value,
+      branch:$("branch").value.trim(),
+      shopName:$("shopName").value.trim(),
+      ownerName:$("ownerName").value.trim(),
+      mobile,
+      businessType:$("businessType").value,
+      address:$("address").value.trim(),
+      services,
+      response:$("response").value,
+      potentialAmount:$("potentialAmount").value || "",
+      followupDate:$("followupDate").value || "",
+      remarks:$("remarks").value.trim(),
+      photo:compressedPhoto,
+      location:currentLocation,
+      createdAt:t.iso,
+      visitDate:t.dateKey
+    };
+
+    try{
+      await putVisit(visit);
+      showToast("भेट सेव्ह झाली. PDF रिपोर्ट तयार करता येईल.");
+      resetForm(false);
+      await renderVisits();
+    }catch(err){
+      console.error(err);
+      showToast("डेटा सेव्ह झाला नाही. मोबाईल स्टोरेज तपासा.");
+    }
+  });
+
+  $("resetBtn").addEventListener("click",()=>resetForm(true));
+
+  function resetForm(ask){
+    if(ask && !confirm("फॉर्ममधील माहिती साफ करायची आहे का?")) return;
+    const keepBranch=$("branch").value;
+    $("visitForm").reset();
+    $("branch").value=keepBranch || "State Bank of India";
+    compressedPhoto="";
+    currentLocation=null;
+    $("photoPreview").src="";
+    $("photoPreview").style.display="none";
+    $("locationText").textContent="अजून लोकेशन घेतलेले नाही.";
+    updateClock();
+  }
+
+  async function renderVisits(){
+    const all=(await getAllVisits()).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    const today=nowLocal().dateKey;
+    const todays=all.filter(v=>v.visitDate===today);
+
+    $("todayCount").textContent=todays.length;
+    $("remainingCount").textContent=Math.max(0,5-todays.length);
+    $("totalCount").textContent=all.length;
+    $("progressBar").style.width=`${Math.min(100,(todays.length/5)*100)}%`;
+
+    if(!todays.length){
+      $("visitList").innerHTML='<div class="empty">आजची कोणतीही भेट अजून नोंदवलेली नाही.</div>';
+      return;
+    }
+
+    $("visitList").innerHTML=todays.map(v=>{
+      const mapUrl=`https://www.google.com/maps?q=${v.location.latitude},${v.location.longitude}`;
+      const wa=v.mobile ? `https://wa.me/91${v.mobile}` : "";
+      return `
+      <article class="visit">
+        <img class="thumb" src="${v.photo}" alt="भेट फोटो">
+        <div>
+          <h3>${escapeHTML(v.shopName)}</h3>
+          <div class="meta">
+            ${escapeHTML(v.ownerName)} • ${escapeHTML(v.businessType)}<br>
+            ${escapeHTML(v.visitor)}<br>
+            ${formatDate(v.createdAt)} • GPS ±${escapeHTML(v.location.accuracy)}m
+          </div>
+          <span class="status">${escapeHTML(v.response)}</span>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="window.printVisit('${v.id}')">📄 A4 PDF</button>
+            <a class="btn btn-light" href="${mapUrl}" target="_blank" rel="noopener">📍 Map</a>
+            ${v.mobile ? `<a class="btn btn-light" href="tel:${v.mobile}">📞 Call</a>` : ""}
+            ${v.mobile ? `<a class="btn btn-light" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
+            <button class="btn btn-danger" onclick="window.removeVisit('${v.id}')">Delete</button>
+          </div>
+        </div>
+      </article>`;
+    }).join("");
+  }
+
+  window.removeVisit=async(id)=>{
+    if(!confirm("ही भेट कायमची Delete करायची आहे का?")) return;
+    await deleteVisit(id);
+    await renderVisits();
+    showToast("नोंद Delete झाली.");
+  };
+
+  window.printVisit=async(id)=>{
+    const all=await getAllVisits();
+    const v=all.find(x=>x.id===id);
+    if(!v) return;
+    const mapUrl=`https://www.google.com/maps?q=${v.location.latitude},${v.location.longitude}`;
+    const amount=v.potentialAmount ? `₹${Number(v.potentialAmount).toLocaleString("en-IN")}` : "-";
+    const services=(v.services && v.services.length) ? v.services.join(", ") : "-";
+    const follow=v.followupDate ? new Date(v.followupDate+"T00:00:00").toLocaleDateString("mr-IN") : "-";
+
+    const report=`<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<title>${escapeHTML(v.shopName)} - Visit Report</title>
+<style>
+@page{size:A4 portrait;margin:10mm}
+*{box-sizing:border-box}
+body{font-family:"Nirmala UI","Mangal",Arial,sans-serif;color:#111;margin:0;background:#fff}
+.page{width:100%;min-height:277mm;border:1.4px solid #111;padding:8mm;position:relative}
+.header{text-align:center;border-bottom:2px solid #0b4f3c;padding-bottom:7px;margin-bottom:8px}
+.header h1{font-size:20px;margin:0;color:#0b4f3c}
+.header p{font-size:12px;margin:3px 0 0}
+.meta{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px}
+.photo{width:100%;height:80mm;object-fit:contain;border:1px solid #333;background:#f4f4f4;margin:5px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+td{border:1px solid #333;padding:6px;vertical-align:top}
+td.key{width:29%;font-weight:700;background:#eef5f2}
+.geo{margin-top:8px;border:1px solid #333;padding:7px;font-size:11px;line-height:1.5}
+.sign{display:grid;grid-template-columns:1fr 1fr;gap:35mm;margin-top:17mm;font-size:12px;text-align:center}
+.line{border-top:1px solid #111;padding-top:4px}
+.footer{position:absolute;bottom:5mm;left:8mm;right:8mm;text-align:center;font-size:9px;color:#555}
+a{color:#000;text-decoration:none}
+@media print{button{display:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>STATE BANK OF INDIA</h1>
+    <p><b>नवीन व्यवसाय स्रोत – प्रत्यक्ष भेट अहवाल</b></p>
+  </div>
+  <div class="meta">
+    <span><b>Report ID:</b> ${escapeHTML(v.id)}</span>
+    <span><b>भेट तारीख-वेळ:</b> ${escapeHTML(formatDate(v.createdAt))}</span>
+  </div>
+
+  <img class="photo" src="${v.photo}" alt="Visit Photo">
+
+  <table>
+    <tr><td class="key">शाखा</td><td>${escapeHTML(v.branch || "-")}</td></tr>
+    <tr><td class="key">भेट देणारे अधिकारी</td><td>${escapeHTML(v.visitor)}</td></tr>
+    <tr><td class="key">दुकान / संस्था</td><td><b>${escapeHTML(v.shopName)}</b></td></tr>
+    <tr><td class="key">मालक / संपर्क व्यक्ती</td><td>${escapeHTML(v.ownerName)}</td></tr>
+    <tr><td class="key">मोबाईल नंबर</td><td>${escapeHTML(v.mobile || "-")}</td></tr>
+    <tr><td class="key">व्यवसायाचा प्रकार</td><td>${escapeHTML(v.businessType)}</td></tr>
+    <tr><td class="key">पूर्ण पत्ता</td><td>${escapeHTML(v.address)}</td></tr>
+    <tr><td class="key">संभाव्य SBI सेवा</td><td>${escapeHTML(services)}</td></tr>
+    <tr><td class="key">ग्राहकाचा प्रतिसाद</td><td>${escapeHTML(v.response)}</td></tr>
+    <tr><td class="key">संभाव्य व्यवसाय रक्कम</td><td>${escapeHTML(amount)}</td></tr>
+    <tr><td class="key">फॉलोअप तारीख</td><td>${escapeHTML(follow)}</td></tr>
+    <tr><td class="key">चर्चा / विशेष नोंद</td><td>${escapeHTML(v.remarks || "-")}</td></tr>
+  </table>
+
+  <div class="geo">
+    <b>GPS जिओ-टॅग:</b><br>
+    Latitude: ${v.location.latitude.toFixed(6)} &nbsp; | &nbsp;
+    Longitude: ${v.location.longitude.toFixed(6)} &nbsp; | &nbsp;
+    Accuracy: ±${escapeHTML(v.location.accuracy)} मीटर<br>
+    Location Captured At: ${escapeHTML(formatDate(v.location.capturedAt))}<br>
+    Google Map: <a href="${mapUrl}">${mapUrl}</a>
+  </div>
+
+  <div class="sign">
+    <div class="line">ग्राहक / दुकानदार सही</div>
+    <div class="line">भेट देणाऱ्या अधिकाऱ्याची सही</div>
+  </div>
+
+  <div class="footer">हा अहवाल मोबाईलमधील SBI Daily Business Visit Tracker मधून तयार झाला आहे.</div>
+</div>
+<script>
+window.onload=()=>setTimeout(()=>window.print(),400);
+<\/script>
+</body>
+</html>`;
+
+    const w=window.open("","_blank");
+    if(!w){
+      showToast("Popup blocked आहे. Browser मध्ये pop-up Allow करा.");
+      return;
+    }
+    w.document.open(); w.document.write(report); w.document.close();
+  };
+
+  $("backupBtn").addEventListener("click",async()=>{
+    const all=await getAllVisits();
+    const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),visits:all},null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=`SBI_Visit_Backup_${nowLocal().dateKey}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  $("restoreInput").addEventListener("change",async(e)=>{
+    const file=e.target.files[0];
+    if(!file) return;
+    try{
+      const data=JSON.parse(await file.text());
+      if(!Array.isArray(data.visits)) throw new Error("Invalid");
+      if(!confirm(`${data.visits.length} नोंदी Restore करायच्या आहेत का? विद्यमान नोंदी कायम राहतील.`)) return;
+      for(const v of data.visits) await putVisit(v);
+      await renderVisits();
+      showToast("Backup Restore झाला.");
+    }catch(err){
+      showToast("हा योग्य Backup JSON नाही.");
+    }
+    e.target.value="";
+  });
+
+  openDB().then(renderVisits).catch(err=>{
+    console.error(err);
+    alert("या ब्राउझरमध्ये स्थानिक डेटाबेस सुरू झाला नाही. Chrome Browser वापरा.");
+  });
+})();
+</script>
+</body>
+</html>
