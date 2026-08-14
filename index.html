@@ -4,108 +4,153 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b5f9e">
-<title>DS WORLD - Bhilwara Shared Live GPS</title>
+<title>DS WORLD - Live GPS Tracker</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
- integrity="sha256-p4NxAoJBhIINfQ3yn9usMG/JmZJp4YJeT2mWq1w3n0E=" crossorigin="">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
- integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
 :root{
-  --blue:#0b5f9e;--blue2:#083d70;--green:#0b7d4b;--red:#c64141;--orange:#c77a00;
-  --bg:#eef4f8;--card:#fff;--line:#d8e2eb;--text:#17263a;--muted:#6b7c8f;
+  --blue:#0b5f9e;--blue2:#073963;--green:#087a49;--red:#c64040;--orange:#ba7600;
+  --line:#d7e1ea;--text:#17263a;--muted:#66798d;--bg:#eef4f8;
 }
 *{box-sizing:border-box;min-width:0}
-html,body{margin:0;width:100%;max-width:100%;overflow-x:hidden;background:linear-gradient(180deg,#e8f4fc,#f8fafc 220px,#eef3f8);font-family:"Nirmala UI","Mangal",Arial,sans-serif;color:var(--text)}
-header{position:sticky;top:0;z-index:1000;background:linear-gradient(135deg,var(--blue2),var(--blue),var(--green));color:#fff;padding:11px 12px;box-shadow:0 5px 18px rgba(0,0,0,.18)}
-.head{max-width:900px;margin:auto}.brand{font:900 11px Arial,sans-serif;letter-spacing:1.5px}
-h1{margin:3px 0 2px;font-size:20px}.sub{font-size:11px;opacity:.92}
-.wrap{max-width:900px;margin:auto;padding:10px}
-.notice{background:#fff8df;border:1px solid #ecd081;color:#745100;border-radius:13px;padding:10px;font-size:11px;line-height:1.45;margin-bottom:9px}
-.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px;margin-bottom:9px;box-shadow:0 4px 15px rgba(27,63,95,.06)}
+html,body{margin:0;width:100%;overflow-x:hidden;background:linear-gradient(180deg,#e8f4fc,#f9fbfd 220px,#eef3f8);font-family:"Nirmala UI","Mangal",Arial,sans-serif;color:var(--text)}
+header{position:sticky;top:0;z-index:1200;background:linear-gradient(135deg,var(--blue2),var(--blue),var(--green));color:#fff;padding:11px 12px;box-shadow:0 5px 18px rgba(0,0,0,.18)}
+.head{max-width:980px;margin:auto}.brand{font:900 11px Arial,sans-serif;letter-spacing:1.4px}
+h1{font-size:20px;margin:3px 0 2px}.sub{font-size:10px;opacity:.94}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}
+.connection{display:flex;align-items:center;gap:6px;font-size:10px}
+.conn-dot{width:9px;height:9px;border-radius:50%;background:#dd5555}.conn-dot.on{background:#2cca79}
+.admin-top{width:auto;min-height:34px;padding:5px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.13);color:#fff;font-weight:900}
+.wrap{max-width:980px;margin:auto;padding:10px}
+.notice{background:#fff8df;border:1px solid #ead184;color:#715100;border-radius:13px;padding:9px;font-size:10px;line-height:1.45;margin-bottom:9px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px;margin-bottom:9px;box-shadow:0 4px 15px rgba(28,64,96,.06)}
 .card h2{font-size:14px;margin:0 0 8px}
-select,button{font:inherit;width:100%;min-height:46px;border:1px solid var(--line);border-radius:11px;padding:8px 10px;background:#fff}
-button{font-weight:900;cursor:pointer}.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.green{background:var(--green);color:#fff;border-color:var(--green)}.danger{color:var(--red);border-color:#efbbbb}
+button,input,select{font:inherit;width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:11px;background:#fff}
+button{cursor:pointer;font-weight:900}
+.primary{background:var(--blue);border-color:var(--blue);color:#fff}.green{background:var(--green);border-color:var(--green);color:#fff}.danger{color:var(--red);border-color:#edbaba}.orange{color:#805500;background:#fff6e2;border-color:#e8ce91}
 .grid2{display:grid;grid-template-columns:1fr;gap:7px}
+.share-state{margin-top:8px;padding:9px;background:#f5f8fb;border:1px solid var(--line);border-radius:11px;font-size:10px;font-weight:800}
 .statusbar{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:9px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:13px;text-align:center;padding:8px}
 .stat strong{display:block;font-size:20px}.stat span{font-size:9px;color:var(--muted)}
-.stat.green strong{color:var(--green)}.stat.blue strong{color:var(--blue)}.stat.red strong{color:var(--red)}
-#map{height:44vh;min-height:330px;border-radius:13px;overflow:hidden;border:1px solid var(--line)}
-.members{display:grid;grid-template-columns:1fr;gap:7px;margin-top:8px}
-.member{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fbfcfd}
-.member-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-.member-name{font-weight:900;font-size:13px}.member-mr{font-size:10px;color:var(--muted)}
-.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:900}
-.badge.live{background:#e8f8ef;color:#0a7545;border:1px solid #b9e2ca}
-.badge.stale{background:#fff1d7;color:#8a5900;border:1px solid #ecd08a}
-.badge.off{background:#f0f2f4;color:#6c7782;border:1px solid #d7dde3}
-.meta{font-size:10px;color:#596b7e;line-height:1.45;margin-top:6px}
-.member-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
-.member-actions button{min-height:40px;font-size:10px}
-.share-state{margin-top:8px;padding:9px;border-radius:11px;background:#f5f8fb;border:1px solid var(--line);font-size:11px;font-weight:800}
-.connection{display:flex;align-items:center;gap:6px;font-size:10px;margin-top:5px}
-.dot{width:9px;height:9px;border-radius:50%;background:#aaa}.dot.on{background:#21a662}.dot.off{background:#d34b4b}
-.toast{position:fixed;left:50%;top:80px;transform:translate(-50%,-8px);opacity:0;pointer-events:none;background:#17293d;color:#fff;padding:9px 12px;border-radius:10px;font-size:11px;transition:.2s;z-index:2000;max-width:90vw}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-footer{text-align:center;font-size:10px;color:var(--muted);padding:14px 8px 24px}
+.stat.live strong{color:var(--green)}.stat.off strong{color:var(--red)}.stat.total strong{color:var(--blue)}
+#map{height:48vh;min-height:360px;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.map-note,.meta{font-size:10px;color:var(--muted);line-height:1.45;margin-top:6px}
+.members{display:grid;grid-template-columns:1fr;gap:7px}
+.member{border:1px solid var(--line);background:#fbfcfd;border-radius:12px;padding:9px}
+.member-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.name{font-size:13px;font-weight:900}.mr{font-size:10px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900}
+.badge.live{background:#e8f8ef;color:#087144;border:1px solid #b8e1ca}.badge.stale{background:#fff2dc;color:#885800;border:1px solid #ecd18f}.badge.off{background:#f0f2f4;color:#687581;border:1px solid #d8dee4}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}.actions button{min-height:38px;font-size:10px}
+.followbar{display:none;margin-bottom:9px;padding:9px;border-radius:12px;background:#eaf5ff;border:1px solid #bddbec;color:#155d91;font-size:10px;font-weight:900}
+.followbar.show{display:flex;justify-content:space-between;align-items:center;gap:8px}.followbar button{width:auto;min-height:34px;padding:5px 9px}
+.marker-wrap{position:relative;width:22px;height:22px}.marker-dot{width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.marker-label{position:absolute;left:26px;top:-4px;white-space:nowrap;background:#fff;border:1px solid #cedae4;border-radius:7px;padding:2px 5px;font:800 10px "Nirmala UI",Arial,sans-serif;color:#17314b;box-shadow:0 2px 6px rgba(0,0,0,.17)}
+.my-dot{width:20px;height:20px;border-radius:50%;background:#111;border:4px solid #fff;box-shadow:0 0 0 3px rgba(11,95,158,.45),0 2px 8px rgba(0,0,0,.3)}
+.admin-card{display:none}.admin-card.show{display:block}
+.admin-row{border:1px solid var(--line);border-radius:11px;padding:8px;margin-top:6px;background:#fbfcfd}
+.admin-row-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.admin-actions button{min-height:38px;font-size:10px}
+.modal{display:none;position:fixed;inset:0;z-index:2500;background:rgba(10,24,38,.62);align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}
+.modal-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-box h3{margin:0 0 9px}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.small{font-size:9px;color:var(--muted);line-height:1.4}
+.toast{position:fixed;left:50%;top:78px;transform:translate(-50%,-8px);opacity:0;pointer-events:none;background:#15283b;color:#fff;padding:8px 11px;border-radius:10px;font-size:10px;transition:.2s;z-index:3000;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}
+footer{text-align:center;font-size:9px;color:var(--muted);padding:14px 8px 24px}
 @media(min-width:650px){.grid2{grid-template-columns:1fr 1fr}.statusbar{grid-template-columns:repeat(4,1fr)}.members{grid-template-columns:1fr 1fr}}
 </style>
 </head>
+
 <body>
 <header>
   <div class="head">
     <div class="brand">DS WORLD</div>
-    <h1>Bhilwara Shared Live GPS Tracker</h1>
-    <div class="sub">7 Members • No visible login • One shared live map</div><div class="sub" style="margin-top:3px;font-weight:800">Default Room: DS WORLD BHILWARA • Auto-Join</div>
-    <div class="connection"><span id="connDot" class="dot off"></span><span id="connText">Firebase connecting…</span></div>
+    <h1>Live GPS Tracker</h1>
+    <div class="sub">One Default Room • Distance from My Location • Name-wise Dots • Admin Control</div>
+    <div class="toprow">
+      <div class="connection"><span id="connDot" class="conn-dot"></span><span id="connText">Firebase connecting…</span></div>
+      <button id="adminOpen" class="admin-top">🔐 Admin</button>
+    </div>
   </div>
 </header>
 
 <div id="toast" class="toast"></div>
 
+<div id="adminModal" class="modal">
+  <div class="modal-box">
+    <h3>🔐 Admin Login</h3>
+    <input id="adminPassword" inputmode="numeric" type="password" placeholder="Admin Password">
+    <div class="small" style="margin-top:6px">Admin controls फक्त अधिकृत coordinator ने वापरावेत.</div>
+    <div class="modal-actions">
+      <button id="adminCancel">Cancel</button>
+      <button id="adminLogin" class="primary">Login</button>
+    </div>
+  </div>
+</div>
+
 <main class="wrap">
   <div class="notice">
-    📍 सर्वांसाठी <b>एकच Default Room</b> आधीच सेट आहे. कोणालाही Room Code टाकायचा नाही. प्रत्येकाने फक्त स्वतःचे नाव निवडून <b>Start Live Sharing</b> करावे.
-    Location sharing फक्त संमतीने वापरा. Browser बंद/फोनची location बंद झाल्यास updates थांबू शकतात.
+    📍 अंतर <b>या फोनच्या सध्याच्या location पासून</b> मोजले जाते. 1000 मीटरपेक्षा कमी असल्यास मीटरमध्ये, अन्यथा किलोमीटरमध्ये दाखवले जाते.
+    प्रत्येक सदस्याने स्वतः <b>Start Live Sharing</b> केल्यावरच त्याचे location दिसेल.
+  </div>
+
+  <div id="followBar" class="followbar">
+    <span id="followText">Tracking...</span>
+    <button id="stopFollow" class="orange">Stop Track</button>
   </div>
 
   <section class="card">
-    <h2>👤 माझे Live Sharing</h2>
+    <h2>📍 माझे Location / Live Sharing</h2>
     <select id="personSelect"></select>
     <div class="grid2" style="margin-top:7px">
+      <button id="myLocationBtn" class="primary">📌 माझे Location घ्या</button>
       <button id="startBtn" class="green">▶ Start Live Sharing</button>
-      <button id="stopBtn" class="danger">■ Stop Sharing</button>
     </div>
-    <div id="myState" class="share-state">Sharing बंद आहे.</div>
+    <button id="stopBtn" class="danger" style="margin-top:7px">■ Stop My Sharing</button>
+    <div id="myState" class="share-state">माझे reference location अजून घेतलेले नाही.</div>
   </section>
 
   <section class="statusbar">
-    <div class="stat blue"><strong>7</strong><span>Total Members</span></div>
-    <div class="stat green"><strong id="liveCount">0</strong><span>Live / Recent</span></div>
+    <div class="stat total"><strong id="totalCount">8</strong><span>Total Members</span></div>
+    <div class="stat live"><strong id="liveCount">0</strong><span>Live / Recent</span></div>
     <div class="stat"><strong id="staleCount">0</strong><span>Stale</span></div>
-    <div class="stat red"><strong id="offlineCount">7</strong><span>No Location</span></div>
+    <div class="stat off"><strong id="offlineCount">8</strong><span>No Location</span></div>
   </section>
 
   <section class="card">
-    <h2>🗺️ सर्वांचे Live Location</h2>
+    <h2>🗺️ Live Map + Distance</h2>
     <div id="map"></div>
-    <div class="meta">LIVE = मागील 2 मिनिटांत location update. Marker वर टॅप केल्यास नाव, accuracy व last update दिसेल.</div>
+    <div class="map-note">नावासमोर `(850 m)` किंवा `(1.24 km)` दिसेल. वेगळ्या रंगाचा dot = वेगळी व्यक्ती. Dot वर tap केल्यास नाव, अंतर, accuracy व last update दिसेल.</div>
   </section>
 
   <section class="card">
     <h2>👥 Member Locations</h2>
     <div id="members" class="members"></div>
   </section>
+
+  <section id="adminCard" class="card admin-card">
+    <h2>🔐 Admin Control Panel</h2>
+    <div class="small">Stop केल्यावर त्या user चे sharing बंद होईल. Restart केल्यावर page उघडे असेल आणि त्या user ने आधी sharing ला consent दिले असेल तर sharing पुन्हा सुरू होईल.</div>
+    <div id="adminUsers"></div>
+
+    <h2 style="margin-top:14px">➕ Manual User Add</h2>
+    <div class="grid2">
+      <input id="newName" placeholder="Display Name, उदा. Patil Sir">
+      <input id="newMr" placeholder="Marathi Name, उदा. पाटील सर">
+    </div>
+    <button id="addUserBtn" class="green" style="margin-top:7px">User Add करा</button>
+    <button id="adminLogout" style="margin-top:10px">Admin Logout</button>
+  </section>
 </main>
 
-<footer>DS WORLD • Bhilwara Shared GPS Tracker</footer>
+<footer>DS WORLD • Consent-based Shared Live GPS</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getDatabase, ref, onValue, set, update, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { getDatabase, ref, onValue, set, update, onDisconnect, serverTimestamp, get } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBx9pl9BTpcZTIEb4Blrl7BqJefXwzgmzc",
@@ -119,41 +164,57 @@ const firebaseConfig = {
 };
 
 const ROOM_ID = "dsworld-bhilwara-7-27efde44a7f8";
-const PEOPLE = [
-  {id:"shete",name:"Shete Sir",mr:"शेटे सर"},
-  {id:"pujari",name:"Pujari Sir",mr:"पुजारी सर"},
-  {id:"sitaram",name:"Sitaram Sir",mr:"सीताराम सर"},
-  {id:"rajan",name:"Rajan",mr:"राजन"},
-  {id:"tejas",name:"Tejas",mr:"तेजस"},
-  {id:"anita",name:"Anita Madam",mr:"अनिता मॅडम"},
-  {id:"misal",name:"Misal Sir",mr:"मिसाळ सर"}
-];
+const DEFAULT_PEOPLE = [{"id": "shete", "name": "Shete Sir", "mr": "शेटे सर"}, {"id": "pujari", "name": "Pujari Sir", "mr": "पुजारी सर"}, {"id": "sitaram", "name": "Sitaram Sir", "mr": "सीताराम सर"}, {"id": "rajan", "name": "Rajan", "mr": "राजन"}, {"id": "tejas", "name": "Tejas", "mr": "तेजस"}, {"id": "anita", "name": "Anita Madam", "mr": "अनिता मॅडम"}, {"id": "misal", "name": "Misal Sir", "mr": "मिसाळ सर"}, {"id": "bhokare", "name": "Bhokare Sir", "mr": "भोकरे सर"}];
+const ADMIN_PASSWORD_NORMALIZED = "9270";
+const COLORS=["#e53935","#1e88e5","#43a047","#fb8c00","#8e24aa","#00acc1","#6d4c41","#3949ab","#f4511e","#00897b","#7cb342","#5e35b1","#d81b60","#039be5"];
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
 
-let watchId = null;
-let currentUid = "";
-let currentPersonId = "";
-let map;
-const markers = {};
+let PEOPLE=[...DEFAULT_PEOPLE];
+let locations={}, controls={};
+let currentUid="", currentPersonId="", watchId=null, followId="";
+let myPosition=null, myMarker=null, map;
+let adminLoggedIn=sessionStorage.getItem("dsw_admin")==="1";
+let adminPausedById={};
+const markers={};
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.x);toast.x=setTimeout(()=>t.classList.remove("show"),1800)}
 function selected(){return PEOPLE.find(p=>p.id===document.getElementById("personSelect").value)}
 function mapsUrl(x){return `https://maps.google.com/?q=${x.lat},${x.lng}`}
+function colorFor(id){return COLORS[Math.abs([...id].reduce((a,c)=>a+c.charCodeAt(0),0))%COLORS.length]}
+function slugify(s){return String(s).toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||("user-"+Date.now())}
+
+function haversineMeters(a,b){
+  const R=6371000, rad=v=>v*Math.PI/180;
+  const dLat=rad(b.lat-a.lat), dLng=rad(b.lng-a.lng);
+  const x=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2;
+  return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+function distanceText(x){
+  if(!myPosition || !x || typeof x.lat!=="number" || typeof x.lng!=="number") return "";
+  const m=haversineMeters(myPosition,{lat:x.lat,lng:x.lng});
+  if(m<1000) return `${Math.round(m)} m`;
+  const km=m/1000;
+  return `${km<10?km.toFixed(2):km.toFixed(1)} km`;
+}
+function distanceSuffix(x){
+  const d=distanceText(x);
+  return d?` (${d})`:"";
+}
 function fmtAge(ts){
   if(!ts)return "कधीच नाही";
-  const sec=Math.max(0,Math.floor((Date.now()-ts)/1000));
-  if(sec<60)return `${sec}s ago`;
-  const min=Math.floor(sec/60); if(min<60)return `${min}m ago`;
-  return `${Math.floor(min/60)}h ago`;
+  const s=Math.max(0,Math.floor((Date.now()-ts)/1000));
+  if(s<60)return `${s}s ago`;
+  const m=Math.floor(s/60);if(m<60)return `${m}m ago`;
+  return `${Math.floor(m/60)}h ago`;
 }
 function stateFor(x){
-  if(!x || typeof x.lat!=="number" || typeof x.lng!=="number") return "off";
+  if(!x||typeof x.lat!=="number"||typeof x.lng!=="number")return "off";
   const age=Date.now()-(x.updatedAt||0);
-  if(x.sharing===true && age<=120000) return "live";
+  if(x.sharing===true&&age<=120000)return "live";
   return "stale";
 }
 function stateLabel(s){return s==="live"?"LIVE":s==="stale"?"STALE":"NO LOCATION"}
@@ -162,122 +223,255 @@ function initMap(){
   map=L.map("map",{zoomControl:true}).setView([25.35,74.63],12);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
 }
-function updateMap(all){
+function makeIcon(p,x){
+  const color=colorFor(p.id),dist=distanceSuffix(x);
+  return L.divIcon({
+    className:"",
+    iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-12],
+    html:`<div class="marker-wrap"><div class="marker-dot" style="background:${color}"></div><div class="marker-label">${esc(p.name+dist)}</div></div>`
+  });
+}
+function updateMyMarker(){
+  if(!myPosition)return;
+  if(myMarker)myMarker.setLatLng([myPosition.lat,myPosition.lng]);
+  else{
+    const icon=L.divIcon({className:"",iconSize:[20,20],iconAnchor:[10,10],html:`<div class="my-dot"></div>`});
+    myMarker=L.marker([myPosition.lat,myPosition.lng],{icon,zIndexOffset:1000}).addTo(map).bindPopup("<b>माझे Location</b>");
+  }
+}
+function updateMap(){
   const bounds=[];
+  if(myPosition){bounds.push([myPosition.lat,myPosition.lng]);updateMyMarker()}
   PEOPLE.forEach(p=>{
-    const x=all?.[p.id];
-    if(!x || typeof x.lat!=="number" || typeof x.lng!=="number"){
+    const x=locations?.[p.id];
+    if(!x||typeof x.lat!=="number"||typeof x.lng!=="number"){
       if(markers[p.id]){map.removeLayer(markers[p.id]);delete markers[p.id]}
       return;
     }
-    const latlng=[x.lat,x.lng];
-    bounds.push(latlng);
-    const popup=`<b>${esc(p.name)}</b><br>${esc(p.mr)}<br>Accuracy: ${Math.round(x.accuracy||0)} m<br>${esc(fmtAge(x.updatedAt))}`;
-    if(markers[p.id]) markers[p.id].setLatLng(latlng).setPopupContent(popup);
-    else markers[p.id]=L.marker(latlng).addTo(map).bindPopup(popup);
+    const ll=[x.lat,x.lng],dist=distanceText(x),popup=`<b>${esc(p.name)}</b>${dist?`<br>Distance: <b>${esc(dist)}</b>`:""}<br>Accuracy: ${Math.round(x.accuracy||0)} m<br>Last: ${esc(fmtAge(x.updatedAt))}`;
+    bounds.push(ll);
+    if(markers[p.id]){
+      markers[p.id].setLatLng(ll).setPopupContent(popup).setIcon(makeIcon(p,x));
+    }else{
+      markers[p.id]=L.marker(ll,{icon:makeIcon(p,x)}).addTo(map).bindPopup(popup);
+    }
+    if(followId===p.id)map.setView(ll,16,{animate:true});
   });
-  if(bounds.length) map.fitBounds(bounds,{padding:[30,30],maxZoom:15});
+  if(!followId&&bounds.length>1){try{map.fitBounds(bounds,{padding:[35,35],maxZoom:15})}catch(e){}}
 }
-function renderMembers(all){
+function renderSelect(){
+  const s=document.getElementById("personSelect"),old=s.value;
+  s.innerHTML=PEOPLE.map(p=>`<option value="${p.id}">${esc(p.name)} / ${esc(p.mr||"")}</option>`).join("");
+  if(PEOPLE.some(p=>p.id===old))s.value=old;
+}
+function renderMembers(){
   let live=0,stale=0,off=0;
   document.getElementById("members").innerHTML=PEOPLE.map(p=>{
-    const x=all?.[p.id], st=stateFor(x);
-    if(st==="live")live++; else if(st==="stale")stale++; else off++;
+    const x=locations?.[p.id],st=stateFor(x),color=colorFor(p.id),dist=distanceSuffix(x);
+    if(st==="live")live++;else if(st==="stale")stale++;else off++;
     return `<div class="member">
       <div class="member-top">
-        <div><div class="member-name">${esc(p.name)}</div><div class="member-mr">${esc(p.mr)}</div></div>
+        <div>
+          <div class="name"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px"></span>${esc(p.name+dist)}</div>
+          <div class="mr">${esc(p.mr||"")}</div>
+        </div>
         <span class="badge ${st}">${stateLabel(st)}</span>
       </div>
-      <div class="meta">${x?`Last: ${esc(fmtAge(x.updatedAt))}<br>Accuracy: ${Math.round(x.accuracy||0)} m<br>${Number(x.lat).toFixed(5)}, ${Number(x.lng).toFixed(5)}`:"Location अजून share केलेली नाही."}</div>
-      ${x?`<div class="member-actions"><button data-map="${p.id}">🗺️ Maps</button><button data-share="${p.id}">📤 Share</button></div>`:""}
+      <div class="meta">${x?`Last: ${esc(fmtAge(x.updatedAt))}<br>Accuracy: ${Math.round(x.accuracy||0)} m`:"Location अजून share केलेली नाही."}</div>
+      ${x?`<div class="actions"><button data-map="${p.id}">🗺️ Maps</button><button class="primary" data-follow="${p.id}">🎯 Track</button><button data-share="${p.id}">📤 Share</button></div>`:""}
     </div>`;
   }).join("");
+  document.getElementById("totalCount").textContent=PEOPLE.length;
   document.getElementById("liveCount").textContent=live;
   document.getElementById("staleCount").textContent=stale;
   document.getElementById("offlineCount").textContent=off;
 
-  document.querySelectorAll("[data-map]").forEach(btn=>btn.onclick=()=>{
-    const x=all?.[btn.dataset.map]; if(x) window.open(mapsUrl(x),"_blank");
+  document.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{const x=locations[b.dataset.map];if(x)window.open(mapsUrl(x),"_blank")});
+  document.querySelectorAll("[data-follow]").forEach(b=>b.onclick=()=>{
+    followId=b.dataset.follow;
+    const p=PEOPLE.find(z=>z.id===followId),x=locations[followId];
+    document.getElementById("followText").textContent=`Tracking: ${p?.name||followId}${distanceSuffix(x)}`;
+    document.getElementById("followBar").classList.add("show");
+    if(x)map.setView([x.lat,x.lng],16,{animate:true});
+    markers[followId]?.openPopup();
   });
-  document.querySelectorAll("[data-share]").forEach(btn=>btn.onclick=async()=>{
-    const p=PEOPLE.find(z=>z.id===btn.dataset.share), x=all?.[btn.dataset.share];
-    if(!p||!x)return;
-    const text=`📍 ${p.name} Live Location\n${mapsUrl(x)}`;
+  document.querySelectorAll("[data-share]").forEach(b=>b.onclick=async()=>{
+    const p=PEOPLE.find(z=>z.id===b.dataset.share),x=locations[b.dataset.share];if(!p||!x)return;
+    const text=`📍 ${p.name}${distanceSuffix(x)}\n${mapsUrl(x)}`;
     if(navigator.share){try{await navigator.share({title:p.name+" Location",text})}catch(e){}}
     else window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
   });
 }
-
-function setConnection(on,text){
-  document.getElementById("connDot").className="dot "+(on?"on":"off");
+function renderAdmin(){
+  const card=document.getElementById("adminCard");
+  card.classList.toggle("show",adminLoggedIn);
+  if(!adminLoggedIn)return;
+  document.getElementById("adminUsers").innerHTML=PEOPLE.map(p=>{
+    const x=locations[p.id],ctl=controls[p.id],enabled=ctl?.enabled!==false;
+    return `<div class="admin-row">
+      <div class="admin-row-top">
+        <div><b>${esc(p.name)}</b>${distanceSuffix(x)}<div class="small">${enabled?"Control: Enabled":"Control: STOPPED"}</div></div>
+        <span class="badge ${stateFor(x)}">${stateLabel(stateFor(x))}</span>
+      </div>
+      <div class="admin-actions">
+        <button class="danger" data-admin-stop="${p.id}">⛔ Stop</button>
+        <button class="green" data-admin-restart="${p.id}">▶ Restart</button>
+      </div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll("[data-admin-stop]").forEach(b=>b.onclick=()=>adminControl(b.dataset.adminStop,false));
+  document.querySelectorAll("[data-admin-restart]").forEach(b=>b.onclick=()=>adminControl(b.dataset.adminRestart,true));
+}
+function setConnection(ok,text){
+  document.getElementById("connDot").className="conn-dot"+(ok?" on":"");
   document.getElementById("connText").textContent=text;
 }
-
-async function startSharing(){
-  if(!currentUid){alert("Firebase अजून connect झालेले नाही.");return}
-  if(!navigator.geolocation){alert("या Browser मध्ये GPS support उपलब्ध नाही.");return}
-  const p=selected();
-  currentPersonId=p.id;
-  const memberRef=ref(db,`rooms/${ROOM_ID}/members/${p.id}`);
-
-  try{
-    await onDisconnect(memberRef).update({sharing:false,updatedAt:serverTimestamp()});
-  }catch(e){}
-
-  if(watchId!==null) navigator.geolocation.clearWatch(watchId);
-
-  document.getElementById("myState").textContent="📡 GPS सुरू करत आहे…";
-  watchId=navigator.geolocation.watchPosition(async pos=>{
+async function seedRoster(){
+  for(const p of DEFAULT_PEOPLE){
     try{
-      await set(memberRef,{
-        name:p.name,mr:p.mr,
-        ownerUid:currentUid,
-        lat:pos.coords.latitude,
-        lng:pos.coords.longitude,
-        accuracy:pos.coords.accuracy,
-        sharing:true,
-        updatedAt:serverTimestamp()
+      const rr=ref(db,`rooms/${ROOM_ID}/roster/${p.id}`),s=await get(rr);
+      if(!s.exists())await set(rr,p);
+    }catch(e){}
+  }
+}
+async function myLocation(){
+  if(!navigator.geolocation){alert("GPS support उपलब्ध नाही.");return}
+  document.getElementById("myState").textContent="📡 माझे location घेत आहे…";
+  navigator.geolocation.getCurrentPosition(pos=>{
+    myPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy};
+    document.getElementById("myState").textContent=`📌 माझे Location मिळाले • Accuracy ${Math.round(pos.coords.accuracy)} m`;
+    renderMembers();renderAdmin();updateMap();
+  },()=>{document.getElementById("myState").textContent="⚠️ Location permission/GPS तपासा."},{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+}
+async function startSharing(fromAdmin=false){
+  if(!currentUid){alert("Firebase connect होऊ द्या.");return}
+  if(!navigator.geolocation){alert("GPS support उपलब्ध नाही.");return}
+  const p=selected();if(!p)return;
+  currentPersonId=p.id;
+
+  const ctl=controls[p.id];
+  if(ctl?.enabled===false && !fromAdmin){
+    alert("या user चे sharing Admin ने Stop केले आहे.");
+    return;
+  }
+
+  if(!fromAdmin){
+    localStorage.setItem(`dsw_consent_${p.id}`,"1");
+  }else if(localStorage.getItem(`dsw_consent_${p.id}`)!=="1"){
+    document.getElementById("myState").textContent="Admin Restart मिळाला; पण या फोनवर user ने आधी Start Live Sharing केलेले नाही.";
+    return;
+  }
+
+  if(watchId!==null)navigator.geolocation.clearWatch(watchId);
+  const mref=ref(db,`rooms/${ROOM_ID}/members/${p.id}`);
+  try{await onDisconnect(mref).update({sharing:false,updatedAt:serverTimestamp()})}catch(e){}
+
+  document.getElementById("myState").textContent="📡 Live sharing सुरू करत आहे…";
+  watchId=navigator.geolocation.watchPosition(async pos=>{
+    myPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy};
+    try{
+      await set(mref,{
+        name:p.name,mr:p.mr||"",ownerUid:currentUid,
+        lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy,
+        sharing:true,updatedAt:serverTimestamp()
       });
-      document.getElementById("myState").textContent=`✅ Live Sharing ON • Accuracy ${Math.round(pos.coords.accuracy)} m`;
+      document.getElementById("myState").textContent=`✅ Live Sharing ON • ${p.name} • Accuracy ${Math.round(pos.coords.accuracy)} m`;
+      renderMembers();renderAdmin();updateMap();
     }catch(e){
       document.getElementById("myState").textContent="⚠️ Database permission तपासा.";
-      console.error(e);
     }
-  },err=>{
-    document.getElementById("myState").textContent="⚠️ Location Permission / GPS तपासा.";
-  },{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+  },()=>{document.getElementById("myState").textContent="⚠️ Location permission/GPS तपासा."},{enableHighAccuracy:true,maximumAge:4000,timeout:20000});
 }
-
-async function stopSharing(){
+async function stopSharing(adminTriggered=false){
   if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}
   if(currentPersonId){
     try{await update(ref(db,`rooms/${ROOM_ID}/members/${currentPersonId}`),{sharing:false,updatedAt:serverTimestamp()})}catch(e){}
   }
-  document.getElementById("myState").textContent="Sharing बंद आहे.";
+  document.getElementById("myState").textContent=adminTriggered?"⛔ Sharing Admin ने Stop केले आहे.":"Sharing बंद आहे.";
+}
+async function adminControl(id,enabled){
+  if(!adminLoggedIn)return;
+  try{
+    await set(ref(db,`rooms/${ROOM_ID}/controls/${id}`),{enabled,updatedAt:serverTimestamp()});
+    if(!enabled){
+      await update(ref(db,`rooms/${ROOM_ID}/members/${id}`),{sharing:false,updatedAt:serverTimestamp()}).catch(()=>{});
+    }
+    toast(enabled?"Restart command पाठवला.":"Stop command पाठवला.");
+  }catch(e){alert("Admin control save झाला नाही. Database rules तपासा.");}
+}
+async function addUser(){
+  if(!adminLoggedIn)return;
+  const name=document.getElementById("newName").value.trim(),mr=document.getElementById("newMr").value.trim();
+  if(!name){alert("User चे नाव टाका.");return}
+  let id=slugify(name);if(PEOPLE.some(p=>p.id===id))id+="-"+Date.now();
+  try{
+    await set(ref(db,`rooms/${ROOM_ID}/roster/${id}`),{id,name,mr,manual:true,createdAt:serverTimestamp()});
+    document.getElementById("newName").value="";document.getElementById("newMr").value="";
+    toast("User add झाला.");
+  }catch(e){alert("User add झाला नाही.");}
 }
 
-document.getElementById("personSelect").innerHTML=PEOPLE.map(p=>`<option value="${p.id}">${esc(p.name)} / ${esc(p.mr)}</option>`).join("");
-document.getElementById("startBtn").onclick=startSharing;
-document.getElementById("stopBtn").onclick=stopSharing;
+document.getElementById("adminOpen").onclick=()=>{
+  if(adminLoggedIn){renderAdmin();document.getElementById("adminCard").scrollIntoView({behavior:"smooth"});return}
+  document.getElementById("adminPassword").value="";
+  document.getElementById("adminModal").classList.add("show");
+};
+document.getElementById("adminCancel").onclick=()=>document.getElementById("adminModal").classList.remove("show");
+document.getElementById("adminLogin").onclick=()=>{
+  const v=document.getElementById("adminPassword").value.replace(/\s+/g,"");
+  if(v===ADMIN_PASSWORD_NORMALIZED){
+    adminLoggedIn=true;sessionStorage.setItem("dsw_admin","1");
+    document.getElementById("adminModal").classList.remove("show");renderAdmin();
+    document.getElementById("adminCard").scrollIntoView({behavior:"smooth"});
+    toast("Admin Login successful.");
+  }else alert("Wrong Admin Password.");
+};
+document.getElementById("adminLogout").onclick=()=>{
+  adminLoggedIn=false;sessionStorage.removeItem("dsw_admin");renderAdmin();toast("Admin Logout.");
+};
+document.getElementById("addUserBtn").onclick=addUser;
+document.getElementById("myLocationBtn").onclick=myLocation;
+document.getElementById("startBtn").onclick=()=>startSharing(false);
+document.getElementById("stopBtn").onclick=()=>stopSharing(false);
+document.getElementById("stopFollow").onclick=()=>{followId="";document.getElementById("followBar").classList.remove("show");updateMap()};
 
-initMap();
+initMap();renderSelect();renderMembers();renderAdmin();
 
-onAuthStateChanged(auth,user=>{
-  if(user){
-    currentUid=user.uid;
-    setConnection(true,"Firebase connected");
-    const roomRef=ref(db,`rooms/${ROOM_ID}/members`);
-    onValue(roomRef,snap=>{
-      const all=snap.val()||{};
-      renderMembers(all);
-      updateMap(all);
-    },err=>{
-      setConnection(false,"Database permission error");
-      console.error(err);
-    });
-  } else {
-    setConnection(false,"Anonymous sign-in…");
-  }
+onAuthStateChanged(auth,async user=>{
+  if(!user){setConnection(false,"Anonymous sign-in…");return}
+  currentUid=user.uid;setConnection(true,"Firebase connected");await seedRoster();
+
+  onValue(ref(db,`rooms/${ROOM_ID}/roster`),snap=>{
+    const roster=snap.val()||{},merged={};
+    DEFAULT_PEOPLE.forEach(p=>merged[p.id]=p);
+    Object.values(roster).forEach(p=>{if(p?.id&&p?.name)merged[p.id]=p});
+    PEOPLE=Object.values(merged).sort((a,b)=>a.name.localeCompare(b.name));
+    renderSelect();renderMembers();renderAdmin();updateMap();
+  });
+
+  onValue(ref(db,`rooms/${ROOM_ID}/members`),snap=>{
+    locations=snap.val()||{};
+    renderMembers();renderAdmin();updateMap();
+  },()=>setConnection(false,"Database permission error"));
+
+  onValue(ref(db,`rooms/${ROOM_ID}/controls`),snap=>{
+    const prev=controls;
+    controls=snap.val()||{};
+    renderAdmin();
+
+    if(currentPersonId){
+      const enabled=controls[currentPersonId]?.enabled!==false;
+      const wasEnabled=prev[currentPersonId]?.enabled!==false;
+
+      if(!enabled && watchId!==null){
+        adminPausedById[currentPersonId]=true;
+        stopSharing(true);
+      }else if(enabled && !wasEnabled && adminPausedById[currentPersonId]){
+        adminPausedById[currentPersonId]=false;
+        startSharing(true);
+      }
+    }
+  });
 });
 
 signInAnonymously(auth).catch(err=>{
