@@ -1,865 +1,290 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="mr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#0b4f3c" />
-  <title>SBI Daily Business Visit Tracker</title>
-  <style>
-    :root{
-      --primary:#0b4f3c;
-      --primary2:#147a5b;
-      --accent:#f4b400;
-      --bg:#eef5f2;
-      --card:#ffffff;
-      --text:#17312a;
-      --muted:#6c7c77;
-      --danger:#b42318;
-      --border:#d7e3de;
-      --shadow:0 10px 30px rgba(11,79,60,.10);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:"Nirmala UI","Mangal","Mukta",Arial,sans-serif;
-      background:linear-gradient(180deg,#e8f4ef 0,#f7faf9 50%,#eef5f2 100%);
-      color:var(--text);
-    }
-    .app{max-width:980px;margin:auto;padding:14px 14px 90px}
-    .hero{
-      background:linear-gradient(135deg,var(--primary),var(--primary2));
-      color:#fff;border-radius:22px;padding:20px;box-shadow:var(--shadow);
-      position:relative;overflow:hidden;
-    }
-    .hero:after{
-      content:"";position:absolute;width:180px;height:180px;border-radius:50%;
-      background:rgba(255,255,255,.08);right:-55px;top:-70px;
-    }
-    .brand{font-size:13px;letter-spacing:.8px;opacity:.9;font-weight:700}
-    h1{margin:5px 0 6px;font-size:25px;line-height:1.22}
-    .hero p{margin:0;font-size:14px;opacity:.9}
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
-    .stat{
-      background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);
-      border-radius:14px;padding:11px;text-align:center;backdrop-filter:blur(8px)
-    }
-    .stat b{display:block;font-size:23px}
-    .stat span{font-size:11px;opacity:.9}
-    .progress{margin-top:12px;background:rgba(255,255,255,.18);height:10px;border-radius:999px;overflow:hidden}
-    .progress > div{height:100%;width:0;background:linear-gradient(90deg,#ffd76a,#fff0a8);transition:.3s}
-    .section{background:var(--card);border-radius:20px;padding:16px;margin-top:14px;box-shadow:var(--shadow);border:1px solid #edf2ef}
-    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-    .section-title h2{margin:0;font-size:18px}
-    .pill{font-size:12px;background:#e9f6f1;color:var(--primary);padding:5px 9px;border-radius:999px;font-weight:700}
-    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .full{grid-column:1/-1}
-    label{display:block;font-size:12px;font-weight:700;margin-bottom:5px;color:#3c514a}
-    input,select,textarea{
-      width:100%;border:1px solid var(--border);background:#fbfdfc;border-radius:12px;
-      padding:12px 13px;font-size:15px;color:var(--text);outline:none
-    }
-    input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 3px rgba(20,122,91,.10)}
-    textarea{min-height:84px;resize:vertical}
-    .checks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .check{
-      border:1px solid var(--border);border-radius:11px;padding:9px;background:#fbfdfc;
-      display:flex;align-items:center;gap:7px;font-size:13px
-    }
-    .check input{width:auto;margin:0}
-    .photo-box{
-      border:1.5px dashed #8fb8a9;border-radius:14px;padding:11px;background:#f7fbf9;text-align:center
-    }
-    .photo-preview{
-      display:none;width:100%;max-height:280px;object-fit:contain;border-radius:12px;margin-top:10px;background:#eef2f0
-    }
-    .location-card{
-      display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
-      border:1px solid var(--border);background:#f7fbf9;border-radius:14px;padding:12px
-    }
-    .location-text{font-size:13px;line-height:1.45;color:#496059}
-    .btn{
-      border:0;border-radius:12px;padding:12px 14px;font-weight:800;font-size:14px;
-      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px
-    }
-    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:white}
-    .btn-light{background:#e8f4ef;color:var(--primary)}
-    .btn-gold{background:#fff4ce;color:#7b5600}
-    .btn-danger{background:#fdecea;color:var(--danger)}
-    .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
-    .visit-list{display:grid;gap:10px}
-    .visit{
-      border:1px solid var(--border);border-radius:15px;padding:12px;background:#fcfefd;
-      display:grid;grid-template-columns:74px 1fr;gap:12px
-    }
-    .thumb{width:74px;height:74px;border-radius:12px;object-fit:cover;background:#e9efec}
-    .visit h3{font-size:15px;margin:0 0 4px}
-    .meta{font-size:12px;color:var(--muted);line-height:1.5}
-    .status{display:inline-block;border-radius:999px;padding:4px 8px;background:#eaf6f1;color:var(--primary);font-size:11px;font-weight:800;margin-top:5px}
-    .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-    .actions .btn{padding:8px 10px;font-size:12px;border-radius:9px}
-    .empty{text-align:center;color:var(--muted);padding:26px 10px}
-    .notice{font-size:12px;color:#5a6f68;background:#fff8dc;border:1px solid #f0df9e;padding:10px;border-radius:12px;margin-top:10px}
-    .toast{
-      position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(80px);
-      background:#17312a;color:#fff;padding:11px 16px;border-radius:12px;font-size:13px;
-      opacity:0;transition:.25s;z-index:9999;max-width:90%;text-align:center
-    }
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(max-width:700px){
-      .grid{grid-template-columns:repeat(2,1fr)}
-      .form-grid{grid-template-columns:1fr}
-      .full{grid-column:auto}
-      .checks{grid-template-columns:repeat(2,1fr)}
-      h1{font-size:22px}
-    }
-    @media(max-width:400px){.checks{grid-template-columns:1fr}.btn-row{grid-template-columns:1fr}}
-  </style>
-</head>
-<body>
-  <div class="app">
-    <section class="hero">
-      <div class="brand">STATE BANK OF INDIA • BUSINESS SOURCE VISIT</div>
-      <h1>दैनिक ५ व्यवसाय भेटी नोंद प्रणाली</h1>
-      <p>फोटो, GPS जिओ-टॅग, तारीख-वेळ आणि स्वतंत्र A4 PDF रिपोर्ट</p>
-      <div class="grid">
-        <div class="stat"><b id="todayCount">0</b><span>आजच्या भेटी</span></div>
-        <div class="stat"><b>5</b><span>दैनिक लक्ष्य</span></div>
-        <div class="stat"><b id="remainingCount">5</b><span>बाकी भेटी</span></div>
-        <div class="stat"><b id="totalCount">0</b><span>एकूण नोंदी</span></div>
-      </div>
-      <div class="progress"><div id="progressBar"></div></div>
-    </section>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5f9e">
+<title>DS WORLD - Bhilwara Shared Live GPS</title>
 
-    <section class="section">
-      <div class="section-title">
-        <h2>नवीन भेट नोंदवा</h2>
-        <span class="pill" id="liveClock">--</span>
-      </div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+ integrity="sha256-p4NxAoJBhIINfQ3yn9usMG/JmZJp4YJeT2mWq1w3n0E=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-      <form id="visitForm">
-        <div class="form-grid">
-          <div>
-            <label>भेट देणारे अधिकारी *</label>
-            <select id="visitor" required>
-              <option value="">नाव निवडा</option>
-              <option>विजय तिरपुडे सर – Chief Manager</option>
-              <option>प्रिया मार्कड</option>
-              <option>दीपक शेंगुळे</option>
-            </select>
-          </div>
-          <div>
-            <label>शाखेचे नाव</label>
-            <input id="branch" value="State Bank of India" placeholder="शाखेचे नाव" />
-          </div>
-          <div>
-            <label>दुकान / संस्थेचे नाव *</label>
-            <input id="shopName" required placeholder="उदा. श्री गणेश मेडिकल" />
-          </div>
-          <div>
-            <label>मालक / संपर्क व्यक्तीचे नाव *</label>
-            <input id="ownerName" required placeholder="पूर्ण नाव" />
-          </div>
-          <div>
-            <label>मोबाईल नंबर</label>
-            <input id="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10 अंकी मोबाईल नंबर" />
-          </div>
-          <div>
-            <label>व्यवसायाचा प्रकार *</label>
-            <select id="businessType" required>
-              <option value="">प्रकार निवडा</option>
-              <option>किराणा / सुपर मार्केट</option>
-              <option>मेडिकल / हॉस्पिटल</option>
-              <option>हॉटेल / रेस्टॉरंट</option>
-              <option>कापड / रेडिमेड</option>
-              <option>हार्डवेअर / बांधकाम</option>
-              <option>शैक्षणिक संस्था</option>
-              <option>पेट्रोल पंप</option>
-              <option>लघु उद्योग / कारखाना</option>
-              <option>शासकीय / खासगी कार्यालय</option>
-              <option>इतर</option>
-            </select>
-          </div>
-          <div class="full">
-            <label>पूर्ण पत्ता / परिसर *</label>
-            <textarea id="address" required placeholder="दुकान क्रमांक, रोड, परिसर, गाव/शहर"></textarea>
-          </div>
-
-          <div class="full">
-            <label>संभाव्य SBI व्यवसाय / सेवा</label>
-            <div class="checks" id="services">
-              <label class="check"><input type="checkbox" value="Current Account"> Current Account</label>
-              <label class="check"><input type="checkbox" value="Savings Account"> Savings Account</label>
-              <label class="check"><input type="checkbox" value="QR / Merchant Payment"> QR / Merchant</label>
-              <label class="check"><input type="checkbox" value="POS Machine"> POS Machine</label>
-              <label class="check"><input type="checkbox" value="Business Loan / Mudra"> Business Loan / Mudra</label>
-              <label class="check"><input type="checkbox" value="Cash Credit / OD"> Cash Credit / OD</label>
-              <label class="check"><input type="checkbox" value="Insurance"> Insurance</label>
-              <label class="check"><input type="checkbox" value="Deposit"> Deposit</label>
-              <label class="check"><input type="checkbox" value="Other"> इतर</label>
-            </div>
-          </div>
-
-          <div>
-            <label>ग्राहकाचा प्रतिसाद *</label>
-            <select id="response" required>
-              <option value="">प्रतिसाद निवडा</option>
-              <option>Interested</option>
-              <option>Follow-up Required</option>
-              <option>Documents Pending</option>
-              <option>Application Submitted</option>
-              <option>Business Converted</option>
-              <option>Not Interested</option>
-            </select>
-          </div>
-          <div>
-            <label>संभाव्य व्यवसाय रक्कम (₹)</label>
-            <input id="potentialAmount" type="number" inputmode="decimal" min="0" placeholder="अंदाजे रक्कम" />
-          </div>
-          <div>
-            <label>पुढील फॉलोअप तारीख</label>
-            <input id="followupDate" type="date" />
-          </div>
-          <div>
-            <label>भेटीची तारीख व वेळ</label>
-            <input id="visitDateTime" readonly />
-          </div>
-
-          <div class="full">
-            <label>भेटीचा फोटो *</label>
-            <div class="photo-box">
-              <input id="photo" type="file" accept="image/*" capture="environment" required />
-              <img id="photoPreview" class="photo-preview" alt="फोटो पूर्वदृश्य" />
-              <div style="font-size:12px;color:#6c7c77;margin-top:7px">फोटो निवडल्यानंतर तो आकार कमी करून सुरक्षितपणे सेव्ह केला जाईल.</div>
-            </div>
-          </div>
-
-          <div class="full">
-            <label>GPS जिओ-टॅग *</label>
-            <div class="location-card">
-              <div class="location-text" id="locationText">अजून लोकेशन घेतलेले नाही.</div>
-              <button class="btn btn-light" type="button" id="getLocationBtn">📍 लोकेशन घ्या</button>
-            </div>
-            <div class="notice">GPS साठी मोबाईलचे Location सुरू ठेवा आणि ब्राउझरमध्ये Location permission “Allow” करा. अचूकता कमी असल्यास पुन्हा लोकेशन घ्या.</div>
-          </div>
-
-          <div class="full">
-            <label>भेटीची नोंद / चर्चा</label>
-            <textarea id="remarks" placeholder="ग्राहकाची गरज, सध्याची बँक, आवश्यक कागदपत्रे, पुढील कृती इ."></textarea>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button type="button" class="btn btn-light" id="resetBtn">फॉर्म साफ करा</button>
-          <button type="submit" class="btn btn-primary">✅ भेट सेव्ह करा</button>
-        </div>
-      </form>
-    </section>
-
-    <section class="section">
-      <div class="section-title">
-        <h2>आजच्या भेटी</h2>
-        <div class="toolbar">
-          <button class="btn btn-gold" id="backupBtn" type="button">डेटा बॅकअप</button>
-          <label class="btn btn-light" style="cursor:pointer">
-            बॅकअप Restore
-            <input id="restoreInput" type="file" accept=".json,application/json" style="display:none">
-          </label>
-        </div>
-      </div>
-      <div id="visitList" class="visit-list"></div>
-    </section>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-<script>
-(() => {
-  "use strict";
-
-  const $ = (id) => document.getElementById(id);
-  const DB_NAME = "SBI_Business_Visit_DB";
-  const STORE = "visits";
-  const DB_VERSION = 1;
-  let db;
-  let currentLocation = null;
-  let compressedPhoto = "";
-
-  function openDB(){
-    return new Promise((resolve,reject)=>{
-      const req = indexedDB.open(DB_NAME, DB_VERSION);
-      req.onupgradeneeded = (e)=>{
-        const d = e.target.result;
-        if(!d.objectStoreNames.contains(STORE)){
-          const store = d.createObjectStore(STORE,{keyPath:"id"});
-          store.createIndex("visitDate","visitDate",{unique:false});
-        }
-      };
-      req.onsuccess=()=>{db=req.result;resolve(db)};
-      req.onerror=()=>reject(req.error);
-    });
-  }
-
-  function putVisit(v){
-    return new Promise((resolve,reject)=>{
-      const tx=db.transaction(STORE,"readwrite");
-      tx.objectStore(STORE).put(v);
-      tx.oncomplete=()=>resolve();
-      tx.onerror=()=>reject(tx.error);
-    });
-  }
-
-  function getAllVisits(){
-    return new Promise((resolve,reject)=>{
-      const req=db.transaction(STORE,"readonly").objectStore(STORE).getAll();
-      req.onsuccess=()=>resolve(req.result || []);
-      req.onerror=()=>reject(req.error);
-    });
-  }
-
-  function deleteVisit(id){
-    return new Promise((resolve,reject)=>{
-      const tx=db.transaction(STORE,"readwrite");
-      tx.objectStore(STORE).delete(id);
-      tx.oncomplete=()=>resolve();
-      tx.onerror=()=>reject(tx.error);
-    });
-  }
-
-  function clearAll(){
-    return new Promise((resolve,reject)=>{
-      const tx=db.transaction(STORE,"readwrite");
-      tx.objectStore(STORE).clear();
-      tx.oncomplete=()=>resolve();
-      tx.onerror=()=>reject(tx.error);
-    });
-  }
-
-  function nowLocal(){
-    const d = new Date();
-    return {
-      iso: d.toISOString(),
-      local: d.toLocaleString("mr-IN",{
-        day:"2-digit",month:"2-digit",year:"numeric",
-        hour:"2-digit",minute:"2-digit",second:"2-digit"
-      }),
-      dateKey: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`
-    };
-  }
-
-  function formatDate(iso){
-    return new Date(iso).toLocaleString("mr-IN",{
-      day:"2-digit",month:"2-digit",year:"numeric",
-      hour:"2-digit",minute:"2-digit"
-    });
-  }
-
-  function escapeHTML(value){
-    return String(value ?? "").replace(/[&<>"']/g, c => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[c]));
-  }
-
-  function showToast(msg){
-    const t=$("toast");
-    t.textContent=msg;
-    t.classList.add("show");
-    setTimeout(()=>t.classList.remove("show"),2600);
-  }
-
-  function updateClock(){
-    $("liveClock").textContent = new Date().toLocaleTimeString("mr-IN");
-    $("visitDateTime").value = nowLocal().local;
-  }
-  setInterval(updateClock,1000);
-  updateClock();
-
-  $("photo").addEventListener("change", async (e)=>{
-    const file=e.target.files[0];
-    if(!file){compressedPhoto="";$("photoPreview").style.display="none";return;}
-    try{
-      compressedPhoto=await compressImage(file,1100,0.72);
-      $("photoPreview").src=compressedPhoto;
-      $("photoPreview").style.display="block";
-    }catch(err){
-      showToast("फोटो प्रक्रिया करण्यात अडचण आली.");
-    }
-  });
-
-  function compressImage(file,maxSize,quality){
-    return new Promise((resolve,reject)=>{
-      const reader=new FileReader();
-      reader.onload=()=>{
-        const img=new Image();
-        img.onload=()=>{
-          let w=img.width,h=img.height;
-          const ratio=Math.min(1,maxSize/Math.max(w,h));
-          w=Math.round(w*ratio); h=Math.round(h*ratio);
-          const canvas=document.createElement("canvas");
-          canvas.width=w;canvas.height=h;
-          const ctx=canvas.getContext("2d");
-          ctx.drawImage(img,0,0,w,h);
-          resolve(canvas.toDataURL("image/jpeg",quality));
-        };
-        img.onerror=reject;
-        img.src=reader.result;
-      };
-      reader.onerror=reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  $("getLocationBtn").addEventListener("click",()=>{
-    if(!navigator.geolocation){
-      showToast("या ब्राउझरमध्ये GPS सुविधा उपलब्ध नाही.");
-      return;
-    }
-    $("locationText").textContent="लोकेशन घेत आहे...";
-    navigator.geolocation.getCurrentPosition(
-      pos=>{
-        currentLocation={
-          latitude:pos.coords.latitude,
-          longitude:pos.coords.longitude,
-          accuracy:Math.round(pos.coords.accuracy),
-          capturedAt:new Date().toISOString()
-        };
-        $("locationText").innerHTML =
-          `<b>Latitude:</b> ${currentLocation.latitude.toFixed(6)}<br>`+
-          `<b>Longitude:</b> ${currentLocation.longitude.toFixed(6)}<br>`+
-          `<b>Accuracy:</b> ±${currentLocation.accuracy} मीटर`;
-        showToast("GPS लोकेशन यशस्वीरीत्या घेतले.");
-      },
-      err=>{
-        currentLocation=null;
-        const msg = err.code===1 ? "Location permission नाकारली आहे." :
-                    err.code===2 ? "GPS लोकेशन उपलब्ध नाही." :
-                    "लोकेशन घेण्यासाठी जास्त वेळ लागला.";
-        $("locationText").textContent=msg;
-        showToast(msg);
-      },
-      {enableHighAccuracy:true,timeout:15000,maximumAge:0}
-    );
-  });
-
-  $("visitForm").addEventListener("submit", async (e)=>{
-    e.preventDefault();
-    if(!compressedPhoto){
-      showToast("भेटीचा फोटो आवश्यक आहे.");
-      return;
-    }
-    if(!currentLocation){
-      showToast("GPS लोकेशन घेणे आवश्यक आहे.");
-      return;
-    }
-
-    const mobile=$("mobile").value.trim();
-    if(mobile && !/^[6-9]\d{9}$/.test(mobile)){
-      showToast("योग्य 10 अंकी मोबाईल नंबर टाका.");
-      return;
-    }
-
-    const services=[...document.querySelectorAll("#services input:checked")].map(x=>x.value);
-    const t=nowLocal();
-    const visit={
-      id:"VISIT-"+Date.now(),
-      visitor:$("visitor").value,
-      branch:$("branch").value.trim(),
-      shopName:$("shopName").value.trim(),
-      ownerName:$("ownerName").value.trim(),
-      mobile,
-      businessType:$("businessType").value,
-      address:$("address").value.trim(),
-      services,
-      response:$("response").value,
-      potentialAmount:$("potentialAmount").value || "",
-      followupDate:$("followupDate").value || "",
-      remarks:$("remarks").value.trim(),
-      photo:compressedPhoto,
-      location:currentLocation,
-      createdAt:t.iso,
-      visitDate:t.dateKey
-    };
-
-    try{
-      await putVisit(visit);
-      showToast("भेट सेव्ह झाली. PDF रिपोर्ट तयार करता येईल.");
-      resetForm(false);
-      await renderVisits();
-    }catch(err){
-      console.error(err);
-      showToast("डेटा सेव्ह झाला नाही. मोबाईल स्टोरेज तपासा.");
-    }
-  });
-
-  $("resetBtn").addEventListener("click",()=>resetForm(true));
-
-  function resetForm(ask){
-    if(ask && !confirm("फॉर्ममधील माहिती साफ करायची आहे का?")) return;
-    const keepBranch=$("branch").value;
-    $("visitForm").reset();
-    $("branch").value=keepBranch || "State Bank of India";
-    compressedPhoto="";
-    currentLocation=null;
-    $("photoPreview").src="";
-    $("photoPreview").style.display="none";
-    $("locationText").textContent="अजून लोकेशन घेतलेले नाही.";
-    updateClock();
-  }
-
-  async function renderVisits(){
-    const all=(await getAllVisits()).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-    const today=nowLocal().dateKey;
-    const todays=all.filter(v=>v.visitDate===today);
-
-    $("todayCount").textContent=todays.length;
-    $("remainingCount").textContent=Math.max(0,5-todays.length);
-    $("totalCount").textContent=all.length;
-    $("progressBar").style.width=`${Math.min(100,(todays.length/5)*100)}%`;
-
-    if(!todays.length){
-      $("visitList").innerHTML='<div class="empty">आजची कोणतीही भेट अजून नोंदवलेली नाही.</div>';
-      return;
-    }
-
-    $("visitList").innerHTML=todays.map(v=>{
-      const mapUrl=`https://www.google.com/maps?q=${v.location.latitude},${v.location.longitude}`;
-      const wa=v.mobile ? `https://wa.me/91${v.mobile}` : "";
-      return `
-      <article class="visit">
-        <img class="thumb" src="${v.photo}" alt="भेट फोटो">
-        <div>
-          <h3>${escapeHTML(v.shopName)}</h3>
-          <div class="meta">
-            ${escapeHTML(v.ownerName)} • ${escapeHTML(v.businessType)}<br>
-            ${escapeHTML(v.visitor)}<br>
-            ${formatDate(v.createdAt)} • GPS ±${escapeHTML(v.location.accuracy)}m
-          </div>
-          <span class="status">${escapeHTML(v.response)}</span>
-          <div class="actions">
-            <button class="btn btn-primary" onclick="window.printVisit('${v.id}')">📄 A4 PDF</button>
-            <button class="btn btn-gold" onclick="window.shareVisitReport('${v.id}')">📤 WhatsApp रिपोर्ट</button>
-            <a class="btn btn-light" href="${mapUrl}" target="_blank" rel="noopener">📍 Map</a>
-            ${v.mobile ? `<a class="btn btn-light" href="tel:${v.mobile}">📞 Call</a>` : ""}
-            ${v.mobile ? `<a class="btn btn-light" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
-            <button class="btn btn-danger" onclick="window.removeVisit('${v.id}')">Delete</button>
-          </div>
-        </div>
-      </article>`;
-    }).join("");
-  }
-
-  window.removeVisit=async(id)=>{
-    if(!confirm("ही भेट कायमची Delete करायची आहे का?")) return;
-    await deleteVisit(id);
-    await renderVisits();
-    showToast("नोंद Delete झाली.");
-  };
-
-  window.printVisit=async(id)=>{
-    const all=await getAllVisits();
-    const v=all.find(x=>x.id===id);
-    if(!v) return;
-    const mapUrl=`https://www.google.com/maps?q=${v.location.latitude},${v.location.longitude}`;
-    const amount=v.potentialAmount ? `₹${Number(v.potentialAmount).toLocaleString("en-IN")}` : "-";
-    const services=(v.services && v.services.length) ? v.services.join(", ") : "-";
-    const follow=v.followupDate ? new Date(v.followupDate+"T00:00:00").toLocaleDateString("mr-IN") : "-";
-
-    const report=`<!DOCTYPE html>
-<html lang="mr">
-<head>
-<meta charset="UTF-8">
-<title>${escapeHTML(v.shopName)} - Visit Report</title>
 <style>
-@page{size:A4 portrait;margin:10mm}
-*{box-sizing:border-box}
-body{font-family:"Nirmala UI","Mangal",Arial,sans-serif;color:#111;margin:0;background:#fff}
-.page{width:100%;min-height:277mm;border:1.4px solid #111;padding:8mm;position:relative}
-.header{text-align:center;border-bottom:2px solid #0b4f3c;padding-bottom:7px;margin-bottom:8px}
-.header h1{font-size:20px;margin:0;color:#0b4f3c}
-.header p{font-size:12px;margin:3px 0 0}
-.meta{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px}
-.photo{width:100%;height:80mm;object-fit:contain;border:1px solid #333;background:#f4f4f4;margin:5px 0 8px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-td{border:1px solid #333;padding:6px;vertical-align:top}
-td.key{width:29%;font-weight:700;background:#eef5f2}
-.geo{margin-top:8px;border:1px solid #333;padding:7px;font-size:11px;line-height:1.5}
-.sign{width:48%;margin:17mm 0 0 auto;font-size:12px;text-align:center}
-.line{border-top:1px solid #111;padding-top:4px}
-a{color:#000;text-decoration:none}
-@media print{button{display:none}}
+:root{
+  --blue:#0b5f9e;--blue2:#083d70;--green:#0b7d4b;--red:#c64141;--orange:#c77a00;
+  --bg:#eef4f8;--card:#fff;--line:#d8e2eb;--text:#17263a;--muted:#6b7c8f;
+}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;width:100%;max-width:100%;overflow-x:hidden;background:linear-gradient(180deg,#e8f4fc,#f8fafc 220px,#eef3f8);font-family:"Nirmala UI","Mangal",Arial,sans-serif;color:var(--text)}
+header{position:sticky;top:0;z-index:1000;background:linear-gradient(135deg,var(--blue2),var(--blue),var(--green));color:#fff;padding:11px 12px;box-shadow:0 5px 18px rgba(0,0,0,.18)}
+.head{max-width:900px;margin:auto}.brand{font:900 11px Arial,sans-serif;letter-spacing:1.5px}
+h1{margin:3px 0 2px;font-size:20px}.sub{font-size:11px;opacity:.92}
+.wrap{max-width:900px;margin:auto;padding:10px}
+.notice{background:#fff8df;border:1px solid #ecd081;color:#745100;border-radius:13px;padding:10px;font-size:11px;line-height:1.45;margin-bottom:9px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px;margin-bottom:9px;box-shadow:0 4px 15px rgba(27,63,95,.06)}
+.card h2{font-size:14px;margin:0 0 8px}
+select,button{font:inherit;width:100%;min-height:46px;border:1px solid var(--line);border-radius:11px;padding:8px 10px;background:#fff}
+button{font-weight:900;cursor:pointer}.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.green{background:var(--green);color:#fff;border-color:var(--green)}.danger{color:var(--red);border-color:#efbbbb}
+.grid2{display:grid;grid-template-columns:1fr;gap:7px}
+.statusbar{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:9px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:13px;text-align:center;padding:8px}
+.stat strong{display:block;font-size:20px}.stat span{font-size:9px;color:var(--muted)}
+.stat.green strong{color:var(--green)}.stat.blue strong{color:var(--blue)}.stat.red strong{color:var(--red)}
+#map{height:44vh;min-height:330px;border-radius:13px;overflow:hidden;border:1px solid var(--line)}
+.members{display:grid;grid-template-columns:1fr;gap:7px;margin-top:8px}
+.member{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fbfcfd}
+.member-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.member-name{font-weight:900;font-size:13px}.member-mr{font-size:10px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:900}
+.badge.live{background:#e8f8ef;color:#0a7545;border:1px solid #b9e2ca}
+.badge.stale{background:#fff1d7;color:#8a5900;border:1px solid #ecd08a}
+.badge.off{background:#f0f2f4;color:#6c7782;border:1px solid #d7dde3}
+.meta{font-size:10px;color:#596b7e;line-height:1.45;margin-top:6px}
+.member-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.member-actions button{min-height:40px;font-size:10px}
+.share-state{margin-top:8px;padding:9px;border-radius:11px;background:#f5f8fb;border:1px solid var(--line);font-size:11px;font-weight:800}
+.connection{display:flex;align-items:center;gap:6px;font-size:10px;margin-top:5px}
+.dot{width:9px;height:9px;border-radius:50%;background:#aaa}.dot.on{background:#21a662}.dot.off{background:#d34b4b}
+.toast{position:fixed;left:50%;top:80px;transform:translate(-50%,-8px);opacity:0;pointer-events:none;background:#17293d;color:#fff;padding:9px 12px;border-radius:10px;font-size:11px;transition:.2s;z-index:2000;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+footer{text-align:center;font-size:10px;color:var(--muted);padding:14px 8px 24px}
+@media(min-width:650px){.grid2{grid-template-columns:1fr 1fr}.statusbar{grid-template-columns:repeat(4,1fr)}.members{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="page">
-  <div class="header">
-    <h1>STATE BANK OF INDIA</h1>
-    <p><b>नवीन व्यवसाय स्रोत – प्रत्यक्ष भेट अहवाल</b></p>
+<header>
+  <div class="head">
+    <div class="brand">DS WORLD</div>
+    <h1>Bhilwara Shared Live GPS Tracker</h1>
+    <div class="sub">7 Members • No visible login • One shared live map</div><div class="sub" style="margin-top:3px;font-weight:800">Default Room: DS WORLD BHILWARA • Auto-Join</div>
+    <div class="connection"><span id="connDot" class="dot off"></span><span id="connText">Firebase connecting…</span></div>
   </div>
-  <div class="meta">
-    <span><b>Report ID:</b> ${escapeHTML(v.id)}</span>
-    <span><b>भेट तारीख-वेळ:</b> ${escapeHTML(formatDate(v.createdAt))}</span>
-  </div>
+</header>
 
-  <img class="photo" src="${v.photo}" alt="Visit Photo">
+<div id="toast" class="toast"></div>
 
-  <table>
-    <tr><td class="key">शाखा</td><td>${escapeHTML(v.branch || "-")}</td></tr>
-    <tr><td class="key">भेट देणारे अधिकारी</td><td>${escapeHTML(v.visitor)}</td></tr>
-    <tr><td class="key">दुकान / संस्था</td><td><b>${escapeHTML(v.shopName)}</b></td></tr>
-    <tr><td class="key">मालक / संपर्क व्यक्ती</td><td>${escapeHTML(v.ownerName)}</td></tr>
-    <tr><td class="key">मोबाईल नंबर</td><td>${escapeHTML(v.mobile || "-")}</td></tr>
-    <tr><td class="key">व्यवसायाचा प्रकार</td><td>${escapeHTML(v.businessType)}</td></tr>
-    <tr><td class="key">पूर्ण पत्ता</td><td>${escapeHTML(v.address)}</td></tr>
-    <tr><td class="key">संभाव्य SBI सेवा</td><td>${escapeHTML(services)}</td></tr>
-    <tr><td class="key">ग्राहकाचा प्रतिसाद</td><td>${escapeHTML(v.response)}</td></tr>
-    <tr><td class="key">संभाव्य व्यवसाय रक्कम</td><td>${escapeHTML(amount)}</td></tr>
-    <tr><td class="key">फॉलोअप तारीख</td><td>${escapeHTML(follow)}</td></tr>
-    <tr><td class="key">चर्चा / विशेष नोंद</td><td>${escapeHTML(v.remarks || "-")}</td></tr>
-  </table>
-
-  <div class="geo">
-    <b>GPS जिओ-टॅग:</b><br>
-    Latitude: ${v.location.latitude.toFixed(6)} &nbsp; | &nbsp;
-    Longitude: ${v.location.longitude.toFixed(6)} &nbsp; | &nbsp;
-    Accuracy: ±${escapeHTML(v.location.accuracy)} मीटर<br>
-    Location Captured At: ${escapeHTML(formatDate(v.location.capturedAt))}<br>
-    Google Map: <a href="${mapUrl}">${mapUrl}</a>
+<main class="wrap">
+  <div class="notice">
+    📍 सर्वांसाठी <b>एकच Default Room</b> आधीच सेट आहे. कोणालाही Room Code टाकायचा नाही. प्रत्येकाने फक्त स्वतःचे नाव निवडून <b>Start Live Sharing</b> करावे.
+    Location sharing फक्त संमतीने वापरा. Browser बंद/फोनची location बंद झाल्यास updates थांबू शकतात.
   </div>
 
-  <div class="sign">
-    <div class="line">भेट देणाऱ्या अधिकाऱ्याची सही</div>
-  </div>
-</div>
-<script>
-window.onload=()=>setTimeout(()=>window.print(),400);
-<\/script>
-</body>
-</html>`;
+  <section class="card">
+    <h2>👤 माझे Live Sharing</h2>
+    <select id="personSelect"></select>
+    <div class="grid2" style="margin-top:7px">
+      <button id="startBtn" class="green">▶ Start Live Sharing</button>
+      <button id="stopBtn" class="danger">■ Stop Sharing</button>
+    </div>
+    <div id="myState" class="share-state">Sharing बंद आहे.</div>
+  </section>
 
-    const w=window.open("","_blank");
-    if(!w){
-      showToast("Popup blocked आहे. Browser मध्ये pop-up Allow करा.");
+  <section class="statusbar">
+    <div class="stat blue"><strong>7</strong><span>Total Members</span></div>
+    <div class="stat green"><strong id="liveCount">0</strong><span>Live / Recent</span></div>
+    <div class="stat"><strong id="staleCount">0</strong><span>Stale</span></div>
+    <div class="stat red"><strong id="offlineCount">7</strong><span>No Location</span></div>
+  </section>
+
+  <section class="card">
+    <h2>🗺️ सर्वांचे Live Location</h2>
+    <div id="map"></div>
+    <div class="meta">LIVE = मागील 2 मिनिटांत location update. Marker वर टॅप केल्यास नाव, accuracy व last update दिसेल.</div>
+  </section>
+
+  <section class="card">
+    <h2>👥 Member Locations</h2>
+    <div id="members" class="members"></div>
+  </section>
+</main>
+
+<footer>DS WORLD • Bhilwara Shared GPS Tracker</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getDatabase, ref, onValue, set, update, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBx9pl9BTpcZTIEb4Blrl7BqJefXwzgmzc",
+  authDomain: "bhilwara-9e91f.firebaseapp.com",
+  databaseURL: "https://bhilwara-9e91f-default-rtdb.firebaseio.com",
+  projectId: "bhilwara-9e91f",
+  storageBucket: "bhilwara-9e91f.firebasestorage.app",
+  messagingSenderId: "122703349946",
+  appId: "1:122703349946:web:42de7cb2a7ecf8d2cb1a83",
+  measurementId: "G-4TRQ38E5X7"
+};
+
+const ROOM_ID = "dsworld-bhilwara-7-27efde44a7f8";
+const PEOPLE = [
+  {id:"shete",name:"Shete Sir",mr:"शेटे सर"},
+  {id:"pujari",name:"Pujari Sir",mr:"पुजारी सर"},
+  {id:"sitaram",name:"Sitaram Sir",mr:"सीताराम सर"},
+  {id:"rajan",name:"Rajan",mr:"राजन"},
+  {id:"tejas",name:"Tejas",mr:"तेजस"},
+  {id:"anita",name:"Anita Madam",mr:"अनिता मॅडम"},
+  {id:"misal",name:"Misal Sir",mr:"मिसाळ सर"}
+];
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+let watchId = null;
+let currentUid = "";
+let currentPersonId = "";
+let map;
+const markers = {};
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.x);toast.x=setTimeout(()=>t.classList.remove("show"),1800)}
+function selected(){return PEOPLE.find(p=>p.id===document.getElementById("personSelect").value)}
+function mapsUrl(x){return `https://maps.google.com/?q=${x.lat},${x.lng}`}
+function fmtAge(ts){
+  if(!ts)return "कधीच नाही";
+  const sec=Math.max(0,Math.floor((Date.now()-ts)/1000));
+  if(sec<60)return `${sec}s ago`;
+  const min=Math.floor(sec/60); if(min<60)return `${min}m ago`;
+  return `${Math.floor(min/60)}h ago`;
+}
+function stateFor(x){
+  if(!x || typeof x.lat!=="number" || typeof x.lng!=="number") return "off";
+  const age=Date.now()-(x.updatedAt||0);
+  if(x.sharing===true && age<=120000) return "live";
+  return "stale";
+}
+function stateLabel(s){return s==="live"?"LIVE":s==="stale"?"STALE":"NO LOCATION"}
+
+function initMap(){
+  map=L.map("map",{zoomControl:true}).setView([25.35,74.63],12);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
+}
+function updateMap(all){
+  const bounds=[];
+  PEOPLE.forEach(p=>{
+    const x=all?.[p.id];
+    if(!x || typeof x.lat!=="number" || typeof x.lng!=="number"){
+      if(markers[p.id]){map.removeLayer(markers[p.id]);delete markers[p.id]}
       return;
     }
-    w.document.open(); w.document.write(report); w.document.close();
-  };
+    const latlng=[x.lat,x.lng];
+    bounds.push(latlng);
+    const popup=`<b>${esc(p.name)}</b><br>${esc(p.mr)}<br>Accuracy: ${Math.round(x.accuracy||0)} m<br>${esc(fmtAge(x.updatedAt))}`;
+    if(markers[p.id]) markers[p.id].setLatLng(latlng).setPopupContent(popup);
+    else markers[p.id]=L.marker(latlng).addTo(map).bindPopup(popup);
+  });
+  if(bounds.length) map.fitBounds(bounds,{padding:[30,30],maxZoom:15});
+}
+function renderMembers(all){
+  let live=0,stale=0,off=0;
+  document.getElementById("members").innerHTML=PEOPLE.map(p=>{
+    const x=all?.[p.id], st=stateFor(x);
+    if(st==="live")live++; else if(st==="stale")stale++; else off++;
+    return `<div class="member">
+      <div class="member-top">
+        <div><div class="member-name">${esc(p.name)}</div><div class="member-mr">${esc(p.mr)}</div></div>
+        <span class="badge ${st}">${stateLabel(st)}</span>
+      </div>
+      <div class="meta">${x?`Last: ${esc(fmtAge(x.updatedAt))}<br>Accuracy: ${Math.round(x.accuracy||0)} m<br>${Number(x.lat).toFixed(5)}, ${Number(x.lng).toFixed(5)}`:"Location अजून share केलेली नाही."}</div>
+      ${x?`<div class="member-actions"><button data-map="${p.id}">🗺️ Maps</button><button data-share="${p.id}">📤 Share</button></div>`:""}
+    </div>`;
+  }).join("");
+  document.getElementById("liveCount").textContent=live;
+  document.getElementById("staleCount").textContent=stale;
+  document.getElementById("offlineCount").textContent=off;
 
+  document.querySelectorAll("[data-map]").forEach(btn=>btn.onclick=()=>{
+    const x=all?.[btn.dataset.map]; if(x) window.open(mapsUrl(x),"_blank");
+  });
+  document.querySelectorAll("[data-share]").forEach(btn=>btn.onclick=async()=>{
+    const p=PEOPLE.find(z=>z.id===btn.dataset.share), x=all?.[btn.dataset.share];
+    if(!p||!x)return;
+    const text=`📍 ${p.name} Live Location\n${mapsUrl(x)}`;
+    if(navigator.share){try{await navigator.share({title:p.name+" Location",text})}catch(e){}}
+    else window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
+  });
+}
 
-  function loadCanvasImage(src){
-    return new Promise((resolve,reject)=>{
-      const img=new Image();
-      img.onload=()=>resolve(img);
-      img.onerror=reject;
-      img.src=src;
-    });
-  }
+function setConnection(on,text){
+  document.getElementById("connDot").className="dot "+(on?"on":"off");
+  document.getElementById("connText").textContent=text;
+}
 
-  function wrapCanvasText(ctx,text,maxWidth){
-    const words=String(text ?? "-").split(/\s+/);
-    const lines=[];
-    let line="";
-    for(const word of words){
-      const test=line ? line+" "+word : word;
-      if(ctx.measureText(test).width>maxWidth && line){
-        lines.push(line);
-        line=word;
-      }else{
-        line=test;
-      }
-    }
-    if(line) lines.push(line);
-    return lines.length ? lines : ["-"];
-  }
+async function startSharing(){
+  if(!currentUid){alert("Firebase अजून connect झालेले नाही.");return}
+  if(!navigator.geolocation){alert("या Browser मध्ये GPS support उपलब्ध नाही.");return}
+  const p=selected();
+  currentPersonId=p.id;
+  const memberRef=ref(db,`rooms/${ROOM_ID}/members/${p.id}`);
 
-  function fitPhotoRect(img,x,y,w,h){
-    const r=Math.min(w/img.width,h/img.height);
-    const dw=img.width*r, dh=img.height*r;
-    return {x:x+(w-dw)/2,y:y+(h-dh)/2,w:dw,h:dh};
-  }
+  try{
+    await onDisconnect(memberRef).update({sharing:false,updatedAt:serverTimestamp()});
+  }catch(e){}
 
-  async function createReportCanvas(v){
-    const canvas=document.createElement("canvas");
-    canvas.width=1240;
-    canvas.height=1754;
-    const ctx=canvas.getContext("2d");
-    const W=canvas.width,H=canvas.height;
-    const margin=54;
-    const green="#0b4f3c";
-    const pale="#eef5f2";
-    const dark="#111111";
+  if(watchId!==null) navigator.geolocation.clearWatch(watchId);
 
-    ctx.fillStyle="#ffffff";
-    ctx.fillRect(0,0,W,H);
-    ctx.strokeStyle=dark;
-    ctx.lineWidth=3;
-    ctx.strokeRect(24,24,W-48,H-48);
-
-    ctx.textAlign="center";
-    ctx.fillStyle=green;
-    ctx.font='700 40px "Nirmala UI","Mangal",sans-serif';
-    ctx.fillText("STATE BANK OF INDIA",W/2,82);
-    ctx.fillStyle=dark;
-    ctx.font='700 26px "Nirmala UI","Mangal",sans-serif';
-    ctx.fillText("नवीन व्यवसाय स्रोत – प्रत्यक्ष भेट अहवाल",W/2,122);
-    ctx.strokeStyle=green;
-    ctx.lineWidth=4;
-    ctx.beginPath();ctx.moveTo(margin,145);ctx.lineTo(W-margin,145);ctx.stroke();
-
-    ctx.textAlign="left";
-    ctx.fillStyle=dark;
-    ctx.font='500 19px "Nirmala UI","Mangal",sans-serif';
-    ctx.fillText(`Report ID: ${v.id}`,margin,178);
-    ctx.textAlign="right";
-    ctx.fillText(`भेट तारीख-वेळ: ${formatDate(v.createdAt)}`,W-margin,178);
-
-    const photo=await loadCanvasImage(v.photo);
-    const photoBox={x:margin,y:200,w:W-margin*2,h:455};
-    ctx.fillStyle="#f4f4f4";
-    ctx.fillRect(photoBox.x,photoBox.y,photoBox.w,photoBox.h);
-    ctx.strokeStyle="#333";ctx.lineWidth=2;
-    ctx.strokeRect(photoBox.x,photoBox.y,photoBox.w,photoBox.h);
-    const pr=fitPhotoRect(photo,photoBox.x+8,photoBox.y+8,photoBox.w-16,photoBox.h-16);
-    ctx.drawImage(photo,pr.x,pr.y,pr.w,pr.h);
-
-    const amount=v.potentialAmount ? `₹${Number(v.potentialAmount).toLocaleString("en-IN")}` : "-";
-    const services=(v.services && v.services.length) ? v.services.join(", ") : "-";
-    const follow=v.followupDate ? new Date(v.followupDate+"T00:00:00").toLocaleDateString("mr-IN") : "-";
-    const rows=[
-      ["शाखा",v.branch || "-"],
-      ["भेट देणारे अधिकारी",v.visitor],
-      ["दुकान / संस्था",v.shopName],
-      ["मालक / संपर्क व्यक्ती",v.ownerName],
-      ["मोबाईल नंबर",v.mobile || "-"],
-      ["व्यवसायाचा प्रकार",v.businessType],
-      ["पूर्ण पत्ता",v.address],
-      ["संभाव्य SBI सेवा",services],
-      ["ग्राहकाचा प्रतिसाद",v.response],
-      ["संभाव्य व्यवसाय रक्कम",amount],
-      ["फॉलोअप तारीख",follow],
-      ["चर्चा / विशेष नोंद",v.remarks || "-"]
-    ];
-
-    let y=675;
-    const tableX=margin, tableW=W-margin*2, keyW=340, valueW=tableW-keyW;
-    ctx.textBaseline="top";
-    for(const [key,val] of rows){
-      ctx.font='700 20px "Nirmala UI","Mangal",sans-serif';
-      const keyLines=wrapCanvasText(ctx,key,keyW-28);
-      ctx.font='500 20px "Nirmala UI","Mangal",sans-serif';
-      const valLines=wrapCanvasText(ctx,val,valueW-30);
-      const lineCount=Math.max(keyLines.length,valLines.length);
-      const rowH=Math.max(48,lineCount*27+18);
-
-      ctx.fillStyle=pale;
-      ctx.fillRect(tableX,y,keyW,rowH);
-      ctx.strokeStyle="#333";ctx.lineWidth=1.5;
-      ctx.strokeRect(tableX,y,keyW,rowH);
-      ctx.strokeRect(tableX+keyW,y,valueW,rowH);
-
-      ctx.fillStyle=dark;
-      ctx.font='700 20px "Nirmala UI","Mangal",sans-serif';
-      keyLines.forEach((line,i)=>ctx.fillText(line,tableX+14,y+10+i*27));
-      ctx.font='500 20px "Nirmala UI","Mangal",sans-serif';
-      valLines.forEach((line,i)=>ctx.fillText(line,tableX+keyW+14,y+10+i*27));
-      y+=rowH;
-    }
-
-    const geoLines=[
-      `Latitude: ${v.location.latitude.toFixed(6)}   |   Longitude: ${v.location.longitude.toFixed(6)}`,
-      `Accuracy: ±${v.location.accuracy} मीटर   |   Location Time: ${formatDate(v.location.capturedAt)}`,
-      `Google Map: https://www.google.com/maps?q=${v.location.latitude},${v.location.longitude}`
-    ];
-    const geoH=104;
-    if(y+geoH>H-170){
-      const scale=(H-170)/(y+geoH);
-      if(scale<1){
-        const temp=document.createElement("canvas");
-        temp.width=W;temp.height=H;
-      }
-    }
-    ctx.fillStyle="#ffffff";
-    ctx.strokeStyle="#333";ctx.lineWidth=1.5;
-    ctx.strokeRect(tableX,y+12,tableW,geoH);
-    ctx.fillStyle=dark;
-    ctx.font='700 19px "Nirmala UI","Mangal",sans-serif';
-    ctx.fillText("GPS जिओ-टॅग:",tableX+14,y+24);
-    ctx.font='500 17px "Nirmala UI","Mangal",sans-serif';
-    geoLines.forEach((line,i)=>ctx.fillText(line,tableX+14,y+50+i*22));
-
-    const signY=Math.min(H-92,y+150);
-    ctx.strokeStyle=dark;ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(W-480,signY);ctx.lineTo(W-margin,signY);ctx.stroke();
-    ctx.textAlign="center";
-    ctx.font='500 18px "Nirmala UI","Mangal",sans-serif';
-    ctx.fillText("भेट देणाऱ्या अधिकाऱ्याची सही",W-267,signY+12);
-    return canvas;
-  }
-
-  window.shareVisitReport=async(id)=>{
-    const all=await getAllVisits();
-    const v=all.find(x=>x.id===id);
-    if(!v) return;
+  document.getElementById("myState").textContent="📡 GPS सुरू करत आहे…";
+  watchId=navigator.geolocation.watchPosition(async pos=>{
     try{
-      showToast("फोटोसहित रिपोर्ट तयार होत आहे...");
-      const canvas=await createReportCanvas(v);
-      const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Blob failed")),"image/jpeg",0.92));
-      const safeName=String(v.shopName || "Visit").replace(/[^\p{L}\p{N}_-]+/gu,"_").slice(0,45);
-      const file=new File([blob],`SBI_Visit_Report_${safeName}.jpg`,{type:"image/jpeg"});
-      const shareData={
-        title:"SBI Business Visit Report",
-        text:`${v.shopName} – ${formatDate(v.createdAt)}\nभेट देणारे अधिकारी: ${v.visitor}`,
-        files:[file]
-      };
-      if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
-        await navigator.share(shareData);
-      }else{
-        const url=URL.createObjectURL(blob);
-        const a=document.createElement("a");
-        a.href=url;
-        a.download=file.name;
-        a.click();
-        setTimeout(()=>URL.revokeObjectURL(url),2000);
-        showToast("रिपोर्ट image डाउनलोड झाली. ती WhatsApp मध्ये attach करा.");
-      }
-    }catch(err){
-      if(err && err.name==="AbortError") return;
+      await set(memberRef,{
+        name:p.name,mr:p.mr,
+        ownerUid:currentUid,
+        lat:pos.coords.latitude,
+        lng:pos.coords.longitude,
+        accuracy:pos.coords.accuracy,
+        sharing:true,
+        updatedAt:serverTimestamp()
+      });
+      document.getElementById("myState").textContent=`✅ Live Sharing ON • Accuracy ${Math.round(pos.coords.accuracy)} m`;
+    }catch(e){
+      document.getElementById("myState").textContent="⚠️ Database permission तपासा.";
+      console.error(e);
+    }
+  },err=>{
+    document.getElementById("myState").textContent="⚠️ Location Permission / GPS तपासा.";
+  },{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+}
+
+async function stopSharing(){
+  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}
+  if(currentPersonId){
+    try{await update(ref(db,`rooms/${ROOM_ID}/members/${currentPersonId}`),{sharing:false,updatedAt:serverTimestamp()})}catch(e){}
+  }
+  document.getElementById("myState").textContent="Sharing बंद आहे.";
+}
+
+document.getElementById("personSelect").innerHTML=PEOPLE.map(p=>`<option value="${p.id}">${esc(p.name)} / ${esc(p.mr)}</option>`).join("");
+document.getElementById("startBtn").onclick=startSharing;
+document.getElementById("stopBtn").onclick=stopSharing;
+
+initMap();
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    currentUid=user.uid;
+    setConnection(true,"Firebase connected");
+    const roomRef=ref(db,`rooms/${ROOM_ID}/members`);
+    onValue(roomRef,snap=>{
+      const all=snap.val()||{};
+      renderMembers(all);
+      updateMap(all);
+    },err=>{
+      setConnection(false,"Database permission error");
       console.error(err);
-      showToast("रिपोर्ट शेअर करण्यात अडचण आली.");
-    }
-  };
+    });
+  } else {
+    setConnection(false,"Anonymous sign-in…");
+  }
+});
 
-  $("backupBtn").addEventListener("click",async()=>{
-    const all=await getAllVisits();
-    const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),visits:all},null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download=`SBI_Visit_Backup_${nowLocal().dateKey}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
-  $("restoreInput").addEventListener("change",async(e)=>{
-    const file=e.target.files[0];
-    if(!file) return;
-    try{
-      const data=JSON.parse(await file.text());
-      if(!Array.isArray(data.visits)) throw new Error("Invalid");
-      if(!confirm(`${data.visits.length} नोंदी Restore करायच्या आहेत का? विद्यमान नोंदी कायम राहतील.`)) return;
-      for(const v of data.visits) await putVisit(v);
-      await renderVisits();
-      showToast("Backup Restore झाला.");
-    }catch(err){
-      showToast("हा योग्य Backup JSON नाही.");
-    }
-    e.target.value="";
-  });
-
-  openDB().then(renderVisits).catch(err=>{
-    console.error(err);
-    alert("या ब्राउझरमध्ये स्थानिक डेटाबेस सुरू झाला नाही. Chrome Browser वापरा.");
-  });
-})();
+signInAnonymously(auth).catch(err=>{
+  setConnection(false,"Anonymous Authentication OFF / error");
+  document.getElementById("myState").textContent="⚠️ Firebase Console मध्ये Anonymous Authentication ON करा.";
+  console.error(err);
+});
 </script>
 </body>
 </html>
