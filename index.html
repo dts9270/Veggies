@@ -141,6 +141,16 @@ footer{text-align:center;font-size:9px;color:var(--muted);padding:14px 8px 24px}
       <input id="newMr" placeholder="Marathi Name, उदा. पाटील सर">
     </div>
     <button id="addUserBtn" class="green" style="margin-top:7px">User Add करा</button>
+
+    <h2 style="margin-top:16px">♻️ Tracker Reset</h2>
+    <div class="small">
+      Trial / जुनी location साफ करण्यासाठी वापरा. Users delete होणार नाहीत.
+      Reset नंतर जो पुन्हा Start Live Sharing करेल त्याचेच नवीन location दिसेल.
+    </div>
+    <button id="resetTrackerBtn" class="danger" style="margin-top:7px">
+      🗑️ Delete All Locations / Reset Tracker
+    </button>
+
     <button id="adminLogout" style="margin-top:10px">Admin Logout</button>
   </section>
 </main>
@@ -150,7 +160,7 @@ footer{text-align:center;font-size:9px;color:var(--muted);padding:14px 8px 24px}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getDatabase, ref, onValue, set, update, onDisconnect, serverTimestamp, get } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { getDatabase, ref, onValue, set, update, remove, onDisconnect, serverTimestamp, get } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBx9pl9BTpcZTIEb4Blrl7BqJefXwzgmzc",
@@ -411,6 +421,63 @@ async function addUser(){
   }catch(e){alert("User add झाला नाही.");}
 }
 
+
+async function resetTrackerLocations(){
+  if(!adminLoggedIn){
+    alert("Admin Login आवश्यक आहे.");
+    return;
+  }
+
+  const pwd = prompt("Admin Password टाका:");
+  if(pwd === null) return;
+
+  const normalized = String(pwd).replace(/\s+/g,"");
+  if(normalized !== ADMIN_PASSWORD_NORMALIZED){
+    alert("Wrong Admin Password.");
+    return;
+  }
+
+  const ok = confirm(
+    "सध्याची सर्व saved locations आणि Stop/Restart control states delete करायची आहेत का?\n\nUsers / roster delete होणार नाहीत."
+  );
+  if(!ok) return;
+
+  try{
+    if(watchId !== null){
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+    }
+
+    currentPersonId = "";
+    followId = "";
+    document.getElementById("followBar").classList.remove("show");
+
+    await remove(ref(db,`rooms/${ROOM_ID}/members`));
+    await remove(ref(db,`rooms/${ROOM_ID}/controls`));
+
+    locations = {};
+    controls = {};
+    adminPausedById = {};
+
+    Object.keys(markers).forEach(id=>{
+      try{ map.removeLayer(markers[id]); }catch(e){}
+      delete markers[id];
+    });
+
+    document.getElementById("myState").textContent =
+      "♻️ Tracker Reset झाला. आता प्रत्येकाने पुन्हा Start Live Sharing करावे.";
+
+    renderMembers();
+    renderAdmin();
+    updateMap();
+
+    toast("सर्व जुनी locations delete झाली.");
+  }catch(e){
+    console.error(e);
+    alert("Tracker Reset झाला नाही. Firebase Database Rules तपासा.");
+  }
+}
+
 document.getElementById("adminOpen").onclick=()=>{
   if(adminLoggedIn){renderAdmin();document.getElementById("adminCard").scrollIntoView({behavior:"smooth"});return}
   document.getElementById("adminPassword").value="";
@@ -430,6 +497,7 @@ document.getElementById("adminLogout").onclick=()=>{
   adminLoggedIn=false;sessionStorage.removeItem("dsw_admin");renderAdmin();toast("Admin Logout.");
 };
 document.getElementById("addUserBtn").onclick=addUser;
+document.getElementById("resetTrackerBtn").onclick=resetTrackerLocations;
 document.getElementById("myLocationBtn").onclick=myLocation;
 document.getElementById("startBtn").onclick=()=>startSharing(false);
 document.getElementById("stopBtn").onclick=()=>stopSharing(false);
