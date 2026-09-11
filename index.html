@@ -1,552 +1,364 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="mr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b5f9e">
-<title>DS WORLD - Live GPS Tracker</title>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DS WORLD Growth OS</title>
 <style>
 :root{
-  --blue:#0b5f9e;--blue2:#073963;--green:#087a49;--red:#c64040;--orange:#ba7600;
-  --line:#d7e1ea;--text:#17263a;--muted:#66798d;--bg:#eef4f8;
+  --bg:#07101f; --bg2:#0b1730; --card:#101f3c; --card2:#142747;
+  --text:#f7fbff; --muted:#9db0ca; --line:#21385d;
+  --blue:#2a7fff; --cyan:#17c3ff; --green:#26d07c; --gold:#f3c763;
+  --red:#ff5d73; --violet:#9d73ff; --shadow:0 20px 60px rgba(0,0,0,.35);
 }
-*{box-sizing:border-box;min-width:0}
-html,body{margin:0;width:100%;overflow-x:hidden;background:linear-gradient(180deg,#e8f4fc,#f9fbfd 220px,#eef3f8);font-family:"Nirmala UI","Mangal",Arial,sans-serif;color:var(--text)}
-header{position:sticky;top:0;z-index:1200;background:linear-gradient(135deg,var(--blue2),var(--blue),var(--green));color:#fff;padding:11px 12px;box-shadow:0 5px 18px rgba(0,0,0,.18)}
-.head{max-width:980px;margin:auto}.brand{font:900 11px Arial,sans-serif;letter-spacing:1.4px}
-h1{font-size:20px;margin:3px 0 2px}.sub{font-size:10px;opacity:.94}
-.toprow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}
-.connection{display:flex;align-items:center;gap:6px;font-size:10px}
-.conn-dot{width:9px;height:9px;border-radius:50%;background:#dd5555}.conn-dot.on{background:#2cca79}
-.admin-top{width:auto;min-height:34px;padding:5px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.13);color:#fff;font-weight:900}
-.wrap{max-width:980px;margin:auto;padding:10px}
-.notice{background:#fff8df;border:1px solid #ead184;color:#715100;border-radius:13px;padding:9px;font-size:10px;line-height:1.45;margin-bottom:9px}
-.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px;margin-bottom:9px;box-shadow:0 4px 15px rgba(28,64,96,.06)}
-.card h2{font-size:14px;margin:0 0 8px}
-button,input,select{font:inherit;width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:11px;background:#fff}
-button{cursor:pointer;font-weight:900}
-.primary{background:var(--blue);border-color:var(--blue);color:#fff}.green{background:var(--green);border-color:var(--green);color:#fff}.danger{color:var(--red);border-color:#edbaba}.orange{color:#805500;background:#fff6e2;border-color:#e8ce91}
-.grid2{display:grid;grid-template-columns:1fr;gap:7px}
-.share-state{margin-top:8px;padding:9px;background:#f5f8fb;border:1px solid var(--line);border-radius:11px;font-size:10px;font-weight:800}
-.statusbar{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:9px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:13px;text-align:center;padding:8px}
-.stat strong{display:block;font-size:20px}.stat span{font-size:9px;color:var(--muted)}
-.stat.live strong{color:var(--green)}.stat.off strong{color:var(--red)}.stat.total strong{color:var(--blue)}
-#map{height:48vh;min-height:360px;border:1px solid var(--line);border-radius:13px;overflow:hidden}
-.map-note,.meta{font-size:10px;color:var(--muted);line-height:1.45;margin-top:6px}
-.members{display:grid;grid-template-columns:1fr;gap:7px}
-.member{border:1px solid var(--line);background:#fbfcfd;border-radius:12px;padding:9px}
-.member-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-.name{font-size:13px;font-weight:900}.mr{font-size:10px;color:var(--muted)}
-.badge{display:inline-block;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900}
-.badge.live{background:#e8f8ef;color:#087144;border:1px solid #b8e1ca}.badge.stale{background:#fff2dc;color:#885800;border:1px solid #ecd18f}.badge.off{background:#f0f2f4;color:#687581;border:1px solid #d8dee4}
-.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}.actions button{min-height:38px;font-size:10px}
-.followbar{display:none;margin-bottom:9px;padding:9px;border-radius:12px;background:#eaf5ff;border:1px solid #bddbec;color:#155d91;font-size:10px;font-weight:900}
-.followbar.show{display:flex;justify-content:space-between;align-items:center;gap:8px}.followbar button{width:auto;min-height:34px;padding:5px 9px}
-.marker-wrap{position:relative;width:22px;height:22px}.marker-dot{width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.marker-label{position:absolute;left:26px;top:-4px;white-space:nowrap;background:#fff;border:1px solid #cedae4;border-radius:7px;padding:2px 5px;font:800 10px "Nirmala UI",Arial,sans-serif;color:#17314b;box-shadow:0 2px 6px rgba(0,0,0,.17)}
-.my-dot{width:20px;height:20px;border-radius:50%;background:#111;border:4px solid #fff;box-shadow:0 0 0 3px rgba(11,95,158,.45),0 2px 8px rgba(0,0,0,.3)}
-.admin-card{display:none}.admin-card.show{display:block}
-.admin-row{border:1px solid var(--line);border-radius:11px;padding:8px;margin-top:6px;background:#fbfcfd}
-.admin-row-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.admin-actions button{min-height:38px;font-size:10px}
-.modal{display:none;position:fixed;inset:0;z-index:2500;background:rgba(10,24,38,.62);align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}
-.modal-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.modal-box h3{margin:0 0 9px}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
-.small{font-size:9px;color:var(--muted);line-height:1.4}
-.toast{position:fixed;left:50%;top:78px;transform:translate(-50%,-8px);opacity:0;pointer-events:none;background:#15283b;color:#fff;padding:8px 11px;border-radius:10px;font-size:10px;transition:.2s;z-index:3000;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}
-footer{text-align:center;font-size:9px;color:var(--muted);padding:14px 8px 24px}
-@media(min-width:650px){.grid2{grid-template-columns:1fr 1fr}.statusbar{grid-template-columns:repeat(4,1fr)}.members{grid-template-columns:1fr 1fr}}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font-family:system-ui,-apple-system,'Noto Sans Devanagari','Segoe UI',sans-serif;
+  background:
+   radial-gradient(circle at 10% 10%,rgba(42,127,255,.25),transparent 34%),
+   radial-gradient(circle at 90% 0%,rgba(157,115,255,.18),transparent 28%),
+   linear-gradient(150deg,var(--bg),var(--bg2));
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.shell{max-width:1180px;margin:auto;padding:14px}
+.glass{background:linear-gradient(180deg,rgba(21,39,70,.92),rgba(12,28,53,.92));border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow);backdrop-filter:blur(16px)}
+.topbar{
+  position:sticky;top:8px;z-index:30;border-radius:22px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{
+  width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:900;
+  background:linear-gradient(135deg,var(--blue),var(--violet));box-shadow:0 10px 26px rgba(42,127,255,.35)
+}
+.brand h1{font-size:17px;margin:0}.brand small{color:var(--muted)}
+.userchip{display:flex;align-items:center;gap:9px}
+.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--gold),#ff965b);color:#1b1306}
+.role{font-size:11px;color:var(--cyan);font-weight:800}
+.iconbtn{border:1px solid var(--line);background:#132642;color:#fff;border-radius:12px;padding:8px 10px}
+.hero{
+  margin-top:14px;border-radius:26px;padding:20px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#123a7b 0%,#195ad8 42%,#5a2cc5 100%);
+  box-shadow:0 25px 70px rgba(24,87,209,.32)
+}
+.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-110px;background:rgba(255,255,255,.11)}
+.hero h2{margin:0;font-size:26px;max-width:760px}.hero p{margin:8px 0 0;color:#dce9ff;max-width:780px}
+.quote{margin-top:14px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.12);display:inline-block;font-weight:800}
+.tabs{display:flex;gap:8px;overflow:auto;margin:14px 0 0;padding-bottom:2px}
+.tab{border:1px solid var(--line);color:var(--muted);background:#0f1f38;padding:10px 13px;border-radius:13px;font-weight:800;white-space:nowrap}
+.tab.active{color:#fff;background:linear-gradient(135deg,var(--blue),var(--violet));border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.kpi{border-radius:18px;padding:14px;min-height:108px}
+.kpi .label{font-size:11px;color:var(--muted);font-weight:800}
+.kpi .value{font-size:25px;font-weight:950;margin-top:4px}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.progress{height:7px;border-radius:999px;background:#20385a;overflow:hidden;margin-top:10px}
+.bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--green))}
+.section{margin-top:12px;border-radius:22px;padding:15px}
+.section h3{margin:0;font-size:16px}
+.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.small{font-size:11px;color:var(--muted)}
+.tableWrap{overflow:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:12px;text-align:center}
+th:first-child,td:first-child{text-align:left}
+input,select{
+  width:100%;background:#0d1a31;border:1px solid var(--line);color:#fff;border-radius:12px;padding:10px 11px;outline:none
+}
+input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(23,195,255,.1)}
+.formGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:10px}
+.primary{border:0;color:#fff;padding:11px 14px;border-radius:13px;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--violet))}
+.green{background:linear-gradient(135deg,#0aa96d,#18d795)}
+.gold{background:linear-gradient(135deg,#d79c22,#f3c763);color:#231805}
+.red{background:linear-gradient(135deg,#c93553,#ff5d73)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.status{font-weight:900}.good{color:var(--green)}.warn{color:var(--gold)}.bad{color:var(--red)}
+.rankcard{padding:10px;border-radius:15px;border:1px solid var(--line);margin-top:8px;background:linear-gradient(180deg,#112341,#0e1b32)}
+.rankline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.metricpill{padding:5px 8px;border-radius:999px;background:#0a1930;border:1px solid var(--line);font-size:10px}
+.loginScreen{min-height:100vh;display:grid;place-items:center;padding:18px}
+.loginCard{width:min(440px,100%);padding:22px;border-radius:28px}
+.loginBrand{text-align:center}
+.loginLogo{width:72px;height:72px;border-radius:22px;margin:auto;display:grid;place-items:center;font-size:26px;font-weight:950;background:linear-gradient(135deg,var(--blue),var(--violet));box-shadow:0 20px 50px rgba(42,127,255,.35)}
+.loginBrand h1{margin:12px 0 2px}.loginBrand p{margin:0;color:var(--muted)}
+.loginTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.loginTabs button{padding:11px;border-radius:12px;border:1px solid var(--line);background:#0d1a31;color:var(--muted);font-weight:900}
+.loginTabs button.active{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;border-color:transparent}
+.field{margin-top:10px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:800}
+.loginBtn{width:100%;margin-top:14px;padding:13px;border:0;border-radius:14px;color:#fff;font-weight:950;background:linear-gradient(135deg,var(--blue),var(--violet))}
+.demo{margin-top:12px;padding:10px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:11px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0d1f39;color:#fff;border:1px solid var(--line);padding:11px 14px;border-radius:13px;box-shadow:var(--shadow);z-index:100;display:none}
+.badge{padding:5px 8px;border-radius:999px;background:#0b1a31;border:1px solid var(--line);font-size:10px;font-weight:900}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.formGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){
+  .shell{padding:8px}.hero{padding:17px}.hero h2{font-size:21px}.grid{grid-template-columns:repeat(2,1fr)}
+  .formGrid{grid-template-columns:1fr 1fr}.topbar{top:4px}.brand small{display:none}.userchip .nm{display:none}
+}
 </style>
 </head>
-
 <body>
-<header>
-  <div class="head">
-    <div class="brand">DS WORLD</div>
-    <h1>Live GPS Tracker</h1>
-    <div class="sub">One Default Room • Distance from My Location • Name-wise Dots • Admin Control</div>
-    <div class="toprow">
-      <div class="connection"><span id="connDot" class="conn-dot"></span><span id="connText">Firebase connecting…</span></div>
-      <button id="adminOpen" class="admin-top">🔐 Admin</button>
+
+<div id="loginScreen" class="loginScreen">
+  <div class="loginCard glass">
+    <div class="loginBrand">
+      <div class="loginLogo">DS</div>
+      <h1>DS WORLD Growth OS</h1>
+      <p>Performance • Discipline • Growth</p>
     </div>
-  </div>
-</header>
 
-<div id="toast" class="toast"></div>
+    <div class="loginTabs">
+      <button id="leaderTab" class="active" onclick="setLoginRole('leader')">Leader Login</button>
+      <button id="adminTab" onclick="setLoginRole('admin')">Admin Login</button>
+    </div>
 
-<div id="adminModal" class="modal">
-  <div class="modal-box">
-    <h3>🔐 Admin Login</h3>
-    <input id="adminPassword" inputmode="numeric" type="password" placeholder="Admin Password">
-    <div class="small" style="margin-top:6px">Admin controls फक्त अधिकृत coordinator ने वापरावेत.</div>
-    <div class="modal-actions">
-      <button id="adminCancel">Cancel</button>
-      <button id="adminLogin" class="primary">Login</button>
+    <div class="field"><label>युजरनेम / मोबाईल नंबर</label><input id="loginUser" placeholder="उदा. 9876543210"></div>
+    <div class="field"><label>पासवर्ड</label><input id="loginPass" type="password" placeholder="पासवर्ड"></div>
+    <button class="loginBtn" onclick="login()">Secure Login →</button>
+
+    <div class="demo">
+      Preview Admin Login: <b>admin</b> / <b>admin123</b><br>
+      Admin मधून नवीन Leader तयार करता येईल.
     </div>
   </div>
 </div>
 
-<main class="wrap">
-  <div class="notice">
-    📍 अंतर <b>या फोनच्या सध्याच्या location पासून</b> मोजले जाते. 1000 मीटरपेक्षा कमी असल्यास मीटरमध्ये, अन्यथा किलोमीटरमध्ये दाखवले जाते.
-    प्रत्येक सदस्याने स्वतः <b>Start Live Sharing</b> केल्यावरच त्याचे location दिसेल.
-  </div>
-
-  <div id="followBar" class="followbar">
-    <span id="followText">Tracking...</span>
-    <button id="stopFollow" class="orange">Stop Track</button>
-  </div>
-
-  <section class="card">
-    <h2>📍 माझे Location / Live Sharing</h2>
-    <select id="personSelect"></select>
-    <div class="grid2" style="margin-top:7px">
-      <button id="myLocationBtn" class="primary">📌 माझे Location घ्या</button>
-      <button id="startBtn" class="green">▶ Start Live Sharing</button>
+<div id="app" class="hidden">
+  <div class="shell">
+    <div class="topbar glass">
+      <div class="brand">
+        <div class="logo">DS</div>
+        <div><h1>DS WORLD Growth OS</h1><small>Enterprise Performance Command Center</small></div>
+      </div>
+      <div class="userchip">
+        <div class="avatar" id="avatar">D</div>
+        <div class="nm"><b id="topName">User</b><div class="role" id="topRole">LEADER</div></div>
+        <button class="iconbtn" onclick="logout()">Logout</button>
+      </div>
     </div>
-    <button id="stopBtn" class="danger" style="margin-top:7px">■ Stop My Sharing</button>
-    <div id="myState" class="share-state">माझे reference location अजून घेतलेले नाही.</div>
-  </section>
 
-  <section class="statusbar">
-    <div class="stat total"><strong id="totalCount">8</strong><span>Total Members</span></div>
-    <div class="stat live"><strong id="liveCount">0</strong><span>Live / Recent</span></div>
-    <div class="stat"><strong id="staleCount">0</strong><span>Stale</span></div>
-    <div class="stat off"><strong id="offlineCount">8</strong><span>No Location</span></div>
-  </section>
-
-  <section class="card">
-    <h2>🗺️ Live Map + Distance</h2>
-    <div id="map"></div>
-    <div class="map-note">नावासमोर `(850 m)` किंवा `(1.24 km)` दिसेल. वेगळ्या रंगाचा dot = वेगळी व्यक्ती. Dot वर tap केल्यास नाव, अंतर, accuracy व last update दिसेल.</div>
-  </section>
-
-  <section class="card">
-    <h2>👥 Member Locations</h2>
-    <div id="members" class="members"></div>
-  </section>
-
-  <section id="adminCard" class="card admin-card">
-    <h2>🔐 Admin Control Panel</h2>
-    <div class="small">Stop केल्यावर त्या user चे sharing बंद होईल. Restart केल्यावर page उघडे असेल आणि त्या user ने आधी sharing ला consent दिले असेल तर sharing पुन्हा सुरू होईल.</div>
-    <div id="adminUsers"></div>
-
-    <h2 style="margin-top:14px">➕ Manual User Add</h2>
-    <div class="grid2">
-      <input id="newName" placeholder="Display Name, उदा. Patil Sir">
-      <input id="newMr" placeholder="Marathi Name, उदा. पाटील सर">
+    <div class="hero">
+      <h2 id="heroTitle">आजची कामगिरी म्हणजे उद्याची ओळख.</h2>
+      <p id="heroSub">तुम्ही फक्त टार्गेट पूर्ण करत नाही आहात — तुम्ही तुमच्या पुढच्या लेव्हलची तयारी करत आहात.</p>
+      <div class="quote" id="quote">“दररोज 1% प्रगती = वर्षभरात मोठा बदल.”</div>
     </div>
-    <button id="addUserBtn" class="green" style="margin-top:7px">User Add करा</button>
 
-    <h2 style="margin-top:16px">♻️ Tracker Reset</h2>
-    <div class="small">
-      Trial / जुनी location साफ करण्यासाठी वापरा. Users delete होणार नाहीत.
-      Reset नंतर जो पुन्हा Start Live Sharing करेल त्याचेच नवीन location दिसेल.
+    <div class="tabs">
+      <button class="tab active" onclick="showView('dashboard',this)">Dashboard</button>
+      <button class="tab" onclick="showView('entry',this)">Daily Entry</button>
+      <button class="tab" onclick="showView('leaderboard',this)">Leaderboard</button>
+      <button id="adminTabApp" class="tab hidden" onclick="showView('admin',this)">Admin Control</button>
     </div>
-    <button id="resetTrackerBtn" class="danger" style="margin-top:7px">
-      🗑️ Delete All Locations / Reset Tracker
-    </button>
 
-    <button id="adminLogout" style="margin-top:10px">Admin Logout</button>
-  </section>
-</main>
+    <div id="dashboardView">
+      <div class="grid">
+        <div class="kpi glass"><div class="label">आजचा FTD Score</div><div class="value" id="ftdScore">0%</div><div class="progress"><div class="bar" id="ftdBar" style="width:0%"></div></div><div class="sub" id="ftdStatus">आजची सुरुवात करा</div></div>
+        <div class="kpi glass"><div class="label">MTD Achievement</div><div class="value" id="mtdScore">0%</div><div class="progress"><div class="bar" id="mtdBar" style="width:0%"></div></div><div class="sub">महिन्याची एकूण प्रगती</div></div>
+        <div class="kpi glass"><div class="label">PV MTD</div><div class="value" id="mtdPv">0</div><div class="sub">Target 5,000 PV</div></div>
+        <div class="kpi glass"><div class="label">Required Daily PV</div><div class="value" id="reqPv">0</div><div class="sub">Target पूर्ण करण्यासाठी</div></div>
+      </div>
 
-<footer>DS WORLD • Consent-based Shared Live GPS</footer>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getDatabase, ref, onValue, set, update, remove, onDisconnect, serverTimestamp, get } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBx9pl9BTpcZTIEb4Blrl7BqJefXwzgmzc",
-  authDomain: "bhilwara-9e91f.firebaseapp.com",
-  databaseURL: "https://bhilwara-9e91f-default-rtdb.firebaseio.com",
-  projectId: "bhilwara-9e91f",
-  storageBucket: "bhilwara-9e91f.firebasestorage.app",
-  messagingSenderId: "122703349946",
-  appId: "1:122703349946:web:42de7cb2a7ecf8d2cb1a83",
-  measurementId: "G-4TRQ38E5X7"
-};
-
-const ROOM_ID = "dsworld-bhilwara-7-27efde44a7f8";
-const DEFAULT_PEOPLE = [{"id": "shete", "name": "Shete Sir", "mr": "शेटे सर"}, {"id": "pujari", "name": "Pujari Sir", "mr": "पुजारी सर"}, {"id": "sitaram", "name": "Sitaram Sir", "mr": "सीताराम सर"}, {"id": "rajan", "name": "Rajan", "mr": "राजन"}, {"id": "tejas", "name": "Tejas", "mr": "तेजस"}, {"id": "anita", "name": "Anita Madam", "mr": "अनिता मॅडम"}, {"id": "misal", "name": "Misal Sir", "mr": "मिसाळ सर"}, {"id": "bhokare", "name": "Bhokare Sir", "mr": "भोकरे सर"}];
-const ADMIN_PASSWORD_NORMALIZED = "9270";
-const COLORS=["#e53935","#1e88e5","#43a047","#fb8c00","#8e24aa","#00acc1","#6d4c41","#3949ab","#f4511e","#00897b","#7cb342","#5e35b1","#d81b60","#039be5"];
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getDatabase(app);
-
-let PEOPLE=[...DEFAULT_PEOPLE];
-let locations={}, controls={};
-let currentUid="", currentPersonId="", watchId=null, followId="";
-let myPosition=null, myMarker=null, map;
-let adminLoggedIn=sessionStorage.getItem("dsw_admin")==="1";
-let adminPausedById={};
-const markers={};
-
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.x);toast.x=setTimeout(()=>t.classList.remove("show"),1800)}
-function selected(){return PEOPLE.find(p=>p.id===document.getElementById("personSelect").value)}
-function mapsUrl(x){return `https://maps.google.com/?q=${x.lat},${x.lng}`}
-function colorFor(id){return COLORS[Math.abs([...id].reduce((a,c)=>a+c.charCodeAt(0),0))%COLORS.length]}
-function slugify(s){return String(s).toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||("user-"+Date.now())}
-
-function haversineMeters(a,b){
-  const R=6371000, rad=v=>v*Math.PI/180;
-  const dLat=rad(b.lat-a.lat), dLng=rad(b.lng-a.lng);
-  const x=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2;
-  return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
-}
-function distanceText(x){
-  if(!myPosition || !x || typeof x.lat!=="number" || typeof x.lng!=="number") return "";
-  const m=haversineMeters(myPosition,{lat:x.lat,lng:x.lng});
-  if(m<1000) return `${Math.round(m)} m`;
-  const km=m/1000;
-  return `${km<10?km.toFixed(2):km.toFixed(1)} km`;
-}
-function distanceSuffix(x){
-  const d=distanceText(x);
-  return d?` (${d})`:"";
-}
-function fmtAge(ts){
-  if(!ts)return "कधीच नाही";
-  const s=Math.max(0,Math.floor((Date.now()-ts)/1000));
-  if(s<60)return `${s}s ago`;
-  const m=Math.floor(s/60);if(m<60)return `${m}m ago`;
-  return `${Math.floor(m/60)}h ago`;
-}
-function stateFor(x){
-  if(!x||typeof x.lat!=="number"||typeof x.lng!=="number")return "off";
-  const age=Date.now()-(x.updatedAt||0);
-  if(x.sharing===true&&age<=120000)return "live";
-  return "stale";
-}
-function stateLabel(s){return s==="live"?"LIVE":s==="stale"?"STALE":"NO LOCATION"}
-
-function initMap(){
-  map=L.map("map",{zoomControl:true}).setView([25.35,74.63],12);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
-}
-function makeIcon(p,x){
-  const color=colorFor(p.id),dist=distanceSuffix(x);
-  return L.divIcon({
-    className:"",
-    iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-12],
-    html:`<div class="marker-wrap"><div class="marker-dot" style="background:${color}"></div><div class="marker-label">${esc(p.name+dist)}</div></div>`
-  });
-}
-function updateMyMarker(){
-  if(!myPosition)return;
-  if(myMarker)myMarker.setLatLng([myPosition.lat,myPosition.lng]);
-  else{
-    const icon=L.divIcon({className:"",iconSize:[20,20],iconAnchor:[10,10],html:`<div class="my-dot"></div>`});
-    myMarker=L.marker([myPosition.lat,myPosition.lng],{icon,zIndexOffset:1000}).addTo(map).bindPopup("<b>माझे Location</b>");
-  }
-}
-function updateMap(){
-  const bounds=[];
-  if(myPosition){bounds.push([myPosition.lat,myPosition.lng]);updateMyMarker()}
-  PEOPLE.forEach(p=>{
-    const x=locations?.[p.id];
-    if(!x||typeof x.lat!=="number"||typeof x.lng!=="number"){
-      if(markers[p.id]){map.removeLayer(markers[p.id]);delete markers[p.id]}
-      return;
-    }
-    const ll=[x.lat,x.lng],dist=distanceText(x),popup=`<b>${esc(p.name)}</b>${dist?`<br>Distance: <b>${esc(dist)}</b>`:""}<br>Accuracy: ${Math.round(x.accuracy||0)} m<br>Last: ${esc(fmtAge(x.updatedAt))}`;
-    bounds.push(ll);
-    if(markers[p.id]){
-      markers[p.id].setLatLng(ll).setPopupContent(popup).setIcon(makeIcon(p,x));
-    }else{
-      markers[p.id]=L.marker(ll,{icon:makeIcon(p,x)}).addTo(map).bindPopup(popup);
-    }
-    if(followId===p.id)map.setView(ll,16,{animate:true});
-  });
-  if(!followId&&bounds.length>1){try{map.fitBounds(bounds,{padding:[35,35],maxZoom:15})}catch(e){}}
-}
-function renderSelect(){
-  const s=document.getElementById("personSelect"),old=s.value;
-  s.innerHTML=PEOPLE.map(p=>`<option value="${p.id}">${esc(p.name)} / ${esc(p.mr||"")}</option>`).join("");
-  if(PEOPLE.some(p=>p.id===old))s.value=old;
-}
-function renderMembers(){
-  let live=0,stale=0,off=0;
-  document.getElementById("members").innerHTML=PEOPLE.map(p=>{
-    const x=locations?.[p.id],st=stateFor(x),color=colorFor(p.id),dist=distanceSuffix(x);
-    if(st==="live")live++;else if(st==="stale")stale++;else off++;
-    return `<div class="member">
-      <div class="member-top">
-        <div>
-          <div class="name"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:5px"></span>${esc(p.name+dist)}</div>
-          <div class="mr">${esc(p.mr||"")}</div>
+      <div class="section glass">
+        <div class="sectionHead"><div><h3>🔥 आजची Winning Position</h3><div class="small">Daily execution health</div></div><span class="badge" id="todayBadge">FTD</span></div>
+        <div class="grid">
+          <div class="kpi"><div class="label">Calls</div><div class="value" id="kCalls">0</div><div class="sub">Target 5</div></div>
+          <div class="kpi"><div class="label">Presentations</div><div class="value" id="kPlans">0</div><div class="sub">Target 2</div></div>
+          <div class="kpi"><div class="label">Today PV</div><div class="value" id="kPv">0</div><div class="sub">Daily benchmark 167</div></div>
+          <div class="kpi"><div class="label">Learning</div><div class="value" id="kLearn">0m</div><div class="sub">Video + Book</div></div>
         </div>
-        <span class="badge ${st}">${stateLabel(st)}</span>
       </div>
-      <div class="meta">${x?`Last: ${esc(fmtAge(x.updatedAt))}<br>Accuracy: ${Math.round(x.accuracy||0)} m`:"Location अजून share केलेली नाही."}</div>
-      ${x?`<div class="actions"><button data-map="${p.id}">🗺️ Maps</button><button class="primary" data-follow="${p.id}">🎯 Track</button><button data-share="${p.id}">📤 Share</button></div>`:""}
-    </div>`;
-  }).join("");
-  document.getElementById("totalCount").textContent=PEOPLE.length;
-  document.getElementById("liveCount").textContent=live;
-  document.getElementById("staleCount").textContent=stale;
-  document.getElementById("offlineCount").textContent=off;
 
-  document.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{const x=locations[b.dataset.map];if(x)window.open(mapsUrl(x),"_blank")});
-  document.querySelectorAll("[data-follow]").forEach(b=>b.onclick=()=>{
-    followId=b.dataset.follow;
-    const p=PEOPLE.find(z=>z.id===followId),x=locations[followId];
-    document.getElementById("followText").textContent=`Tracking: ${p?.name||followId}${distanceSuffix(x)}`;
-    document.getElementById("followBar").classList.add("show");
-    if(x)map.setView([x.lat,x.lng],16,{animate:true});
-    markers[followId]?.openPopup();
-  });
-  document.querySelectorAll("[data-share]").forEach(b=>b.onclick=async()=>{
-    const p=PEOPLE.find(z=>z.id===b.dataset.share),x=locations[b.dataset.share];if(!p||!x)return;
-    const text=`📍 ${p.name}${distanceSuffix(x)}\n${mapsUrl(x)}`;
-    if(navigator.share){try{await navigator.share({title:p.name+" Location",text})}catch(e){}}
-    else window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
-  });
-}
-function renderAdmin(){
-  const card=document.getElementById("adminCard");
-  card.classList.toggle("show",adminLoggedIn);
-  if(!adminLoggedIn)return;
-  document.getElementById("adminUsers").innerHTML=PEOPLE.map(p=>{
-    const x=locations[p.id],ctl=controls[p.id],enabled=ctl?.enabled!==false;
-    return `<div class="admin-row">
-      <div class="admin-row-top">
-        <div><b>${esc(p.name)}</b>${distanceSuffix(x)}<div class="small">${enabled?"Control: Enabled":"Control: STOPPED"}</div></div>
-        <span class="badge ${stateFor(x)}">${stateLabel(stateFor(x))}</span>
+      <div class="section glass">
+        <div class="sectionHead"><div><h3>🚀 Smart Motivation</h3><div class="small">तुमच्या आजच्या performance वर आधारित</div></div><span class="badge">Growth Coach</span></div>
+        <div id="coachText" style="margin-top:10px;line-height:1.65;font-weight:800;color:#dce9ff">
+          आजची नोंद करा. तुमच्या कृतीवरून पुढचा focus येथे दिसेल.
+        </div>
       </div>
-      <div class="admin-actions">
-        <button class="danger" data-admin-stop="${p.id}">⛔ Stop</button>
-        <button class="green" data-admin-restart="${p.id}">▶ Restart</button>
+    </div>
+
+    <div id="entryView" class="hidden">
+      <div class="section glass">
+        <div class="sectionHead"><div><h3>📱 Daily Performance Entry</h3><div class="small" id="entryName"></div></div><span class="badge">Today</span></div>
+        <div class="formGrid">
+          <div><div class="small">नवीन संपर्क</div><input id="names" type="number" value="0"></div>
+          <div><div class="small">कॉल / भेटी</div><input id="calls" type="number" value="0"></div>
+          <div><div class="small">प्लॅन</div><input id="plans" type="number" value="0"></div>
+          <div><div class="small">PV</div><input id="pv" type="number" value="0"></div>
+          <div><div class="small">व्हिडिओ मिनिटे</div><input id="video" type="number" value="0"></div>
+          <div><div class="small">वाचन मिनिटे</div><input id="book" type="number" value="0"></div>
+          <div><div class="small">Depth Follow-up</div><input id="depth" type="number" value="0"></div>
+          <div><div class="small">Meeting</div><input id="meeting" type="number" value="0"></div>
+        </div>
+        <div class="btnrow"><button class="primary green" onclick="saveEntry()">✅ आजची नोंद जतन करा</button></div>
       </div>
-    </div>`;
-  }).join("");
-  document.querySelectorAll("[data-admin-stop]").forEach(b=>b.onclick=()=>adminControl(b.dataset.adminStop,false));
-  document.querySelectorAll("[data-admin-restart]").forEach(b=>b.onclick=()=>adminControl(b.dataset.adminRestart,true));
+    </div>
+
+    <div id="leaderboardView" class="hidden">
+      <div class="section glass">
+        <div class="sectionHead"><div><h3>🏆 Team Leaderboard</h3><div class="small">Activity + PV + Consistency आधारित preview ranking</div></div><span class="badge">LIVE</span></div>
+        <div id="rankList"></div>
+      </div>
+    </div>
+
+    <div id="adminView" class="hidden">
+      <div class="section glass">
+        <div class="sectionHead">
+          <div><h3>🛡️ Admin Control Center</h3><div class="small">Leader login तयार करा, update करा किंवा हटवा</div></div>
+          <span class="badge">ADMIN ONLY</span>
+        </div>
+        <div class="formGrid">
+          <div><div class="small">Leader नाव</div><input id="newName" placeholder="पूर्ण नाव"></div>
+          <div><div class="small">मोबाईल / Username</div><input id="newUser" placeholder="10 अंकी मोबाईल"></div>
+          <div><div class="small">Password</div><input id="newPass" placeholder="पासवर्ड"></div>
+          <div><div class="small">Role</div><select id="newRole"><option value="leader">Leader</option><option value="admin">Admin</option></select></div>
+        </div>
+        <div class="btnrow"><button class="primary" onclick="addUser()">➕ User Add करा</button></div>
+      </div>
+
+      <div class="section glass">
+        <div class="sectionHead"><div><h3>👥 Users</h3><div class="small">Hard/local browser accounts</div></div><span class="badge" id="userCount">0</span></div>
+        <div class="tableWrap">
+          <table>
+            <thead><tr><th>नाव</th><th>Username</th><th>Role</th><th>Password</th><th>Action</th></tr></thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_DEFAULT={name:"Super Admin",username:"admin",password:"admin123",role:"admin"};
+const targets={names:2,calls:5,plans:2,pv:167,video:20,book:20,depth:1,meeting:1};
+let loginRole="leader";
+let currentUser=null;
+
+function getUsers(){
+  let u=JSON.parse(localStorage.getItem("ds_growth_users")||"[]");
+  if(!u.find(x=>x.username==="admin")) u.unshift(ADMIN_DEFAULT);
+  localStorage.setItem("ds_growth_users",JSON.stringify(u));
+  return u;
 }
-function setConnection(ok,text){
-  document.getElementById("connDot").className="conn-dot"+(ok?" on":"");
-  document.getElementById("connText").textContent=text;
+function setUsers(u){localStorage.setItem("ds_growth_users",JSON.stringify(u))}
+function setLoginRole(r){
+  loginRole=r;
+  leaderTab.classList.toggle("active",r==="leader");
+  adminTab.classList.toggle("active",r==="admin");
 }
-async function seedRoster(){
-  for(const p of DEFAULT_PEOPLE){
-    try{
-      const rr=ref(db,`rooms/${ROOM_ID}/roster/${p.id}`),s=await get(rr);
-      if(!s.exists())await set(rr,p);
-    }catch(e){}
-  }
+function login(){
+  const user=loginUser.value.trim(), pass=loginPass.value;
+  const found=getUsers().find(x=>x.username===user&&x.password===pass&&x.role===loginRole);
+  if(!found)return showToast("Login details जुळले नाहीत");
+  currentUser=found;
+  sessionStorage.setItem("ds_current_user",JSON.stringify(found));
+  boot();
 }
-async function myLocation(){
-  if(!navigator.geolocation){alert("GPS support उपलब्ध नाही.");return}
-  document.getElementById("myState").textContent="📡 माझे location घेत आहे…";
-  navigator.geolocation.getCurrentPosition(pos=>{
-    myPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy};
-    document.getElementById("myState").textContent=`📌 माझे Location मिळाले • Accuracy ${Math.round(pos.coords.accuracy)} m`;
-    renderMembers();renderAdmin();updateMap();
-  },()=>{document.getElementById("myState").textContent="⚠️ Location permission/GPS तपासा."},{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+function boot(){
+  if(!currentUser){const s=sessionStorage.getItem("ds_current_user");if(s)currentUser=JSON.parse(s)}
+  if(!currentUser)return;
+  loginScreen.classList.add("hidden");app.classList.remove("hidden");
+  topName.textContent=currentUser.name;topRole.textContent=currentUser.role.toUpperCase();
+  avatar.textContent=(currentUser.name||"U").trim()[0].toUpperCase();
+  entryName.textContent=currentUser.name+" • "+new Date().toLocaleDateString("mr-IN");
+  adminTabApp.classList.toggle("hidden",currentUser.role!=="admin");
+  heroTitle.textContent=currentUser.role==="admin"?"आज टीम कुठे उभी आहे, हे एका नजरेत पाहा.":"तुमची आजची कृतीच तुमची उद्याची ओळख ठरवते.";
+  renderAll();
 }
-async function startSharing(fromAdmin=false){
-  if(!currentUid){alert("Firebase connect होऊ द्या.");return}
-  if(!navigator.geolocation){alert("GPS support उपलब्ध नाही.");return}
-  const p=selected();if(!p)return;
-  currentPersonId=p.id;
-
-  const ctl=controls[p.id];
-  if(ctl?.enabled===false && !fromAdmin){
-    alert("या user चे sharing Admin ने Stop केले आहे.");
-    return;
-  }
-
-  if(!fromAdmin){
-    localStorage.setItem(`dsw_consent_${p.id}`,"1");
-  }else if(localStorage.getItem(`dsw_consent_${p.id}`)!=="1"){
-    document.getElementById("myState").textContent="Admin Restart मिळाला; पण या फोनवर user ने आधी Start Live Sharing केलेले नाही.";
-    return;
-  }
-
-  if(watchId!==null)navigator.geolocation.clearWatch(watchId);
-  const mref=ref(db,`rooms/${ROOM_ID}/members/${p.id}`);
-  try{await onDisconnect(mref).update({sharing:false,updatedAt:serverTimestamp()})}catch(e){}
-
-  document.getElementById("myState").textContent="📡 Live sharing सुरू करत आहे…";
-  watchId=navigator.geolocation.watchPosition(async pos=>{
-    myPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy};
-    try{
-      await set(mref,{
-        name:p.name,mr:p.mr||"",ownerUid:currentUid,
-        lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy,
-        sharing:true,updatedAt:serverTimestamp()
-      });
-      document.getElementById("myState").textContent=`✅ Live Sharing ON • ${p.name} • Accuracy ${Math.round(pos.coords.accuracy)} m`;
-      renderMembers();renderAdmin();updateMap();
-    }catch(e){
-      document.getElementById("myState").textContent="⚠️ Database permission तपासा.";
-    }
-  },()=>{document.getElementById("myState").textContent="⚠️ Location permission/GPS तपासा."},{enableHighAccuracy:true,maximumAge:4000,timeout:20000});
+function logout(){sessionStorage.removeItem("ds_current_user");location.reload()}
+function showView(v,btn){
+  ["dashboard","entry","leaderboard","admin"].forEach(x=>document.getElementById(x+"View").classList.toggle("hidden",x!==v));
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active")
 }
-async function stopSharing(adminTriggered=false){
-  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}
-  if(currentPersonId){
-    try{await update(ref(db,`rooms/${ROOM_ID}/members/${currentPersonId}`),{sharing:false,updatedAt:serverTimestamp()})}catch(e){}
-  }
-  document.getElementById("myState").textContent=adminTriggered?"⛔ Sharing Admin ने Stop केले आहे.":"Sharing बंद आहे.";
+function entryKey(){return "ds_entries_"+currentUser.username}
+function allEntries(){return JSON.parse(localStorage.getItem(entryKey())||"{}")}
+function todayKey(){return new Date().toISOString().slice(0,10)}
+function saveEntry(){
+  const e={};
+  Object.keys(targets).forEach(k=>e[k]=Number(document.getElementById(k).value||0));
+  const data=allEntries();data[todayKey()]=e;localStorage.setItem(entryKey(),JSON.stringify(data));
+  showToast("आजची नोंद यशस्वीपणे जतन झाली ✅");renderAll();showView("dashboard",document.querySelector(".tab"))
 }
-async function adminControl(id,enabled){
-  if(!adminLoggedIn)return;
-  try{
-    await set(ref(db,`rooms/${ROOM_ID}/controls/${id}`),{enabled,updatedAt:serverTimestamp()});
-    if(!enabled){
-      await update(ref(db,`rooms/${ROOM_ID}/members/${id}`),{sharing:false,updatedAt:serverTimestamp()}).catch(()=>{});
-    }
-    toast(enabled?"Restart command पाठवला.":"Stop command पाठवला.");
-  }catch(e){alert("Admin control save झाला नाही. Database rules तपासा.");}
+function monthEntries(username){
+  const data=JSON.parse(localStorage.getItem("ds_entries_"+username)||"{}");
+  const ym=new Date().toISOString().slice(0,7);
+  return Object.entries(data).filter(([d])=>d.startsWith(ym)).map(x=>x[1])
 }
-async function addUser(){
-  if(!adminLoggedIn)return;
-  const name=document.getElementById("newName").value.trim(),mr=document.getElementById("newMr").value.trim();
-  if(!name){alert("User चे नाव टाका.");return}
-  let id=slugify(name);if(PEOPLE.some(p=>p.id===id))id+="-"+Date.now();
-  try{
-    await set(ref(db,`rooms/${ROOM_ID}/roster/${id}`),{id,name,mr,manual:true,createdAt:serverTimestamp()});
-    document.getElementById("newName").value="";document.getElementById("newMr").value="";
-    toast("User add झाला.");
-  }catch(e){alert("User add झाला नाही.");}
+function sum(arr,k){return arr.reduce((a,b)=>a+Number(b[k]||0),0)}
+function ftdScore(e){
+  if(!e)return 0;let s=0;
+  Object.keys(targets).forEach(k=>s+=Math.min((Number(e[k]||0)/targets[k])*100,100));
+  return Math.round(s/Object.keys(targets).length)
 }
-
-
-async function resetTrackerLocations(){
-  if(!adminLoggedIn){
-    alert("Admin Login आवश्यक आहे.");
-    return;
-  }
-
-  const pwd = prompt("Admin Password टाका:");
-  if(pwd === null) return;
-
-  const normalized = String(pwd).replace(/\s+/g,"");
-  if(normalized !== ADMIN_PASSWORD_NORMALIZED){
-    alert("Wrong Admin Password.");
-    return;
-  }
-
-  const ok = confirm(
-    "सध्याची सर्व saved locations आणि Stop/Restart control states delete करायची आहेत का?\n\nUsers / roster delete होणार नाहीत."
-  );
-  if(!ok) return;
-
-  try{
-    if(watchId !== null){
-      navigator.geolocation.clearWatch(watchId);
-      watchId = null;
-    }
-
-    currentPersonId = "";
-    followId = "";
-    document.getElementById("followBar").classList.remove("show");
-
-    await remove(ref(db,`rooms/${ROOM_ID}/members`));
-    await remove(ref(db,`rooms/${ROOM_ID}/controls`));
-
-    locations = {};
-    controls = {};
-    adminPausedById = {};
-
-    Object.keys(markers).forEach(id=>{
-      try{ map.removeLayer(markers[id]); }catch(e){}
-      delete markers[id];
-    });
-
-    document.getElementById("myState").textContent =
-      "♻️ Tracker Reset झाला. आता प्रत्येकाने पुन्हा Start Live Sharing करावे.";
-
-    renderMembers();
-    renderAdmin();
-    updateMap();
-
-    toast("सर्व जुनी locations delete झाली.");
-  }catch(e){
-    console.error(e);
-    alert("Tracker Reset झाला नाही. Firebase Database Rules तपासा.");
-  }
+function renderAll(){
+  renderDash();renderLeaderboard();if(currentUser.role==="admin")renderUsers()
 }
-
-document.getElementById("adminOpen").onclick=()=>{
-  if(adminLoggedIn){renderAdmin();document.getElementById("adminCard").scrollIntoView({behavior:"smooth"});return}
-  document.getElementById("adminPassword").value="";
-  document.getElementById("adminModal").classList.add("show");
-};
-document.getElementById("adminCancel").onclick=()=>document.getElementById("adminModal").classList.remove("show");
-document.getElementById("adminLogin").onclick=()=>{
-  const v=document.getElementById("adminPassword").value.replace(/\s+/g,"");
-  if(v===ADMIN_PASSWORD_NORMALIZED){
-    adminLoggedIn=true;sessionStorage.setItem("dsw_admin","1");
-    document.getElementById("adminModal").classList.remove("show");renderAdmin();
-    document.getElementById("adminCard").scrollIntoView({behavior:"smooth"});
-    toast("Admin Login successful.");
-  }else alert("Wrong Admin Password.");
-};
-document.getElementById("adminLogout").onclick=()=>{
-  adminLoggedIn=false;sessionStorage.removeItem("dsw_admin");renderAdmin();toast("Admin Logout.");
-};
-document.getElementById("addUserBtn").onclick=addUser;
-document.getElementById("resetTrackerBtn").onclick=resetTrackerLocations;
-document.getElementById("myLocationBtn").onclick=myLocation;
-document.getElementById("startBtn").onclick=()=>startSharing(false);
-document.getElementById("stopBtn").onclick=()=>stopSharing(false);
-document.getElementById("stopFollow").onclick=()=>{followId="";document.getElementById("followBar").classList.remove("show");updateMap()};
-
-initMap();renderSelect();renderMembers();renderAdmin();
-
-onAuthStateChanged(auth,async user=>{
-  if(!user){setConnection(false,"Anonymous sign-in…");return}
-  currentUid=user.uid;setConnection(true,"Firebase connected");await seedRoster();
-
-  onValue(ref(db,`rooms/${ROOM_ID}/roster`),snap=>{
-    const roster=snap.val()||{},merged={};
-    DEFAULT_PEOPLE.forEach(p=>merged[p.id]=p);
-    Object.values(roster).forEach(p=>{if(p?.id&&p?.name)merged[p.id]=p});
-    PEOPLE=Object.values(merged).sort((a,b)=>a.name.localeCompare(b.name));
-    renderSelect();renderMembers();renderAdmin();updateMap();
-  });
-
-  onValue(ref(db,`rooms/${ROOM_ID}/members`),snap=>{
-    locations=snap.val()||{};
-    renderMembers();renderAdmin();updateMap();
-  },()=>setConnection(false,"Database permission error"));
-
-  onValue(ref(db,`rooms/${ROOM_ID}/controls`),snap=>{
-    const prev=controls;
-    controls=snap.val()||{};
-    renderAdmin();
-
-    if(currentPersonId){
-      const enabled=controls[currentPersonId]?.enabled!==false;
-      const wasEnabled=prev[currentPersonId]?.enabled!==false;
-
-      if(!enabled && watchId!==null){
-        adminPausedById[currentPersonId]=true;
-        stopSharing(true);
-      }else if(enabled && !wasEnabled && adminPausedById[currentPersonId]){
-        adminPausedById[currentPersonId]=false;
-        startSharing(true);
-      }
-    }
-  });
-});
-
-signInAnonymously(auth).catch(err=>{
-  setConnection(false,"Anonymous Authentication OFF / error");
-  document.getElementById("myState").textContent="⚠️ Firebase Console मध्ये Anonymous Authentication ON करा.";
-  console.error(err);
-});
+function renderDash(){
+  const e=allEntries()[todayKey()]||{};
+  const f=ftdScore(e);
+  ftdScoreEl=document.getElementById("ftdScore");ftdScoreEl.textContent=f+"%";ftdBar.style.width=f+"%";
+  if(f>=85){ftdStatus.textContent="उत्कृष्ट — आजचा दिवस मजबूत आहे";ftdStatus.className="sub good"}
+  else if(f>=60){ftdStatus.textContent="चांगली सुरुवात — अजून थोडा push";ftdStatus.className="sub warn"}
+  else{ftdStatus.textContent="आज अजून action आवश्यक";ftdStatus.className="sub bad"}
+  kCalls.textContent=e.calls||0;kPlans.textContent=e.plans||0;kPv.textContent=e.pv||0;kLearn.textContent=(Number(e.video||0)+Number(e.book||0))+"m";
+  const m=monthEntries(currentUser.username), pv=sum(m,"pv");
+  mtdPv.textContent=pv;
+  const mtd=Math.min(Math.round((pv/5000)*100),100);mtdScore.textContent=mtd+"%";mtdBar.style.width=mtd+"%";
+  const d=new Date(), days=new Date(d.getFullYear(),d.getMonth()+1,0).getDate(), left=Math.max(days-d.getDate(),1);
+  reqPv.textContent=Math.ceil(Math.max(5000-pv,0)/left);
+  coachText.textContent=coach(e,f,pv,left);
+}
+function coach(e,f,pv,left){
+  if(f>=90)return "🔥 Outstanding! आजची discipline level उत्कृष्ट आहे. आता हा consistency streak कायम ठेवा आणि PV मध्ये extra push द्या.";
+  if((e.calls||0)<5)return "📞 आजचा मुख्य focus: किमान 5 कॉल पूर्ण करा. Calling वाढली की presentations आणि PV naturally वाढतील.";
+  if((e.plans||0)<2)return "🎯 Calls झाले आहेत. आता किमान 2 plan presentations पूर्ण करा — आजची conversion संधी इथे आहे.";
+  if((e.pv||0)<167)return "💼 Activity ठीक आहे. आता आजचा PV benchmark पूर्ण करण्यावर focus करा.";
+  return "✅ आजची execution चांगली आहे. महिन्याचे लक्ष्य पूर्ण करण्यासाठी हीच सातत्यपूर्ण गती ठेवा.";
+}
+function renderLeaderboard(){
+  const users=getUsers().filter(x=>x.role==="leader");
+  const rows=users.map(u=>{
+    const m=monthEntries(u.username),pv=sum(m,"pv"),active=m.length;
+    const today=JSON.parse(localStorage.getItem("ds_entries_"+u.username)||"{}")[todayKey()]||{};
+    const f=ftdScore(today),score=Math.round(f*.45+Math.min(pv/5000*100,100)*.45+Math.min(active/20*100,100)*.10);
+    return {...u,pv,f,score,active}
+  }).sort((a,b)=>b.score-a.score);
+  rankList.innerHTML=rows.length?rows.map((r,i)=>`
+    <div class="rankcard">
+      <div class="rankline"><div><b>${i+1}. ${r.name}</b><div class="small">${r.username}</div></div><span class="metricpill">${r.score>=75?"🟢":r.score>=45?"🟡":"🔴"} Overall ${r.score}%</span></div>
+      <div class="btnrow"><span class="metricpill">FTD ${r.f}%</span><span class="metricpill">PV ${r.pv}</span><span class="metricpill">${r.active} Active Days</span></div>
+    </div>`).join(""):`<div class="small" style="margin-top:10px">Admin मधून Leader add करा.</div>`;
+}
+function addUser(){
+  const name=newName.value.trim(),username=newUser.value.trim(),password=newPass.value,role=newRole.value;
+  if(!name||!username||!password)return showToast("सर्व माहिती भरा");
+  let u=getUsers();if(u.some(x=>x.username===username))return showToast("हा Username आधीच आहे");
+  u.push({name,username,password,role});setUsers(u);
+  newName.value=newUser.value=newPass.value="";showToast("User तयार झाला ✅");renderUsers();renderLeaderboard()
+}
+function deleteUser(username){
+  if(username==="admin")return showToast("Default Admin delete करता येणार नाही");
+  if(!confirm("हा user हटवायचा?"))return;
+  setUsers(getUsers().filter(x=>x.username!==username));renderUsers();renderLeaderboard()
+}
+function renderUsers(){
+  const u=getUsers();userCount.textContent=u.length;
+  usersTable.innerHTML=u.map(x=>`<tr><td>${x.name}</td><td>${x.username}</td><td>${x.role}</td><td>${x.password}</td><td>${x.username==="admin"?"—":`<button class="primary red" onclick="deleteUser('${x.username}')">Delete</button>`}</td></tr>`).join("")
+}
+function showToast(msg){toast.textContent=msg;toast.style.display="block";setTimeout(()=>toast.style.display="none",2200)}
+const quotes=[
+ "दररोज 1% प्रगती = वर्षभरात मोठा बदल.",
+ "शिस्त ही प्रेरणेपेक्षा जास्त शक्तिशाली असते.",
+ "आजचा एक कॉल उद्याचा मोठा व्यवसाय ठरू शकतो.",
+ "Consistency हीच Growth ची खरी सुपरपॉवर आहे."
+];
+setInterval(()=>{quote.textContent="“"+quotes[Math.floor(Math.random()*quotes.length)]+"”"},5000);
+boot();
 </script>
 </body>
 </html>
