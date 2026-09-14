@@ -1,364 +1,869 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="mr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>DS WORLD Growth OS</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RCM Ganpati WhatsApp Center</title>
+
 <style>
-:root{
-  --bg:#07101f; --bg2:#0b1730; --card:#101f3c; --card2:#142747;
-  --text:#f7fbff; --muted:#9db0ca; --line:#21385d;
-  --blue:#2a7fff; --cyan:#17c3ff; --green:#26d07c; --gold:#f3c763;
-  --red:#ff5d73; --violet:#9d73ff; --shadow:0 20px 60px rgba(0,0,0,.35);
-}
 *{box-sizing:border-box}
+
 body{
-  margin:0; min-height:100vh; color:var(--text);
-  font-family:system-ui,-apple-system,'Noto Sans Devanagari','Segoe UI',sans-serif;
-  background:
-   radial-gradient(circle at 10% 10%,rgba(42,127,255,.25),transparent 34%),
-   radial-gradient(circle at 90% 0%,rgba(157,115,255,.18),transparent 28%),
-   linear-gradient(150deg,var(--bg),var(--bg2));
+  margin:0;
+  font-family:system-ui,-apple-system,"Noto Sans Devanagari",Arial,sans-serif;
+  background:#f4f7f5;
+  color:#173127
 }
-button,input,select{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-.shell{max-width:1180px;margin:auto;padding:14px}
-.glass{background:linear-gradient(180deg,rgba(21,39,70,.92),rgba(12,28,53,.92));border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow);backdrop-filter:blur(16px)}
-.topbar{
-  position:sticky;top:8px;z-index:30;border-radius:22px;padding:12px 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
+
+.app{
+  max-width:760px;
+  margin:auto;
+  min-height:100vh;
+  background:#fff;
+  padding-bottom:70px
 }
-.brand{display:flex;align-items:center;gap:10px}
-.logo{
-  width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:900;
-  background:linear-gradient(135deg,var(--blue),var(--violet));box-shadow:0 10px 26px rgba(42,127,255,.35)
-}
-.brand h1{font-size:17px;margin:0}.brand small{color:var(--muted)}
-.userchip{display:flex;align-items:center;gap:9px}
-.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--gold),#ff965b);color:#1b1306}
-.role{font-size:11px;color:var(--cyan);font-weight:800}
-.iconbtn{border:1px solid var(--line);background:#132642;color:#fff;border-radius:12px;padding:8px 10px}
+
 .hero{
-  margin-top:14px;border-radius:26px;padding:20px;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,#123a7b 0%,#195ad8 42%,#5a2cc5 100%);
-  box-shadow:0 25px 70px rgba(24,87,209,.32)
+  background:linear-gradient(135deg,#07573c,#0f7c55);
+  color:#fff;
+  padding:16px;
+  position:sticky;
+  top:0;
+  z-index:10
 }
-.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-110px;background:rgba(255,255,255,.11)}
-.hero h2{margin:0;font-size:26px;max-width:760px}.hero p{margin:8px 0 0;color:#dce9ff;max-width:780px}
-.quote{margin-top:14px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.12);display:inline-block;font-weight:800}
-.tabs{display:flex;gap:8px;overflow:auto;margin:14px 0 0;padding-bottom:2px}
-.tab{border:1px solid var(--line);color:var(--muted);background:#0f1f38;padding:10px 13px;border-radius:13px;font-weight:800;white-space:nowrap}
-.tab.active{color:#fff;background:linear-gradient(135deg,var(--blue),var(--violet));border-color:transparent}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
-.kpi{border-radius:18px;padding:14px;min-height:108px}
-.kpi .label{font-size:11px;color:var(--muted);font-weight:800}
-.kpi .value{font-size:25px;font-weight:950;margin-top:4px}
-.kpi .sub{font-size:11px;color:var(--muted);margin-top:4px}
-.progress{height:7px;border-radius:999px;background:#20385a;overflow:hidden;margin-top:10px}
-.bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--green))}
-.section{margin-top:12px;border-radius:22px;padding:15px}
-.section h3{margin:0;font-size:16px}
-.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.small{font-size:11px;color:var(--muted)}
-.tableWrap{overflow:auto;margin-top:10px}
-table{width:100%;border-collapse:collapse;min-width:700px}
-th,td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:12px;text-align:center}
-th:first-child,td:first-child{text-align:left}
-input,select{
-  width:100%;background:#0d1a31;border:1px solid var(--line);color:#fff;border-radius:12px;padding:10px 11px;outline:none
+
+h1{
+  font-size:20px;
+  margin:0 0 4px
 }
-input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(23,195,255,.1)}
-.formGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:10px}
-.primary{border:0;color:#fff;padding:11px 14px;border-radius:13px;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--violet))}
-.green{background:linear-gradient(135deg,#0aa96d,#18d795)}
-.gold{background:linear-gradient(135deg,#d79c22,#f3c763);color:#231805}
-.red{background:linear-gradient(135deg,#c93553,#ff5d73)}
-.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.status{font-weight:900}.good{color:var(--green)}.warn{color:var(--gold)}.bad{color:var(--red)}
-.rankcard{padding:10px;border-radius:15px;border:1px solid var(--line);margin-top:8px;background:linear-gradient(180deg,#112341,#0e1b32)}
-.rankline{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.metricpill{padding:5px 8px;border-radius:999px;background:#0a1930;border:1px solid var(--line);font-size:10px}
-.loginScreen{min-height:100vh;display:grid;place-items:center;padding:18px}
-.loginCard{width:min(440px,100%);padding:22px;border-radius:28px}
-.loginBrand{text-align:center}
-.loginLogo{width:72px;height:72px;border-radius:22px;margin:auto;display:grid;place-items:center;font-size:26px;font-weight:950;background:linear-gradient(135deg,var(--blue),var(--violet));box-shadow:0 20px 50px rgba(42,127,255,.35)}
-.loginBrand h1{margin:12px 0 2px}.loginBrand p{margin:0;color:var(--muted)}
-.loginTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
-.loginTabs button{padding:11px;border-radius:12px;border:1px solid var(--line);background:#0d1a31;color:var(--muted);font-weight:900}
-.loginTabs button.active{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;border-color:transparent}
-.field{margin-top:10px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:800}
-.loginBtn{width:100%;margin-top:14px;padding:13px;border:0;border-radius:14px;color:#fff;font-weight:950;background:linear-gradient(135deg,var(--blue),var(--violet))}
-.demo{margin-top:12px;padding:10px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:11px}
-.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0d1f39;color:#fff;border:1px solid var(--line);padding:11px 14px;border-radius:13px;box-shadow:var(--shadow);z-index:100;display:none}
-.badge{padding:5px 8px;border-radius:999px;background:#0b1a31;border:1px solid var(--line);font-size:10px;font-weight:900}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.formGrid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){
-  .shell{padding:8px}.hero{padding:17px}.hero h2{font-size:21px}.grid{grid-template-columns:repeat(2,1fr)}
-  .formGrid{grid-template-columns:1fr 1fr}.topbar{top:4px}.brand small{display:none}.userchip .nm{display:none}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px
+}
+
+.tab{
+  border:1px solid #ffffff55;
+  background:#ffffff15;
+  color:#fff;
+  padding:11px;
+  border-radius:12px;
+  font-weight:800
+}
+
+.tab.active{
+  background:#fff;
+  color:#0a6847
+}
+
+.panel{
+  display:none;
+  padding:12px
+}
+
+.panel.active{
+  display:block
+}
+
+.msg{
+  width:100%;
+  min-height:145px;
+  border:1px solid #ead9a8;
+  border-radius:12px;
+  padding:11px;
+  font-size:14px;
+  line-height:1.5;
+  background:#fffdf5
+}
+
+.row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:10px 12px;
+  font-weight:800
+}
+
+.copy{
+  background:#fff0c7;
+  color:#725000
+}
+
+.search{
+  width:100%;
+  padding:12px;
+  border:1px solid #dce5df;
+  border-radius:12px;
+  margin:10px 0
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin:10px 0
+}
+
+.stat{
+  background:#f7faf8;
+  border:1px solid #e4ebe6;
+  border-radius:12px;
+  padding:8px;
+  text-align:center
+}
+
+.stat b{
+  display:block;
+  font-size:17px;
+  color:#0a6847
+}
+
+.card{
+  border:1px solid #e4ebe6;
+  border-radius:14px;
+  padding:12px;
+  margin:8px 0
+}
+
+.card.sent{
+  background:#effcf3;
+  border-color:#b9e5c7
+}
+
+.name{
+  font-weight:850
+}
+
+.meta{
+  font-size:12px;
+  color:#6a786f;
+  margin:4px 0 10px
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center
+}
+
+.phone{
+  font-weight:800
+}
+
+.wa{
+  border:0;
+  background:#16a34a;
+  color:#fff;
+  border-radius:10px;
+  padding:11px 14px;
+  font-weight:850
+}
+
+.wa.done{
+  background:#2f7651
+}
+
+.undo{
+  border:1px solid #cad8cf;
+  background:#fff;
+  border-radius:9px;
+  padding:9px;
+  font-weight:700
+}
+
+.filter{
+  width:100%;
+  padding:11px;
+  border:1px solid #dce5df;
+  border-radius:12px;
+  background:#fff;
+  margin-bottom:6px
+}
+
+.foot{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(760px,100%);
+  background:#fff;
+  border-top:1px solid #e4ebe6;
+  padding:8px;
+  text-align:center;
+  font-size:11px;
+  color:#66786d
+}
+
+.empty{
+  text-align:center;
+  color:#75837a;
+  padding:28px 8px
 }
 </style>
 </head>
+
 <body>
 
-<div id="loginScreen" class="loginScreen">
-  <div class="loginCard glass">
-    <div class="loginBrand">
-      <div class="loginLogo">DS</div>
-      <h1>DS WORLD Growth OS</h1>
-      <p>Performance • Discipline • Growth</p>
-    </div>
+<div class="app">
 
-    <div class="loginTabs">
-      <button id="leaderTab" class="active" onclick="setLoginRole('leader')">Leader Login</button>
-      <button id="adminTab" onclick="setLoginRole('admin')">Admin Login</button>
-    </div>
+<div class="hero">
 
-    <div class="field"><label>युजरनेम / मोबाईल नंबर</label><input id="loginUser" placeholder="उदा. 9876543210"></div>
-    <div class="field"><label>पासवर्ड</label><input id="loginPass" type="password" placeholder="पासवर्ड"></div>
-    <button class="loginBtn" onclick="login()">Secure Login →</button>
+<h1>🙏 RCM गणेशोत्सव WhatsApp Center</h1>
 
-    <div class="demo">
-      Preview Admin Login: <b>admin</b> / <b>admin123</b><br>
-      Admin मधून नवीन Leader तयार करता येईल.
-    </div>
-  </div>
+<div>
+Regular + Terminated • वेगळे Messages • Sent Status Save
 </div>
 
-<div id="app" class="hidden">
-  <div class="shell">
-    <div class="topbar glass">
-      <div class="brand">
-        <div class="logo">DS</div>
-        <div><h1>DS WORLD Growth OS</h1><small>Enterprise Performance Command Center</small></div>
-      </div>
-      <div class="userchip">
-        <div class="avatar" id="avatar">D</div>
-        <div class="nm"><b id="topName">User</b><div class="role" id="topRole">LEADER</div></div>
-        <button class="iconbtn" onclick="logout()">Logout</button>
-      </div>
-    </div>
+<div class="tabs">
 
-    <div class="hero">
-      <h2 id="heroTitle">आजची कामगिरी म्हणजे उद्याची ओळख.</h2>
-      <p id="heroSub">तुम्ही फक्त टार्गेट पूर्ण करत नाही आहात — तुम्ही तुमच्या पुढच्या लेव्हलची तयारी करत आहात.</p>
-      <div class="quote" id="quote">“दररोज 1% प्रगती = वर्षभरात मोठा बदल.”</div>
-    </div>
+<button
+id="tr"
+class="tab active"
+onclick="sw('r')">
+✅ Regular <span id="rc"></span>
+</button>
 
-    <div class="tabs">
-      <button class="tab active" onclick="showView('dashboard',this)">Dashboard</button>
-      <button class="tab" onclick="showView('entry',this)">Daily Entry</button>
-      <button class="tab" onclick="showView('leaderboard',this)">Leaderboard</button>
-      <button id="adminTabApp" class="tab hidden" onclick="showView('admin',this)">Admin Control</button>
-    </div>
+<button
+id="tt"
+class="tab"
+onclick="sw('t')">
+🔁 Terminated <span id="tc"></span>
+</button>
 
-    <div id="dashboardView">
-      <div class="grid">
-        <div class="kpi glass"><div class="label">आजचा FTD Score</div><div class="value" id="ftdScore">0%</div><div class="progress"><div class="bar" id="ftdBar" style="width:0%"></div></div><div class="sub" id="ftdStatus">आजची सुरुवात करा</div></div>
-        <div class="kpi glass"><div class="label">MTD Achievement</div><div class="value" id="mtdScore">0%</div><div class="progress"><div class="bar" id="mtdBar" style="width:0%"></div></div><div class="sub">महिन्याची एकूण प्रगती</div></div>
-        <div class="kpi glass"><div class="label">PV MTD</div><div class="value" id="mtdPv">0</div><div class="sub">Target 5,000 PV</div></div>
-        <div class="kpi glass"><div class="label">Required Daily PV</div><div class="value" id="reqPv">0</div><div class="sub">Target पूर्ण करण्यासाठी</div></div>
-      </div>
-
-      <div class="section glass">
-        <div class="sectionHead"><div><h3>🔥 आजची Winning Position</h3><div class="small">Daily execution health</div></div><span class="badge" id="todayBadge">FTD</span></div>
-        <div class="grid">
-          <div class="kpi"><div class="label">Calls</div><div class="value" id="kCalls">0</div><div class="sub">Target 5</div></div>
-          <div class="kpi"><div class="label">Presentations</div><div class="value" id="kPlans">0</div><div class="sub">Target 2</div></div>
-          <div class="kpi"><div class="label">Today PV</div><div class="value" id="kPv">0</div><div class="sub">Daily benchmark 167</div></div>
-          <div class="kpi"><div class="label">Learning</div><div class="value" id="kLearn">0m</div><div class="sub">Video + Book</div></div>
-        </div>
-      </div>
-
-      <div class="section glass">
-        <div class="sectionHead"><div><h3>🚀 Smart Motivation</h3><div class="small">तुमच्या आजच्या performance वर आधारित</div></div><span class="badge">Growth Coach</span></div>
-        <div id="coachText" style="margin-top:10px;line-height:1.65;font-weight:800;color:#dce9ff">
-          आजची नोंद करा. तुमच्या कृतीवरून पुढचा focus येथे दिसेल.
-        </div>
-      </div>
-    </div>
-
-    <div id="entryView" class="hidden">
-      <div class="section glass">
-        <div class="sectionHead"><div><h3>📱 Daily Performance Entry</h3><div class="small" id="entryName"></div></div><span class="badge">Today</span></div>
-        <div class="formGrid">
-          <div><div class="small">नवीन संपर्क</div><input id="names" type="number" value="0"></div>
-          <div><div class="small">कॉल / भेटी</div><input id="calls" type="number" value="0"></div>
-          <div><div class="small">प्लॅन</div><input id="plans" type="number" value="0"></div>
-          <div><div class="small">PV</div><input id="pv" type="number" value="0"></div>
-          <div><div class="small">व्हिडिओ मिनिटे</div><input id="video" type="number" value="0"></div>
-          <div><div class="small">वाचन मिनिटे</div><input id="book" type="number" value="0"></div>
-          <div><div class="small">Depth Follow-up</div><input id="depth" type="number" value="0"></div>
-          <div><div class="small">Meeting</div><input id="meeting" type="number" value="0"></div>
-        </div>
-        <div class="btnrow"><button class="primary green" onclick="saveEntry()">✅ आजची नोंद जतन करा</button></div>
-      </div>
-    </div>
-
-    <div id="leaderboardView" class="hidden">
-      <div class="section glass">
-        <div class="sectionHead"><div><h3>🏆 Team Leaderboard</h3><div class="small">Activity + PV + Consistency आधारित preview ranking</div></div><span class="badge">LIVE</span></div>
-        <div id="rankList"></div>
-      </div>
-    </div>
-
-    <div id="adminView" class="hidden">
-      <div class="section glass">
-        <div class="sectionHead">
-          <div><h3>🛡️ Admin Control Center</h3><div class="small">Leader login तयार करा, update करा किंवा हटवा</div></div>
-          <span class="badge">ADMIN ONLY</span>
-        </div>
-        <div class="formGrid">
-          <div><div class="small">Leader नाव</div><input id="newName" placeholder="पूर्ण नाव"></div>
-          <div><div class="small">मोबाईल / Username</div><input id="newUser" placeholder="10 अंकी मोबाईल"></div>
-          <div><div class="small">Password</div><input id="newPass" placeholder="पासवर्ड"></div>
-          <div><div class="small">Role</div><select id="newRole"><option value="leader">Leader</option><option value="admin">Admin</option></select></div>
-        </div>
-        <div class="btnrow"><button class="primary" onclick="addUser()">➕ User Add करा</button></div>
-      </div>
-
-      <div class="section glass">
-        <div class="sectionHead"><div><h3>👥 Users</h3><div class="small">Hard/local browser accounts</div></div><span class="badge" id="userCount">0</span></div>
-        <div class="tableWrap">
-          <table>
-            <thead><tr><th>नाव</th><th>Username</th><th>Role</th><th>Password</th><th>Action</th></tr></thead>
-            <tbody id="usersTable"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
+</div>
 </div>
 
-<div class="toast" id="toast"></div>
+
+<section id="pr" class="panel active">
+
+<textarea id="mr" class="msg"></textarea>
+
+<div class="row">
+<button class="btn copy" onclick="copyMsg('r')">
+📋 Copy Message
+</button>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<b id="rTotal">0</b>
+Total
+</div>
+
+<div class="stat">
+<b id="rSent">0</b>
+Sent
+</div>
+
+<div class="stat">
+<b id="rPending">0</b>
+Pending
+</div>
+
+</div>
+
+<input
+id="sr"
+class="search"
+placeholder="नाव / नंबर / शहर शोधा..."
+oninput="render('r')">
+
+<select
+id="fr"
+class="filter"
+onchange="render('r')">
+
+<option value="all">All</option>
+<option value="pending">Pending</option>
+<option value="sent">Sent</option>
+
+</select>
+
+<div id="lr"></div>
+
+</section>
+
+
+<section id="pt" class="panel">
+
+<textarea id="mt" class="msg"></textarea>
+
+<div class="row">
+<button class="btn copy" onclick="copyMsg('t')">
+📋 Copy Message
+</button>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<b id="tTotal">0</b>
+Total
+</div>
+
+<div class="stat">
+<b id="tSent">0</b>
+Sent
+</div>
+
+<div class="stat">
+<b id="tPending">0</b>
+Pending
+</div>
+
+</div>
+
+<input
+id="st"
+class="search"
+placeholder="नाव / नंबर / शहर शोधा..."
+oninput="render('t')">
+
+<select
+id="ft"
+class="filter"
+onchange="render('t')">
+
+<option value="all">All</option>
+<option value="pending">Pending</option>
+<option value="sent">Sent</option>
+
+</select>
+
+<div id="lt"></div>
+
+</section>
+
+
+<div class="foot">
+DS WORLD • Sent status या browser/device मध्ये save राहतो.
+</div>
+
+</div>
+
 
 <script>
-const ADMIN_DEFAULT={name:"Super Admin",username:"admin",password:"admin123",role:"admin"};
-const targets={names:2,calls:5,plans:2,pv:167,video:20,book:20,depth:1,meeting:1};
-let loginRole="leader";
-let currentUser=null;
 
-function getUsers(){
-  let u=JSON.parse(localStorage.getItem("ds_growth_users")||"[]");
-  if(!u.find(x=>x.username==="admin")) u.unshift(ADMIN_DEFAULT);
-  localStorage.setItem("ds_growth_users",JSON.stringify(u));
-  return u;
+/* =========================
+   REGULAR CONTACTS
+   ========================= */
+
+const R="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";
+
+
+/* =========================
+   TERMINATED CONTACTS
+   ========================= */
+
+const T="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";
+
+
+/* =========================
+   DEFAULT MESSAGES
+   ========================= */
+
+const DEF={
+
+r:`🙏 गणपती बाप्पा मोरया!
+
+आपणास व आपल्या परिवारास गणेशोत्सवाच्या हार्दिक शुभेच्छा! 🌺
+
+निरोगी आरोग्यासाठी योग्य पोषण, स्वच्छता आणि चांगल्या जीवनशैलीची साथ देणारे RCM प्रत्येक कुटुंबासाठी उपयुक्त आहे. 🌿
+
+बाप्पा आपल्या परिवाराला उत्तम आरोग्य, आनंद आणि समृद्धी देवो! 🙏
+
+– RCM परिवार`,
+
+t:`🙏 गणपती बाप्पा मोरया!
+
+आपणास व आपल्या परिवारास गणेशोत्सवाच्या हार्दिक शुभेच्छा! 🌺
+
+बाप्पाच्या मंगल आगमनासोबत आरोग्यपूर्ण जीवनाची नवी सुरुवात करूया. योग्य पोषण, स्वच्छता आणि दैनंदिन आरोग्यदायी सवयींसाठी RCM उपयोगी साथीदार ठरू शकतो. 🌿
+
+RCM विषयी नवीन माहिती किंवा मार्गदर्शन हवे असल्यास नक्की कळवा.
+
+– RCM परिवार`
+
+};
+
+
+let D={
+r:[],
+t:[]
+};
+
+
+let sent=JSON.parse(
+localStorage.getItem('dsw_sent_v2')||'{}'
+);
+
+
+let msgs=JSON.parse(
+localStorage.getItem('dsw_msg_v2')||'{}'
+);
+
+
+/* =========================
+   DECOMPRESS CONTACT DATA
+   ========================= */
+
+async function ungzip(b64){
+
+let bin=Uint8Array.from(
+atob(b64),
+c=>c.charCodeAt(0)
+);
+
+let ds=
+new DecompressionStream('gzip');
+
+return JSON.parse(
+await new Response(
+new Blob([bin])
+.stream()
+.pipeThrough(ds)
+).text()
+);
+
 }
-function setUsers(u){localStorage.setItem("ds_growth_users",JSON.stringify(u))}
-function setLoginRole(r){
-  loginRole=r;
-  leaderTab.classList.toggle("active",r==="leader");
-  adminTab.classList.toggle("active",r==="admin");
+
+
+/* =========================
+   HELPER FUNCTIONS
+   ========================= */
+
+function clean(v){
+
+let n=
+String(v||'')
+.replace(/\D/g,'');
+
+if(
+n.length===12 &&
+n.startsWith('91')
+){
+n=n.slice(2);
 }
-function login(){
-  const user=loginUser.value.trim(), pass=loginPass.value;
-  const found=getUsers().find(x=>x.username===user&&x.password===pass&&x.role===loginRole);
-  if(!found)return showToast("Login details जुळले नाहीत");
-  currentUser=found;
-  sessionStorage.setItem("ds_current_user",JSON.stringify(found));
-  boot();
+
+return n.slice(-10);
+
 }
-function boot(){
-  if(!currentUser){const s=sessionStorage.getItem("ds_current_user");if(s)currentUser=JSON.parse(s)}
-  if(!currentUser)return;
-  loginScreen.classList.add("hidden");app.classList.remove("hidden");
-  topName.textContent=currentUser.name;topRole.textContent=currentUser.role.toUpperCase();
-  avatar.textContent=(currentUser.name||"U").trim()[0].toUpperCase();
-  entryName.textContent=currentUser.name+" • "+new Date().toLocaleDateString("mr-IN");
-  adminTabApp.classList.toggle("hidden",currentUser.role!=="admin");
-  heroTitle.textContent=currentUser.role==="admin"?"आज टीम कुठे उभी आहे, हे एका नजरेत पाहा.":"तुमची आजची कृतीच तुमची उद्याची ओळख ठरवते.";
-  renderAll();
+
+
+function k(x,c){
+return x+'_'+c.id;
 }
-function logout(){sessionStorage.removeItem("ds_current_user");location.reload()}
-function showView(v,btn){
-  ["dashboard","entry","leaderboard","admin"].forEach(x=>document.getElementById(x+"View").classList.toggle("hidden",x!==v));
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active")
+
+
+function save(){
+
+localStorage.setItem(
+'dsw_sent_v2',
+JSON.stringify(sent)
+);
+
 }
-function entryKey(){return "ds_entries_"+currentUser.username}
-function allEntries(){return JSON.parse(localStorage.getItem(entryKey())||"{}")}
-function todayKey(){return new Date().toISOString().slice(0,10)}
-function saveEntry(){
-  const e={};
-  Object.keys(targets).forEach(k=>e[k]=Number(document.getElementById(k).value||0));
-  const data=allEntries();data[todayKey()]=e;localStorage.setItem(entryKey(),JSON.stringify(data));
-  showToast("आजची नोंद यशस्वीपणे जतन झाली ✅");renderAll();showView("dashboard",document.querySelector(".tab"))
+
+
+function saveMsg(){
+
+localStorage.setItem(
+'dsw_msg_v2',
+JSON.stringify(msgs)
+);
+
 }
-function monthEntries(username){
-  const data=JSON.parse(localStorage.getItem("ds_entries_"+username)||"{}");
-  const ym=new Date().toISOString().slice(0,7);
-  return Object.entries(data).filter(([d])=>d.startsWith(ym)).map(x=>x[1])
+
+
+function esc(s){
+
+return String(s??'')
+.replace(
+/[&<>"']/g,
+m=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[m])
+);
+
 }
-function sum(arr,k){return arr.reduce((a,b)=>a+Number(b[k]||0),0)}
-function ftdScore(e){
-  if(!e)return 0;let s=0;
-  Object.keys(targets).forEach(k=>s+=Math.min((Number(e[k]||0)/targets[k])*100,100));
-  return Math.round(s/Object.keys(targets).length)
+
+
+/* =========================
+   TAB SWITCH
+   ========================= */
+
+function sw(x){
+
+tr.classList.toggle(
+'active',
+x==='r'
+);
+
+tt.classList.toggle(
+'active',
+x==='t'
+);
+
+pr.classList.toggle(
+'active',
+x==='r'
+);
+
+pt.classList.toggle(
+'active',
+x==='t'
+);
+
+render(x);
+
 }
-function renderAll(){
-  renderDash();renderLeaderboard();if(currentUser.role==="admin")renderUsers()
+
+
+/* =========================
+   COPY MESSAGE
+   ========================= */
+
+function copyMsg(x){
+
+navigator.clipboard
+.writeText(
+document.getElementById(
+'m'+x
+).value
+)
+.then(
+()=>alert('Message copy झाला.')
+);
+
 }
-function renderDash(){
-  const e=allEntries()[todayKey()]||{};
-  const f=ftdScore(e);
-  ftdScoreEl=document.getElementById("ftdScore");ftdScoreEl.textContent=f+"%";ftdBar.style.width=f+"%";
-  if(f>=85){ftdStatus.textContent="उत्कृष्ट — आजचा दिवस मजबूत आहे";ftdStatus.className="sub good"}
-  else if(f>=60){ftdStatus.textContent="चांगली सुरुवात — अजून थोडा push";ftdStatus.className="sub warn"}
-  else{ftdStatus.textContent="आज अजून action आवश्यक";ftdStatus.className="sub bad"}
-  kCalls.textContent=e.calls||0;kPlans.textContent=e.plans||0;kPv.textContent=e.pv||0;kLearn.textContent=(Number(e.video||0)+Number(e.book||0))+"m";
-  const m=monthEntries(currentUser.username), pv=sum(m,"pv");
-  mtdPv.textContent=pv;
-  const mtd=Math.min(Math.round((pv/5000)*100),100);mtdScore.textContent=mtd+"%";mtdBar.style.width=mtd+"%";
-  const d=new Date(), days=new Date(d.getFullYear(),d.getMonth()+1,0).getDate(), left=Math.max(days-d.getDate(),1);
-  reqPv.textContent=Math.ceil(Math.max(5000-pv,0)/left);
-  coachText.textContent=coach(e,f,pv,left);
+
+
+/* =========================
+   SEND WHATSAPP
+   ========================= */
+
+function send(x,id){
+
+let c=
+D[x].find(
+a=>String(a.id)===String(id)
+);
+
+if(!c)return;
+
+
+let p=
+clean(c.mobile);
+
+
+if(p.length!==10){
+
+return alert(
+'Valid mobile number नाही.'
+);
+
 }
-function coach(e,f,pv,left){
-  if(f>=90)return "🔥 Outstanding! आजची discipline level उत्कृष्ट आहे. आता हा consistency streak कायम ठेवा आणि PV मध्ये extra push द्या.";
-  if((e.calls||0)<5)return "📞 आजचा मुख्य focus: किमान 5 कॉल पूर्ण करा. Calling वाढली की presentations आणि PV naturally वाढतील.";
-  if((e.plans||0)<2)return "🎯 Calls झाले आहेत. आता किमान 2 plan presentations पूर्ण करा — आजची conversion संधी इथे आहे.";
-  if((e.pv||0)<167)return "💼 Activity ठीक आहे. आता आजचा PV benchmark पूर्ण करण्यावर focus करा.";
-  return "✅ आजची execution चांगली आहे. महिन्याचे लक्ष्य पूर्ण करण्यासाठी हीच सातत्यपूर्ण गती ठेवा.";
+
+
+/* Sent Status Save */
+
+sent[k(x,c)]={
+at:new Date().toISOString()
+};
+
+save();
+
+render(x);
+
+
+/* Open WhatsApp */
+
+window.open(
+'https://wa.me/91'
++p+
+'?text='+
+encodeURIComponent(
+document
+.getElementById('m'+x)
+.value
+.trim()
+),
+'_blank'
+);
+
 }
-function renderLeaderboard(){
-  const users=getUsers().filter(x=>x.role==="leader");
-  const rows=users.map(u=>{
-    const m=monthEntries(u.username),pv=sum(m,"pv"),active=m.length;
-    const today=JSON.parse(localStorage.getItem("ds_entries_"+u.username)||"{}")[todayKey()]||{};
-    const f=ftdScore(today),score=Math.round(f*.45+Math.min(pv/5000*100,100)*.45+Math.min(active/20*100,100)*.10);
-    return {...u,pv,f,score,active}
-  }).sort((a,b)=>b.score-a.score);
-  rankList.innerHTML=rows.length?rows.map((r,i)=>`
-    <div class="rankcard">
-      <div class="rankline"><div><b>${i+1}. ${r.name}</b><div class="small">${r.username}</div></div><span class="metricpill">${r.score>=75?"🟢":r.score>=45?"🟡":"🔴"} Overall ${r.score}%</span></div>
-      <div class="btnrow"><span class="metricpill">FTD ${r.f}%</span><span class="metricpill">PV ${r.pv}</span><span class="metricpill">${r.active} Active Days</span></div>
-    </div>`).join(""):`<div class="small" style="margin-top:10px">Admin मधून Leader add करा.</div>`;
+
+
+/* =========================
+   UNDO SENT
+   ========================= */
+
+function undo(x,id){
+
+let c=
+D[x].find(
+a=>String(a.id)===String(id)
+);
+
+delete sent[k(x,c)];
+
+save();
+
+render(x);
+
 }
-function addUser(){
-  const name=newName.value.trim(),username=newUser.value.trim(),password=newPass.value,role=newRole.value;
-  if(!name||!username||!password)return showToast("सर्व माहिती भरा");
-  let u=getUsers();if(u.some(x=>x.username===username))return showToast("हा Username आधीच आहे");
-  u.push({name,username,password,role});setUsers(u);
-  newName.value=newUser.value=newPass.value="";showToast("User तयार झाला ✅");renderUsers();renderLeaderboard()
+
+
+/* =========================
+   RENDER CONTACT LIST
+   ========================= */
+
+function render(x){
+
+let a=D[x];
+
+let q=
+document
+.getElementById('s'+x)
+.value
+.toLowerCase()
+.trim();
+
+
+let f=
+document
+.getElementById('f'+x)
+.value;
+
+
+let sn=
+a.filter(
+c=>sent[k(x,c)]
+).length;
+
+
+/* Stats */
+
+document
+.getElementById(x+'Total')
+.textContent=a.length;
+
+document
+.getElementById(x+'Sent')
+.textContent=sn;
+
+document
+.getElementById(x+'Pending')
+.textContent=
+a.length-sn;
+
+
+document
+.getElementById(
+x==='r'
+?'rc'
+:'tc'
+)
+.textContent=
+'('+a.length+')';
+
+
+/* Filter */
+
+let z=
+a.filter(c=>{
+
+let s=
+!!sent[k(x,c)];
+
+if(
+f==='sent' &&
+!s
+)return false;
+
+if(
+f==='pending' &&
+s
+)return false;
+
+
+return !q ||
+
+[
+c.name,
+c.mobile,
+c.city,
+c.reason,
+c.id
+]
+.join(' ')
+.toLowerCase()
+.includes(q);
+
+});
+
+
+/* Cards */
+
+document
+.getElementById('l'+x)
+.innerHTML=
+
+z.map(c=>{
+
+let s=
+!!sent[k(x,c)];
+
+let p=
+clean(c.mobile);
+
+
+return `
+
+<div class="card ${s?'sent':''}">
+
+<div class="name">
+${esc(c.name||'No Name')}
+</div>
+
+<div class="meta">
+
+ID: ${esc(c.id)}
+
+•
+
+${esc(c.city||'')}
+
+${
+x==='t' && c.reason
+?
+' • '+esc(c.reason)
+:
+''
 }
-function deleteUser(username){
-  if(username==="admin")return showToast("Default Admin delete करता येणार नाही");
-  if(!confirm("हा user हटवायचा?"))return;
-  setUsers(getUsers().filter(x=>x.username!==username));renderUsers();renderLeaderboard()
+
+</div>
+
+
+<div class="actions">
+
+<div class="phone">
+📱 ${esc(p||c.mobile)}
+</div>
+
+
+<div class="row">
+
+<button
+class="wa ${s?'done':''}"
+onclick="send('${x}','${esc(c.id)}')">
+
+${
+s
+?
+'✓ Sent / Send Again'
+:
+'WhatsApp'
 }
-function renderUsers(){
-  const u=getUsers();userCount.textContent=u.length;
-  usersTable.innerHTML=u.map(x=>`<tr><td>${x.name}</td><td>${x.username}</td><td>${x.role}</td><td>${x.password}</td><td>${x.username==="admin"?"—":`<button class="primary red" onclick="deleteUser('${x.username}')">Delete</button>`}</td></tr>`).join("")
+
+</button>
+
+
+${
+s
+?
+`
+<button
+class="undo"
+onclick="undo('${x}','${esc(c.id)}')">
+Undo
+</button>
+`
+:
+''
 }
-function showToast(msg){toast.textContent=msg;toast.style.display="block";setTimeout(()=>toast.style.display="none",2200)}
-const quotes=[
- "दररोज 1% प्रगती = वर्षभरात मोठा बदल.",
- "शिस्त ही प्रेरणेपेक्षा जास्त शक्तिशाली असते.",
- "आजचा एक कॉल उद्याचा मोठा व्यवसाय ठरू शकतो.",
- "Consistency हीच Growth ची खरी सुपरपॉवर आहे."
-];
-setInterval(()=>{quote.textContent="“"+quotes[Math.floor(Math.random()*quotes.length)]+"”"},5000);
-boot();
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}).join('')
+
+||
+
+'<div class="empty">Contact सापडला नाही.</div>';
+
+}
+
+
+/* =========================
+   START APP
+   ========================= */
+
+(async()=>{
+
+D.r=
+await ungzip(R);
+
+D.t=
+await ungzip(T);
+
+
+/* Load Saved Messages */
+
+mr.value=
+msgs.r||DEF.r;
+
+mt.value=
+msgs.t||DEF.t;
+
+
+/* Auto Save Message */
+
+mr.oninput=()=>{
+
+msgs.r=mr.value;
+
+saveMsg();
+
+};
+
+
+mt.oninput=()=>{
+
+msgs.t=mt.value;
+
+saveMsg();
+
+};
+
+
+/* Show Lists */
+
+render('r');
+
+render('t');
+
+})();
+
 </script>
+
 </body>
 </html>
